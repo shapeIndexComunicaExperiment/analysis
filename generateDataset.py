@@ -14,11 +14,6 @@ class Dataset:
     results: typing.Dict[str, typing.Dict[str, typing.List[dict] | None]]
     arrivalTimes: typing.Dict[str, typing.Dict[str, typing.List[float] | None]]
 
-
-filepathFullResuls = "/home/bryanelliott/Documents/PhD/coding/shapeIndexExperiment/best-case/results/shape_index_result.json"
-filepathSummaryResuls = "/home/bryanelliott/Documents/PhD/coding/shapeIndexExperiment/best-case/results/summary_shape_index_result.json"
-
-
 def divideResultsIntoArrivalTime(results: typing.List[dict]) -> typing.Tuple[typing.List[dict], typing.List[float]]:
     resultsCurrated = []
     arrivalTimes = []
@@ -91,8 +86,4 @@ def generateDatasetFromResults(filepathFullResuls: str, filepathSummaryResuls: s
         meanExecutionTime=meanExecutionTime,
         numberHttpRequest=numberHttpRequest,
         stdExecutionTime=stdExecutionTime)
-
-
-eg = generateDatasetFromResults(
-    filepathFullResuls, filepathSummaryResuls, "shape_index_result")
-print(eg.arrivalTimes)
+        
