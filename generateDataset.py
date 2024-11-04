@@ -1,27 +1,27 @@
 import json
 from dataclasses import dataclass
-import typing
+from typing import List, Optional, Dict, Tuple
 
 
 @dataclass
 class Dataset:
     name: str
-    meanExecutionTime: typing.Dict[str, typing.List[float] | None]
-    numberHttpRequest: typing.Dict[str, typing.List[int] | None]
-    stdExecutionTime: typing.Dict[str, typing.List[float] | None]
-    executionTime: typing.Dict[str,
-                               typing.Dict[str, typing.List[float] | None]]
-    results: typing.Dict[str, typing.Dict[str, typing.List[dict] | None]]
-    arrivalTimes: typing.Dict[str, typing.Dict[str, typing.List[float] | None]]
+    meanExecutionTime: Dict[str, List[float] | None]
+    numberHttpRequest: Dict[str, List[int] | None]
+    stdExecutionTime: Dict[str, List[float] | None]
+    executionTime: Dict[str,
+                               Dict[str, List[float] | None]]
+    results: Dict[str, Dict[str, List[dict] | None]]
+    arrivalTimes: Dict[str, Dict[str, List[float] | None]]
 
-def divideResultsIntoArrivalTime(results: typing.List[dict]) -> typing.Tuple[typing.List[dict], typing.List[float]]:
+def divideResultsIntoArrivalTime(results: List[dict]) -> Tuple[List[dict], List[float]]:
     resultsCurrated = []
     arrivalTimes = []
 
     for result in results:
         arrivalTimes.append(result.pop('_arrival_time'))
         resultsCurrated.append(result)
-    return [resultsCurrated, arrivalTimes]
+    return (resultsCurrated, arrivalTimes)
 
 def generateDatasetFromResults(filepathFullResuls: str, filepathSummaryResuls: str, name: str) -> Dataset:
     fullResuls = None
@@ -86,7 +86,7 @@ def generateDatasetFromResults(filepathFullResuls: str, filepathSummaryResuls: s
         numberHttpRequest=numberHttpRequest,
         stdExecutionTime=stdExecutionTime)
 
-def groundTruthResults(filepath)-> typing.List[dict]:
+def generateGroundTruthResults(filepath)-> List[dict]:
     data = None
     with open(filepath, 'rb') as rf:
         data = json.load(rf)

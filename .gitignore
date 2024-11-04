@@ -4,3 +4,4 @@
 /plots/query-short/*
 !plots/query-discovery/.gitkeep
 !plots/query-short/.gitkeep
+__pycache__
