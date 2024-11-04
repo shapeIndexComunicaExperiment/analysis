@@ -23,7 +23,6 @@ def divideResultsIntoArrivalTime(results: typing.List[dict]) -> typing.Tuple[typ
         resultsCurrated.append(result)
     return [resultsCurrated, arrivalTimes]
 
-
 def generateDatasetFromResults(filepathFullResuls: str, filepathSummaryResuls: str, name: str) -> Dataset:
     fullResuls = None
     summaryResults = None
@@ -86,4 +85,19 @@ def generateDatasetFromResults(filepathFullResuls: str, filepathSummaryResuls: s
         meanExecutionTime=meanExecutionTime,
         numberHttpRequest=numberHttpRequest,
         stdExecutionTime=stdExecutionTime)
-        
+
+def groundTruthResults(filepath)-> typing.List[dict]:
+    data = None
+    with open(filepath, 'rb') as rf:
+        data = json.load(rf)
+    bindings = data["results"]["bindings"]
+    resp = []
+    for binding in bindings:
+        transformedBinding = {}
+        for key, value in binding.items():
+            currentValue = '"{}"'.format(value['value'])
+            if "datatype" in value:
+                currentValue+= '^^{}'.format(value["datatype"])
+            transformedBinding[key] = currentValue
+        resp.append(transformedBinding)
+    return resp
