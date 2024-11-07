@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from typing import List, Optional, Dict, Tuple
+from typing import List, Dict, Tuple
 
 
 @dataclass
@@ -50,11 +50,12 @@ def generateDatasetFromResults(filepathFullResuls: str, filepathSummaryResuls: s
                     meanExecutionTime[queryName].append(None)
                     numberHttpRequest[queryName].append(None)
                     stdExecutionTime[queryName].append(None)
-                if field == "n_http_requests":
+                elif field == "n_http_requests":
                     numberHttpRequest[queryName].append(value)
-                if field == "execution_time":
+                elif field == "execution_time":
                     meanExecutionTime[queryName].append(value["average"])
                     stdExecutionTime[queryName].append(value["std"])
+                
 
     for queryName, versionData in fullResuls["data"].items():
         executionTime[queryName] = {}

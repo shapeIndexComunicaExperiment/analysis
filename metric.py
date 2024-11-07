@@ -26,7 +26,7 @@ def calculatePercentageReductionSeries(
 ) -> Dict[str, Optional[List[float]]]:
     resp = {}
     for query, versionInstances in instances.items():
-        resp[query] = []
+        resp[query] = [None, None, None, None, None]
         if versionInstances != None:    
             for i, val in enumerate(versionInstances):
                 currentBaseline= baseline[query]    
