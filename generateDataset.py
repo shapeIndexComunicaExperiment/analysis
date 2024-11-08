@@ -1,18 +1,18 @@
 import json
 from dataclasses import dataclass
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 
 
 @dataclass
 class Dataset:
     name: str
-    meanExecutionTime: Dict[str, List[float] | None]
-    numberHttpRequest: Dict[str, List[int] | None]
-    stdExecutionTime: Dict[str, List[float] | None]
+    meanExecutionTime: Dict[str, Optional[List[float]]]
+    numberHttpRequest: Dict[str, Optional[List[int]]]
+    stdExecutionTime: Dict[str, Optional[List[float]]]
     executionTime: Dict[str,
-                               Dict[str, List[float] | None]]
-    results: Dict[str, Dict[str, List[dict] | None]]
-    arrivalTimes: Dict[str, Dict[str, List[float] | None]]
+                               Dict[str, Optional[List[float]]]]
+    results: Dict[str, Dict[str, Optional[List[dict]]]]
+    arrivalTimes: Dict[str, Dict[str, Optional[List[float]]]]
 
 def divideResultsIntoArrivalTime(results: List[dict]) -> Tuple[List[dict], List[float]]:
     resultsCurrated = []
