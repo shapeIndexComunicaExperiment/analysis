@@ -1,17 +1,17 @@
 | Query Template         |   Average (ms) |   std (ms) |   max (ms) |
 |------------------------|----------------|------------|------------|
-| interactive-discover-1 |      0.0198023 |  0.0193934 |   0.03718  |
-| interactive-discover-2 |      0.0295138 |  0.059436  |   0.584658 |
-| interactive-discover-3 |      0.0209398 |  0.0209637 |   0.045264 |
-| interactive-discover-4 |      0.0233935 |  0.0183578 |   0.056509 |
-| interactive-discover-5 |      0.015638  |  0.0242973 |   0.052597 |
-| interactive-discover-6 |      0.0246414 |  0.0621297 |   0.617542 |
-| interactive-discover-7 |      0.0328916 |  0.0248497 |   0.096213 |
-| interactive-discover-8 |      0.0331301 |  0.0670098 |   0.579009 |
-| interactive-short-1    |      0.0457999 |  0.0281276 |   0.108018 |
-| interactive-short-2    |      0.116418  |  0.117347  |   1.05395  |
-| interactive-short-3    |      0.07744   |  0.111465  |   0.833807 |
-| interactive-short-4    |      0.0220637 |  0.0486545 |   0.462128 |
-| interactive-short-5    |      0.0410534 |  0.0743144 |   0.683143 |
-| interactive-short-6    |      0.100982  |  0.229593  |   2.34184  |
-| interactive-short-7    |      0.145818  |  0.128243  |   0.860785 |
+| interactive-discover-1 |      0.0255175 |  0.0411487 |   0.16027  |
+| interactive-discover-2 |      0.0357028 |  0.0589371 |   0.557514 |
+| interactive-discover-3 |      0.020772  |  0.0240084 |   0.056989 |
+| interactive-discover-4 |      0.0479469 |  0.0341826 |   0.15769  |
+| interactive-discover-5 |      0.0427217 |  0.128892  |   1.22881  |
+| interactive-discover-6 |      0.0205133 |  0.0223618 |   0.048231 |
+| interactive-discover-7 |      0.0212108 |  0.0195655 |   0.051565 |
+| interactive-discover-8 |      0.0294924 |  0.0571058 |   0.563364 |
+| interactive-short-1    |      0.0567782 |  0.0442225 |   0.157424 |
+| interactive-short-2    |      0.154156  |  0.189214  |   1.8159   |
+| interactive-short-3    |      0.0943691 |  0.0577281 |   0.238885 |
+| interactive-short-4    |      0.022006  |  0.0167595 |   0.031884 |
+| interactive-short-5    |      0.0532262 |  0.046396  |   0.33212  |
+| interactive-short-6    |      0.0787384 |  0.0685979 |   0.286787 |
+| interactive-short-7    |      0.155046  |  0.17014   |   1.51953  |
