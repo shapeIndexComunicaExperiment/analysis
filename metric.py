@@ -1,8 +1,16 @@
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict,Set
 from generateDataset import Dataset
 from numbers import Number
 
-
+def internalResultConsistency(result_runs: List[Set[str]])->bool:
+    if len(result_runs) ==0:
+        return True
+    first_result = result_runs[0]
+    for i, repetition_result in enumerate(result_runs):
+        if not first_result==repetition_result:
+            return False
+    return True
+    
 def calculatePercentageUsefulLinks(
     instances: Dict[str, List[int]],
     groundTruth: Dict[str, List[int]],

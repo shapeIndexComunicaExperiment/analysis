@@ -1,28 +1,30 @@
 import json
 from dataclasses import dataclass
 from typing import List, Dict, Tuple, Optional, Set
+from collections import OrderedDict
 
 
 @dataclass
 class Dataset:
     name: str
-    meanExecutionTime: Dict[str, Optional[List[float]]]
-    numberHttpRequest: Dict[str, Optional[List[int]]]
-    stdExecutionTime: Dict[str, Optional[List[float]]]
+    meanExecutionTime: Dict[str, List[Optional[float]]]
+    numberHttpRequest: Dict[str, List[Optional[int]]]
+    stdExecutionTime: Dict[str, List[Optional[float]]]
     executionTime: Dict[str,
                         Dict[str, Optional[List[float]]]]
-    results: Dict[str, Dict[str, Optional[List[Set[dict]]]]]
-    arrivalTimes: Dict[str, Dict[str, Optional[List[float]]]]
-    numberResults: Dict[str, Optional[List[int]]]
+    results: Dict[str, Dict[str, List[Set[str]]]]
+    arrivalTimes: Dict[str, Dict[str, List[List[Set[Dict]]]]]
+    numberResults: Dict[str, List[Optional[int]]]
 
 
-def divideResultsIntoArrivalTime(results: List[dict]) -> Tuple[List[dict], List[float]]:
-    resultsCurrated = []
+def divideResultsIntoArrivalTime(results: List[dict]) -> Tuple[Set[str], List[float]]:
+    resultsCurrated = set()
     arrivalTimes = []
 
     for result in results:
         arrivalTimes.append(result.pop('_arrival_time'))
-        resultsCurrated.append(result)
+        ordered_results = dict(sorted(result.items()))
+        resultsCurrated.add(json.dumps(ordered_results))
     return (resultsCurrated, arrivalTimes)
 
 
@@ -75,14 +77,13 @@ def generateDatasetFromResults(filepathFullResuls: str, filepathSummaryResuls: s
                 if (type(repetition) != str):
                     res = divideResultsIntoArrivalTime(
                         repetition['results'])
-                    print(res[0])
-                    results[queryName][version].append(set(res[0]))
+                    results[queryName][version].append(res[0])
                     executionTime[queryName][version].append(
                         repetition['execution_time'])
                     arrivalTimes[queryName][version].append(res[1])
                 else:
                     executionTime[queryName][version] = None
-                    results[queryName][version] = None
+                    #results[queryName][version] = None
                     arrivalTimes[queryName][version] = None
     return Dataset(
         name=name,
