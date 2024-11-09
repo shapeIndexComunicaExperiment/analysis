@@ -1,21 +1,21 @@
 import json
 from dataclasses import dataclass
 from typing import List, Dict, Tuple, Optional, Set
-from collections import OrderedDict
 
 
 @dataclass
 class Dataset:
     name: str
+    
     meanExecutionTime: Dict[str, List[Optional[float]]]
     numberHttpRequest: Dict[str, List[Optional[int]]]
     stdExecutionTime: Dict[str, List[Optional[float]]]
+    numberResults: Dict[str, List[Optional[int]]]
+    
     executionTime: Dict[str,
                         Dict[str, Optional[List[float]]]]
     results: Dict[str, Dict[str, List[Set[str]]]]
     arrivalTimes: Dict[str, Dict[str, List[List[Set[Dict]]]]]
-    numberResults: Dict[str, List[Optional[int]]]
-
 
 def divideResultsIntoArrivalTime(results: List[dict]) -> Tuple[Set[str], List[float]]:
     resultsCurrated = set()
@@ -23,8 +23,7 @@ def divideResultsIntoArrivalTime(results: List[dict]) -> Tuple[Set[str], List[fl
 
     for result in results:
         arrivalTimes.append(result.pop('_arrival_time'))
-        ordered_results = dict(sorted(result.items()))
-        resultsCurrated.add(json.dumps(ordered_results))
+        resultsCurrated.add(str(result))
     return (resultsCurrated, arrivalTimes)
 
 
@@ -83,7 +82,7 @@ def generateDatasetFromResults(filepathFullResuls: str, filepathSummaryResuls: s
                     arrivalTimes[queryName][version].append(res[1])
                 else:
                     executionTime[queryName][version] = None
-                    #results[queryName][version] = None
+                    results[queryName][version] = None
                     arrivalTimes[queryName][version] = None
     return Dataset(
         name=name,
