@@ -42,7 +42,7 @@ def calculatePercentageReductionSeries(
                 if currentBaseline is not None and currentBaseline[i] is not None and val is None:
                     resp[query][i] = None
                 elif val is None:
-                      resp[query][i] = -1
+                      resp[query][i] = None
                 elif currentBaseline is not None and currentBaseline[i] is not None :
                     resp[query][i] = calculatePercentageReduction(val, currentBaseline[i])
                     
