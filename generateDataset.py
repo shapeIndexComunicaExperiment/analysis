@@ -15,7 +15,21 @@ class Dataset:
     executionTime: Dict[str,
                         Dict[str, Optional[List[float]]]]
     results: Dict[str, Dict[str, List[Set[str]]]]
-    arrivalTimes: Dict[str, Dict[str, List[List[Set[Dict]]]]]
+    arrivalTimes: Dict[str, Dict[str, List[List[float]]]]
+    
+    def _resultsArrivalNth(self, query_name:str, version:str, nth:int)->List[float]:
+        arrival_times = self.arrivalTimes[query_name][version]
+        first_results = []
+        for times in arrival_times:
+            first_results.append(times[nth])
+        return first_results
+    
+    def firstResultsTime(self, query_name:str, version:str)->List[float]:
+        return self._resultsArrivalNth(query_name, version,1)
+    
+    def lastResultsTime(self, query_name:str, version:str)->List[float]:
+        return self._resultsArrivalNth(query_name, version,-1)
+        
 
 def divideResultsIntoArrivalTime(results: List[dict]) -> Tuple[Set[str], List[float]]:
     resultsCurrated = set()
@@ -23,7 +37,7 @@ def divideResultsIntoArrivalTime(results: List[dict]) -> Tuple[Set[str], List[fl
 
     for result in results:
         arrivalTimes.append(result.pop('_arrival_time'))
-        resultsCurrated.add(str(result))
+        resultsCurrated.add(json.dumps(dict(sorted(result.items()))))
     return (resultsCurrated, arrivalTimes)
 
 

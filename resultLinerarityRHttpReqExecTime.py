@@ -21,7 +21,7 @@ def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, s
 
     ax.xaxis.set_major_locator(MultipleLocator(x_axis_tick))
     ax.yaxis.set_major_locator(MultipleLocator(y_axis_tick))
-    ax.tick_params(axis='y', rotation=20)
+    ax.tick_params(axis='x', rotation=20)
 
     ax.set_xlabel('% reduction HTTP request')
     ax.set_ylabel('% reduction execution time')

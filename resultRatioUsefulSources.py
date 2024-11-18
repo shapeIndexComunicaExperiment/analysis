@@ -3,14 +3,16 @@ from texttable import Texttable
 import latextable
 from tabulate import tabulate
 import sys
-from typing import List, Dict
+from typing import List, Dict, Optional
 import os
-from generateDataset import generateDatasetFromResults 
+from generateDataset import generateDatasetFromResults, Dataset
 
-def generateRatio(dataset: Dict[str, List[int] | None])-> Dict[str, List[float] | None]:
+def generateRatio(dataset: Dataset)-> Dict[str, List[float] | None]:
     ratioUsefullHttpRequest = {}
     for queryTemplate, queryResults in dataset.numberHttpRequest.items():
         ratioUsefullHttpRequest[queryTemplate] = []
+        if sources is None:
+            return {}
         currentSources = sources[queryTemplate]
         for i, nHttpRequest in enumerate(queryResults):
             if nHttpRequest is not None and currentSources["v{}".format(i)] is not None:
@@ -25,7 +27,7 @@ artefactFolder = "./artefact/ratio_useful_resources"
 head = ["Query template", "v0", "v1", "v2", "v3", "v4"]
 
 sourceFilePath = "./results/oracle/sources.json"
-sources = None
+sources: Optional[Dict[str, Dict[str, List[str]]]] = None
 with open(sourceFilePath, 'rb') as rf:
     sources = json.load(rf)
 
@@ -45,8 +47,13 @@ rowsShapeIndex = []
 for queryTemplate, ratiosShapeIndex in ratioUsefullHttpRequestShapeIndex.items():
     currentRation = []
     ratiosTypeIndex = ratioUsefullHttpRequestTypeIndex[queryTemplate]
+    if ratiosShapeIndex is None:
+        continue
     for i, ratioShapeIndex in enumerate(ratiosShapeIndex):
-        ratioTypeIndex = ratiosTypeIndex[i]
+        if ratiosTypeIndex is not None:
+            ratioTypeIndex = ratiosTypeIndex[i]
+        else:
+            ratioTypeIndex = None
         if ratioShapeIndex is None:
             ratioShapeIndex = "-"
         else:
@@ -62,7 +69,7 @@ for queryTemplate, ratiosShapeIndex in ratioUsefullHttpRequestShapeIndex.items()
     currentRow = [queryTemplate] + currentRation
     rowsShapeIndex.append(currentRow)
 
-caption= "Even using the shape index (denominator) compare to the type-index with LDP (numerator) for the majority of the query their is a low ratio of useful resources aquired."
+caption= "Even with the shape index approach (denominator), most queries have a percentage of useful resources acquired. In some cases, the type index with LDP (numerator) can produce a percentage of 100\\%, whereas the shape index approach never produces a percentage as close to 100\\%."
 label="tab:ratioUsefulResources"
 
 textTable = Texttable()
