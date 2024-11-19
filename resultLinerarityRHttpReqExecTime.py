@@ -7,12 +7,16 @@ from scipy.stats import pearsonr
 from typing import List, Dict, Tuple, Optional
 import os
 import json
+from matplotlib import rcParams
+
+rcParams.update({'font.size': 12})
+
 
 artefactFolder = "./artefact/http_req_exec_time_relation"
 
 
 def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, savePathNoExtension: str) -> None:
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(8,7))
 
     ax.grid(axis="both")
 

@@ -3,4 +3,8 @@ source ./venv/bin/activate
 python resultLinerarityRHttpReqExecTime.py
 python resultQueryContainmentTable.py
 python resultRatioUsefulSources.py
-python resultEvalVariationPercentageShapeIndex.py
+
+python resultVariationPercentageShapeIndex.py
+python resultVariationPercentageEntry.py
+python resultVariationShapeDetail.py
+python resultVariationApproach.py

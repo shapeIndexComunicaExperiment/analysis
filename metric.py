@@ -1,7 +1,4 @@
 from typing import List, Optional, Dict,Set
-from generateDataset import Dataset
-from numbers import Number
-import numpy as np
 
 def internalResultConsistency(result_runs: List[Set[str]])->bool:
     if len(result_runs) ==0:
@@ -30,9 +27,9 @@ def calculatePercentageReduction(val: int|float, baseline: int|float) -> float:
     return (baseline - val) / baseline * 100
 
 def calculatePercentageReductionSeries(
-    instances: Dict[str, Optional[List[int|float]]],
-    baseline: Dict[str, Optional[List[int|float]]],
-) -> Dict[str, Optional[List[float]]]:
+    instances: Dict[str, Optional[List[int|float|None]]],
+    baseline: Dict[str, Optional[List[int|float|None]]],
+) -> Dict[str, List[Optional[float]]]:
     resp = {}
     for query, versionInstances in instances.items():
         resp[query] = [None, None, None, None, None]
