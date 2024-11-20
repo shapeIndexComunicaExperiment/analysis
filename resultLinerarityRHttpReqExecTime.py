@@ -26,7 +26,7 @@ def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, s
 
     ax.xaxis.set_major_locator(MultipleLocator(x_axis_tick))
     ax.yaxis.set_major_locator(MultipleLocator(y_axis_tick))
-    ax.tick_params(axis='x', rotation=20)
+    ax.tick_params(axis='x', rotation=30)
     
     ax.xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
     statPath = mpatches.Patch(color="None", label=f'PCC = {pcc:.2f}, p-value ={pvalue:.2E}')
