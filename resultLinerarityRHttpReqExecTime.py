@@ -93,8 +93,30 @@ shapeIndexMinimalPathSummary = "./results/shape-minimal/summary_shape_index_resu
 shapeIndexMinimalDataset = generateDatasetFromResults(
     shapeIndexMinimalPathResult, shapeIndexMinimalPathSummary, "shapeMinimal")
 
-shapeIndexDatasets = [shapeIndexDataset, shapeIndex20Dataset, shapeIndex50Dataset,
-                      shapeIndex80Dataset, shapeIndexInnerDataset, shapeIndexMinimalDataset]
+shapeIndex20EntryPathResult = "./results/shape-entry-20-percent/shape_index_result.json"
+shapeIndex20EntryPathSummary = "./results/shape-entry-20-percent/summary_shape_index_result.json"
+shapeIndex20EntryDataset = generateDatasetFromResults(shapeIndex20PathResult, shapeIndex20PathSummary, "shape index entries 20%")
+
+shapeIndex50EntryPathResult = "./results/shape-entry-50-percent/shape_index_result.json"
+shapeIndex50EntryPathSummary = "./results/shape-entry-50-percent/summary_shape_index_result.json"
+shapeIndex50EntryDataset = generateDatasetFromResults(shapeIndex50PathResult, shapeIndex50PathSummary, "shape index entries 50%")
+
+shapeIndex80EntryPathResult = "./results/shape-entry-80-percent/shape_index_result.json"
+shapeIndex80EntryPathSummary = "./results/shape-entry-80-percent/summary_shape_index_result.json"
+shapeIndex80EntryDataset = generateDatasetFromResults(shapeIndex80PathResult, shapeIndex80PathSummary, "shape index entries 80%")
+
+
+shapeIndexDatasets = [
+    shapeIndexDataset,
+    shapeIndex20Dataset,
+    shapeIndex50Dataset,
+    shapeIndex80Dataset,
+    shapeIndex20EntryDataset,
+    shapeIndex50EntryDataset,
+    shapeIndex80EntryDataset,
+    shapeIndexInnerDataset,
+    shapeIndexMinimalDataset,
+]
 
 generalReductionHttpRequest = []
 generalReductionExec = []
