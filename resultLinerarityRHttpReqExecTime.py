@@ -8,6 +8,7 @@ from typing import List, Dict, Tuple, Optional
 import os
 import json
 from matplotlib import rcParams
+import matplotlib.patches as mpatches
 
 rcParams.update({'font.size': 12})
 
@@ -15,7 +16,7 @@ rcParams.update({'font.size': 12})
 artefactFolder = "./artefact/http_req_exec_time_relation"
 
 
-def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, savePathNoExtension: str) -> None:
+def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, savePathNoExtension: str, pcc:float,pvalue:float) -> None:
     fig, ax = plt.subplots(figsize=(8,7))
 
     ax.grid(axis="both")
@@ -26,7 +27,9 @@ def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, s
     ax.xaxis.set_major_locator(MultipleLocator(x_axis_tick))
     ax.yaxis.set_major_locator(MultipleLocator(y_axis_tick))
     ax.tick_params(axis='x', rotation=20)
-
+    
+    statPath = mpatches.Patch(color="None", label=f'PCC={pcc:2f}, p-value: {pvalue}')
+    ax.legend(handles=[statPath],handlelength=0, handleheight=0)
     ax.set_xlabel('% reduction HTTP request')
     ax.set_ylabel('% reduction execution time')
 
@@ -165,5 +168,21 @@ with open(os.path.join(artefactFolder, "perason_analysis.json"), "w") as outfile
     json_object = json.dumps(pearsonrAnalysis, indent=4)
     outfile.write(json_object)
 
-generatePlot(better_dataset[0], better_dataset[1],25,20,os.path.join(artefactFolder,"http_req_exec_time_cor_better"))
-generatePlot(worse_dataset[0], worse_dataset[1],100,20,os.path.join(artefactFolder,"http_req_exec_time_cor_worse"))
+generatePlot(
+    better_dataset[0],
+    better_dataset[1],
+    25,
+    20,
+    os.path.join(artefactFolder,"http_req_exec_time_cor_better"),
+    PCC_better_performance[0].item(),
+    PCC_better_performance[1].item()
+)
+generatePlot(
+    worse_dataset[0],
+    worse_dataset[1],
+    100,
+    20,
+    os.path.join(artefactFolder,"http_req_exec_time_cor_worse"),
+    PCC_worse_performance[0].item(),
+    PCC_worse_performance[1].item()
+    )
