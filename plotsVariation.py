@@ -5,6 +5,7 @@ import statistics
 from typing import List, Optional, Dict, Tuple
 from generateDataset import Dataset
 from metric import calculatePercentageReductionSeries
+from matplotlib.ticker import MultipleLocator
 
 QUERY_MAP = {
         "interactive-discover-1": "D1",
@@ -57,7 +58,7 @@ def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtensi
     width = 1/len_instance
     multiplier = 0
     
-    fig, ax = plt.subplots(figsize=(10, 8))
+    fig, ax = plt.subplots(figsize=(10, 9))
 
     for dataset, measurements in results.items():
         offset = width * multiplier + width/len(results)
@@ -73,6 +74,7 @@ def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtensi
                    boxprops=dict(facecolor=color_map[dataset]),
                   )
         
+    ax.yaxis.set_major_locator(MultipleLocator(50))
     ax.set_ylabel(yaxisLabel)
     ax.set_xlabel("query template")
     ax.set_xticks(x + width, QUERIES)
