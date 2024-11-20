@@ -79,7 +79,7 @@ def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtensi
     ax.set_xlabel("query template")
     ax.set_xticks(x + width, QUERIES)
     ax.grid(axis="both")
-    ax.legend(loc='upper left',  fontsize="20")
+    ax.legend(loc='upper left',  fontsize="18")
     
     fig.tight_layout()
     fig.savefig("{}.svg".format(savePathNoExtension), format="svg")
