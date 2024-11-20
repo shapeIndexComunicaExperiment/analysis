@@ -46,7 +46,7 @@ def statisticTemplateMetric(serie:Dict[str, List[Optional[float|int]]])->Dict[st
             "std": std,
             "min":min_val,
             "max": max_val,
-            "raw": list(map(lambda x: x if x != None else 0, val))
+            "raw": list(map(lambda x: x if x != None else np.nan, val))
         }
     return stat
 
@@ -74,7 +74,7 @@ def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtensi
                    boxprops=dict(facecolor=color_map[dataset]),
                   )
         
-    ax.yaxis.set_major_locator(MultipleLocator(50))
+    ax.yaxis.set_major_locator(MultipleLocator(0.5))
     ax.set_ylabel(yaxisLabel)
     ax.set_xlabel("query template")
     ax.set_xticks(x + width, QUERIES)

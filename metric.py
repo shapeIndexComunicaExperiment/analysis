@@ -24,7 +24,8 @@ def calculatePercentageUsefulLinks(
 
 
 def calculatePercentageReduction(val: int|float, baseline: int|float) -> float:
-    return (baseline - val) / baseline * 100
+    return (val/baseline)
+    #return (baseline - val) / baseline * 100
 
 def calculatePercentageReductionSeries(
     instances: Dict[str, Optional[List[int|float|None]]],

@@ -30,8 +30,8 @@ def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, s
     
     statPath = mpatches.Patch(color="None", label=f'PCC = {pcc:.2f}, p-value ={pvalue:.2E}')
     ax.legend(handles=[statPath],handlelength=0, handleheight=0)
-    ax.set_xlabel('% reduction HTTP request')
-    ax.set_ylabel('% reduction execution time')
+    ax.set_xlabel('ratio of HTTP request')
+    ax.set_ylabel('ratio of execution time')
 
     fig.savefig("{}.svg".format(savePathNoExtension), format="svg")
     fig.savefig("{}.eps".format(savePathNoExtension), format="eps")
@@ -138,9 +138,9 @@ np_x_general_reduction_http_req = np.array(generalReductionHttpRequest)
 np_y_general_reduction_exec = np.array(generalReductionExec)
 
 (
+    worse_dataset,
     better_dataset,
-    worse_dataset
-) = dividePoints(np_x_general_reduction_http_req, np_y_general_reduction_exec, -125)
+) = dividePoints(np_x_general_reduction_http_req, np_y_general_reduction_exec, 1)
 
 PCC_worse_performance = pearsonr(
     worse_dataset[0], worse_dataset[1])
@@ -171,8 +171,8 @@ with open(os.path.join(artefactFolder, "perason_analysis.json"), "w") as outfile
 generatePlot(
     better_dataset[0],
     better_dataset[1],
-    25,
-    20,
+    0.1,
+    0.1,
     os.path.join(artefactFolder,"http_req_exec_time_cor_better"),
     PCC_better_performance[0].item(),
     PCC_better_performance[1].item()
@@ -180,8 +180,8 @@ generatePlot(
 generatePlot(
     worse_dataset[0],
     worse_dataset[1],
-    100,
-    20,
+    1,
+    0.5,
     os.path.join(artefactFolder,"http_req_exec_time_cor_worse"),
     PCC_worse_performance[0].item(),
     PCC_worse_performance[1].item()
