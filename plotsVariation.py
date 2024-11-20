@@ -45,7 +45,7 @@ def statisticTemplateMetric(serie:Dict[str, List[Optional[float|int]]])->Dict[st
             "std": std,
             "min":min_val,
             "max": max_val,
-            "raw": list(map(lambda x: x if x != None else np.nan, val))
+            "raw": list(map(lambda x: x if x != None else 0, val))
         }
     return stat
 
