@@ -74,6 +74,7 @@ def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtensi
                   )
         
     ax.set_ylabel(yaxisLabel)
+    ax.set_xlabel("query template")
     ax.set_xticks(x + width, QUERIES)
     ax.grid(axis="both")
     ax.legend()

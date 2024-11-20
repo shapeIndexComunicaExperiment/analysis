@@ -28,7 +28,7 @@ instances = [shapeIndexDataset, ldpDataset]
 
 generatePlot(
     result_object_time,
-    '%reduction query execution time',
+    '% reduction query execution time',
     len(instances),
     color_map=color_map, 
     savePathNoExtension=os.path.join(artefactFolder,"reduction_query_execution_time")
@@ -36,7 +36,7 @@ generatePlot(
 
 generatePlot(
     result_object_http,
-    '%reduction number HTTP requests',
+    '% reduction number HTTP requests',
     len(instances),
     color_map=color_map, 
     savePathNoExtension=os.path.join(artefactFolder,"reduction_number_HTTP_requests")
