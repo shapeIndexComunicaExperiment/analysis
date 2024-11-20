@@ -55,10 +55,10 @@ def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtensi
     rcParams.update({'font.size': fontSize})
 
     x = np.arange(len(QUERIES))
-    width = 1/len_instance
+    width = 1/len_instance - 0.1
     multiplier = 0
     
-    fig, ax = plt.subplots(figsize=(10, 9))
+    fig, ax = plt.subplots(figsize=(10, 8))
 
     for dataset, measurements in results.items():
         offset = width * multiplier + width/len(results)
