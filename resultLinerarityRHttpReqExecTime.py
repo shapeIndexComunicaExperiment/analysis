@@ -188,7 +188,7 @@ generatePlot(
     worse_dataset[0],
     worse_dataset[1],
     1.0,
-    0.5,
+    0.1,
     os.path.join(artefactFolder,"http_req_exec_time_cor_worse"),
     PCC_worse_performance[0].item(),
     PCC_worse_performance[1].item()
