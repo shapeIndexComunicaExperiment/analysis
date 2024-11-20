@@ -2,7 +2,7 @@ from generateDataset import generateDatasetFromResults
 from metric import calculatePercentageReductionSeries
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.ticker import MultipleLocator
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 from scipy.stats import pearsonr
 from typing import List, Dict, Tuple, Optional
 import os
@@ -28,6 +28,7 @@ def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, s
     ax.yaxis.set_major_locator(MultipleLocator(y_axis_tick))
     ax.tick_params(axis='x', rotation=20)
     
+    ax.xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
     statPath = mpatches.Patch(color="None", label=f'PCC = {pcc:.2f}, p-value ={pvalue:.2E}')
     ax.legend(handles=[statPath],handlelength=0, handleheight=0)
     ax.set_xlabel('ratio of HTTP request')
@@ -55,6 +56,12 @@ def dividePoints(x: np.array, y: np.array, threshold: float) -> Tuple[Tuple[np.a
         if val > threshold:
             x_right.append(val)
             y_right.append(y[i])
+        elif val == threshold:
+            x_right.append(val)
+            y_right.append(y[i])
+            
+            x_left.append(val)
+            y_left.append(y[i])
         else:
             x_left.append(val)
             y_left.append(y[i])
@@ -180,7 +187,7 @@ generatePlot(
 generatePlot(
     worse_dataset[0],
     worse_dataset[1],
-    1,
+    1.0,
     0.5,
     os.path.join(artefactFolder,"http_req_exec_time_cor_worse"),
     PCC_worse_performance[0].item(),
