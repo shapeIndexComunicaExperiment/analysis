@@ -51,7 +51,7 @@ def statisticTemplateMetric(serie:Dict[str, List[Optional[float|int]]])->Dict[st
     return stat
 
 
-def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtension, fontSize=13):
+def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtension, fontSize=18):
     rcParams.update({'font.size': fontSize})
 
     x = np.arange(len(QUERIES))

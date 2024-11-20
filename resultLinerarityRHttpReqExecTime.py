@@ -10,7 +10,7 @@ import json
 from matplotlib import rcParams
 import matplotlib.patches as mpatches
 
-rcParams.update({'font.size': 12})
+rcParams.update({'font.size': 18})
 
 
 artefactFolder = "./artefact/http_req_exec_time_relation"
