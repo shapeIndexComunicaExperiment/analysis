@@ -33,6 +33,8 @@ def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, s
     ax.legend(handles=[statPath],handlelength=0, handleheight=0)
     ax.set_xlabel('ratio of HTTP request')
     ax.set_ylabel('ratio of execution time')
+    
+    fig.tight_layout()
 
     fig.savefig("{}.svg".format(savePathNoExtension), format="svg")
     fig.savefig("{}.eps".format(savePathNoExtension), format="eps")

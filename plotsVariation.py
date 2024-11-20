@@ -81,6 +81,7 @@ def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtensi
     ax.grid(axis="both")
     ax.legend()
     
+    fig.tight_layout()
     fig.savefig("{}.svg".format(savePathNoExtension), format="svg")
     fig.savefig("{}.eps".format(savePathNoExtension), format="eps")
 
