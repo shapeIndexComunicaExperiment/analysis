@@ -15,6 +15,13 @@ rcParams.update({'font.size': 18})
 
 artefactFolder = "./artefact/http_req_exec_time_relation"
 
+def slopeLinearRegression(x: np.array, y: np.array):
+    n = len(x)
+    x_mean = np.mean(x)
+    y_mean = np.mean(y)
+    m = np.sum((x - x_mean) * (y - y_mean)) / np.sum((x - x_mean)**2)
+    b = y_mean - m * x_mean
+    return m
 
 def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, savePathNoExtension: str, pcc:float,pvalue:float) -> None:
     fig, ax = plt.subplots(figsize=(8,7))
@@ -161,17 +168,22 @@ PCC_overall = pearsonr(np_x_general_reduction_http_req,
 pearsonrAnalysis = {
     "PCC_worse_performance": {
         "PCC": PCC_worse_performance[0].item(),
-        "Pvalue": PCC_worse_performance[1].item()
+        "Pvalue": PCC_worse_performance[1].item(),
+        "slope": slopeLinearRegression(worse_dataset[0], worse_dataset[1])
     },
     "PCC_better_performance": {
         "PCC": PCC_better_performance[0].item(),
-        "Pvalue": PCC_better_performance[1].item()
+        "Pvalue": PCC_better_performance[1].item(),
+        "slope": slopeLinearRegression(better_dataset[0], better_dataset[1])
+
     },
     "PCC_overall": {
         "PCC": PCC_overall[0].item(),
-        "Pvalue": PCC_overall[1].item()
+        "Pvalue": PCC_overall[1].item(),
+        "slope": slopeLinearRegression(np_x_general_reduction_http_req, np_y_general_reduction_exec)
     }
 }
+
 
 with open(os.path.join(artefactFolder, "perason_analysis.json"), "w") as outfile:
     json_object = json.dumps(pearsonrAnalysis, indent=4)

@@ -40,7 +40,8 @@ generatePlot(
     result_object_time,
     'ratio execution time',
     len(instances),
-    color_map=color_map, 
+    color_map=color_map,
+    deactivate_y_axis=False,
     savePathNoExtension=os.path.join(artefactFolder,"reduction_query_execution_time")
     )
 
@@ -48,6 +49,7 @@ generatePlot(
     result_object_http,
     'ratio HTTP request',
     len(instances),
-    color_map=color_map, 
+    color_map=color_map,
+    deactivate_y_axis=False,
     savePathNoExtension=os.path.join(artefactFolder,"reduction_number_HTTP_requests")
     )

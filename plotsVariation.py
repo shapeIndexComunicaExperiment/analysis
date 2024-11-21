@@ -51,7 +51,7 @@ def statisticTemplateMetric(serie:Dict[str, List[Optional[float|int]]])->Dict[st
     return stat
 
 
-def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtension, fontSize=25):
+def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtension, deactivate_y_axis=True, deactivate_x_axis_title=True, fontSize=25):
     rcParams.update({'font.size': fontSize})
 
     x = np.arange(len(QUERIES))
@@ -75,13 +75,19 @@ def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtensi
                   )
         
     ax.yaxis.set_major_locator(MultipleLocator(0.5))
-    ax.set_ylabel(yaxisLabel)
-    ax.set_xlabel("query template")
+    if deactivate_y_axis:
+        ax.set_yticks([])
+        ax.set_yticklabels([])
+    else:
+        ax.set_ylabel(yaxisLabel)
+    if not deactivate_x_axis_title:
+        ax.set_xlabel("query template")
     ax.set_xticks(x + width, QUERIES)
     ax.grid(axis="both")
     ax.legend(loc='upper left',  fontsize="18")
     
     fig.tight_layout()
+    
     fig.savefig("{}.svg".format(savePathNoExtension), format="svg")
     fig.savefig("{}.eps".format(savePathNoExtension), format="eps")
 
