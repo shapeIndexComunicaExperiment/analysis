@@ -75,8 +75,9 @@ def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtensi
                   )
         
     ax.yaxis.set_major_locator(MultipleLocator(0.5))
+    ax.set_ylim(0, 9)
     if deactivate_y_axis:
-        ax.set_yticks([])
+        #ax.set_yticks([])
         ax.set_yticklabels([])
     else:
         ax.set_ylabel(yaxisLabel)
