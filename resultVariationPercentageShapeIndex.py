@@ -51,5 +51,6 @@ generatePlot(
     len(instances),
     color_map=color_map,
     deactivate_y_axis=False,
+    ylim=None,
     savePathNoExtension=os.path.join(artefactFolder,"reduction_number_HTTP_requests")
     )

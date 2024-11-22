@@ -38,6 +38,7 @@ generatePlot(
     result_object_http,
     'ratio HTTP request',
     len(instances),
-    color_map=color_map, 
+    color_map=color_map,
+    ylim=None,
     savePathNoExtension=os.path.join(artefactFolder,"reduction_number_HTTP_requests")
     )

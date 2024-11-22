@@ -51,7 +51,7 @@ def statisticTemplateMetric(serie:Dict[str, List[Optional[float|int]]])->Dict[st
     return stat
 
 
-def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtension, deactivate_y_axis=True, deactivate_x_axis_title=True, fontSize=25):
+def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtension, deactivate_y_axis=True, deactivate_x_axis_title=True, fontSize=25, ylim=9.5):
     rcParams.update({'font.size': fontSize})
 
     x = np.arange(len(QUERIES))
@@ -75,7 +75,8 @@ def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtensi
                   )
         
     ax.yaxis.set_major_locator(MultipleLocator(0.5))
-    ax.set_ylim(0, 9.5)
+    if ylim is not None:
+        ax.set_ylim(0, ylim)
     if deactivate_y_axis:
         #ax.set_yticks([])
         ax.set_yticklabels([])
