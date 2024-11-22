@@ -32,6 +32,7 @@ generatePlot(
     len(instances),
     color_map=color_map,
     deactivate_y_axis=False,
+    deactivate_x_axis_title=False,
     savePathNoExtension=os.path.join(artefactFolder,"reduction_query_execution_time")
     )
 
@@ -41,5 +42,6 @@ generatePlot(
     len(instances),
     color_map=color_map,
     deactivate_y_axis=False,
+    deactivate_x_axis_title=False,
     savePathNoExtension=os.path.join(artefactFolder,"reduction_number_HTTP_requests")
     )
