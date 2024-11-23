@@ -6,6 +6,7 @@ from typing import List, Optional, Dict, Tuple
 from generateDataset import Dataset
 from metric import calculatePercentageReductionSeries
 from matplotlib.ticker import MultipleLocator
+from matplotlib import rcParams, ticker
 import copy
 
 QUERY_MAP = {
@@ -60,7 +61,7 @@ def generatePlot(results,
                  deactivate_y_axis=False,
                  deactivate_x_axis_title=False,
                  fontSize=25,
-                 ylim=9.5,
+                 ylim=11,
                  query_to_skip=[]
                  ):
     rcParams.update({'font.size': fontSize})
@@ -111,6 +112,7 @@ def generatePlot(results,
         ax.set_xlabel("query template")
         
     ax.set_yscale('log', base=2)
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: '{:.1f}'.format(val)))
     ax.axhline(1, color='gray', linestyle='--', label='No performance change')
     ax.set_xticks(x + width, queries)
     ax.grid(axis="both")

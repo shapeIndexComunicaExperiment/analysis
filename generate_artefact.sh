@@ -8,3 +8,5 @@ python resultVariationPercentageShapeIndex.py
 python resultVariationPercentageEntry.py
 python resultVariationShapeDetail.py
 python resultVariationApproach.py
+
+python resultVariationShapeIndexAll.py
