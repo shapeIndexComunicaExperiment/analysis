@@ -79,7 +79,7 @@ def generatePlot(results,
     width = 1/len_instance - 0.1
     multiplier = 0
     
-    fig, ax = plt.subplots(figsize=(12, 10))
+    fig, ax = plt.subplots(figsize=(10, 10))
 
     for dataset, measurements in results.items():
         offset = width * multiplier + width/len(results)
