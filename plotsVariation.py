@@ -79,7 +79,7 @@ def generatePlot(results,
     width = 1/len_instance - 0.1
     multiplier = 0
     
-    fig, ax = plt.subplots(figsize=(10, 10))
+    fig, ax = plt.subplots(figsize=(12, 10))
 
     for dataset, measurements in results.items():
         offset = width * multiplier + width/len(results)
@@ -101,7 +101,7 @@ def generatePlot(results,
                   )
         
     if ylim is not None:
-        ax.set_ylim(0, ylim)
+        ax.set_ylim(0.25, ylim)
     if deactivate_y_axis:
         #ax.set_yticks([])
         ax.set_yticklabels([])
