@@ -10,7 +10,7 @@ import json
 from matplotlib import rcParams
 import matplotlib.patches as mpatches
 
-rcParams.update({'font.size': 18})
+rcParams.update({'font.size': 25})
 
 
 artefactFolder = "./artefact/http_req_exec_time_relation"
@@ -24,7 +24,7 @@ def slopeLinearRegression(x: np.array, y: np.array):
     return m
 
 def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, savePathNoExtension: str, pcc:float,pvalue:float) -> None:
-    fig, ax = plt.subplots(figsize=(8,7))
+    fig, ax = plt.subplots(figsize=(10,10))
 
     ax.grid(axis="both")
 
@@ -33,7 +33,7 @@ def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, s
 
     ax.xaxis.set_major_locator(MultipleLocator(x_axis_tick))
     ax.yaxis.set_major_locator(MultipleLocator(y_axis_tick))
-    ax.tick_params(axis='x', rotation=30)
+    ax.tick_params(axis='x', rotation=35)
     
     ax.xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
     statPath = mpatches.Patch(color="None", label=f'PCC = {pcc:.2f}, p-value ={pvalue:.2E}')
