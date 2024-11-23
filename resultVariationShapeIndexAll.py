@@ -158,7 +158,7 @@ rcParams.update({'font.size': fontSize})
 x = np.arange(len(queries))
 
 
-fig, axs = plt.subplots(1,3, sharey=True, figsize=(30, 10))
+fig, axs = plt.subplots(1,3, sharey=True, figsize=(35, 10))
 
 for i, results in enumerate(variations):
     len_instance = len(results)
