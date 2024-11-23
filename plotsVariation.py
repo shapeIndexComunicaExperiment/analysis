@@ -6,6 +6,7 @@ from typing import List, Optional, Dict, Tuple
 from generateDataset import Dataset
 from metric import calculatePercentageReductionSeries
 from matplotlib.ticker import MultipleLocator
+import copy
 
 QUERY_MAP = {
         "interactive-discover-1": "D1",
@@ -25,7 +26,7 @@ QUERY_MAP = {
         "interactive-short-7": "S7"
     }
 
-QUERIES = QUERY_MAP.values()
+QUERIES = list(QUERY_MAP.values())
 
 def statisticTemplateMetric(serie:Dict[str, List[Optional[float|int]]])->Dict[str, float|List[float]]:
     stat = {}
@@ -46,25 +47,50 @@ def statisticTemplateMetric(serie:Dict[str, List[Optional[float|int]]])->Dict[st
             "std": std,
             "min":min_val,
             "max": max_val,
-            "raw": list(map(lambda x: x if x != None else 1, val))
+            "raw": list(map(lambda x: x if x != None else np.nan, val))
         }
     return stat
 
 
-def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtension, deactivate_y_axis=True, deactivate_x_axis_title=True, fontSize=25, ylim=9.5):
+def generatePlot(results,
+                 yaxisLabel,
+                 len_instance,
+                 color_map,
+                 savePathNoExtension,
+                 deactivate_y_axis=False,
+                 deactivate_x_axis_title=False,
+                 fontSize=25,
+                 ylim=9.5,
+                 query_to_skip=[]
+                 ):
     rcParams.update({'font.size': fontSize})
 
-    x = np.arange(len(QUERIES))
+    indexes_to_skip = []
+    queries = copy.deepcopy(QUERIES)
+    for query in query_to_skip:
+        index = queries.index(query)
+        indexes_to_skip.append(index)
+    
+    for query in query_to_skip:
+        index = queries.index(query)
+        del queries[index]
+    
+    x = np.arange(len(queries))
     width = 1/len_instance - 0.1
     multiplier = 0
     
-    fig, ax = plt.subplots(figsize=(10, 8))
+    fig, ax = plt.subplots(figsize=(10, 10))
 
     for dataset, measurements in results.items():
         offset = width * multiplier + width/len(results)
-        data = list(range(len(QUERIES)))
+        data = list(range(len(queries)))
+        rewind = 0
         for i, measurement in enumerate(measurements):
-            data[i] = measurement
+            all_nan = all(np.isnan(el) for el in measurement)
+            if all_nan:
+                rewind+=1
+                continue
+            data[i-rewind] = [1 if np.isnan(x) else x for x in measurement]
         multiplier += 1
         ax.boxplot(data,
                    positions=x+offset,
@@ -74,7 +100,6 @@ def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtensi
                    boxprops=dict(facecolor=color_map[dataset]),
                   )
         
-    ax.yaxis.set_major_locator(MultipleLocator(0.5))
     if ylim is not None:
         ax.set_ylim(0, ylim)
     if deactivate_y_axis:
@@ -84,7 +109,10 @@ def generatePlot(results, yaxisLabel, len_instance, color_map, savePathNoExtensi
         ax.set_ylabel(yaxisLabel)
     if not deactivate_x_axis_title:
         ax.set_xlabel("query template")
-    ax.set_xticks(x + width, QUERIES)
+        
+    ax.set_yscale('log', base=2)
+    ax.axhline(1, color='gray', linestyle='--', label='No performance change')
+    ax.set_xticks(x + width, queries)
     ax.grid(axis="both")
     ax.legend(loc='upper left',  fontsize="18")
     

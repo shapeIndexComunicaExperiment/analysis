@@ -32,12 +32,14 @@ instances = [ shapeIndex20Dataset, shapeIndex50Dataset, shapeIndex80Dataset]
 
 (result_object_means_http, result_object_http, result_object_means_time, result_object_time) = generate_stats(instances, shapeIndexDataset)
 
+query_to_skip = ["D8", "S2", "S3", "S6"]
+
 generatePlot(
     result_object_time,
     'ratio execution time',
     len(instances),
     color_map=color_map,
-    deactivate_x_axis_title=False,
+    query_to_skip=query_to_skip,
     savePathNoExtension=os.path.join(artefactFolder,"reduction_query_execution_time")
     )
 
@@ -46,7 +48,7 @@ generatePlot(
     'ratio HTTP request',
     len(instances),
     color_map=color_map,
-    deactivate_x_axis_title=False,
     ylim=None,
+    query_to_skip=query_to_skip,
     savePathNoExtension=os.path.join(artefactFolder,"reduction_number_HTTP_requests")
     )
