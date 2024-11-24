@@ -1,5 +1,36 @@
 from typing import List, Optional, Dict,Set
+import scipy.stats as stats
+import numpy as np
+from scipy.stats import ks_2samp
 
+def statisticalSignificanceByTemplate(instance: Dict[str, Optional[List[float]]], baseline: Dict[str, Optional[List[float]]]):
+    baseline_template_results = []
+    instance_template_results = []
+    for key, results in baseline.items():
+        if results is not None and instance[key] is not None:
+            baseline_template_results += results
+            instance_template_results += instance[key]
+    
+    if len(baseline_template_results) == 0:
+        return (None, None, None)
+    pValueGreater = stats.mannwhitneyu(x=np.array(instance_template_results),
+                           y=np.array(baseline_template_results),
+                           method="auto",
+                           alternative = 'greater').pvalue
+    
+    pValueLess = stats.mannwhitneyu(x=np.array(instance_template_results),
+                           y=np.array(baseline_template_results),
+                           method="auto",
+                           alternative = 'less').pvalue
+        
+    pValueEqual = stats.mannwhitneyu(x=instance_template_results,
+                           y=baseline_template_results,
+                           method="auto",
+                           alternative = 'two-sided').pvalue
+    
+
+    return (pValueGreater.item(), pValueEqual.item(), pValueLess.item())
+    
 def internalResultConsistency(result_runs: List[Set[str]])->bool:
     if len(result_runs) ==0:
         return True

@@ -68,7 +68,7 @@ instances_percentage_entry = [ shapeIndex20EntryDataset, shapeIndex50EntryDatase
     result_object_time_entry
 ) = generate_stats(instances_percentage_entry, shapeIndexDataset)
 
-instances_percentage_shape_index = [ shapeIndex20Dataset, shapeIndex50Dataset, shapeIndex80Dataset]
+instances_percentage_shape_index = [ shapeIndex0Dataset, shapeIndex20Dataset, shapeIndex50Dataset, shapeIndex80Dataset]
 (
     result_object_means_http_shape_index,
     result_object_http_shape_index,
@@ -149,7 +149,7 @@ color_maps = [
     color_map_shape
 ]
 
-fontSize = 25
+fontSize = 30
 ylim = 11
 yaxisLabel = 'ratio execution time'
 
