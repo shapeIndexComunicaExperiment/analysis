@@ -17,7 +17,7 @@ from plotsVariation import calculatePercentageReductionSeries, statisticTemplate
 import os
 
 artefactFolder = "./artefact/statistical_significance"
-head = ["query template", "relation execution time", "p-value", "avg ratio HTTP request"]
+head = ["Query template", "relation execution time", "p-value", "avg ratio HTTP request"]
 
 def generateTableInfo(results, stat_http_req):  
     rows = []

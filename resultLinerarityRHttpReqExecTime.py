@@ -9,6 +9,8 @@ import os
 import json
 from matplotlib import rcParams
 import matplotlib.patches as mpatches
+from scipy.optimize import curve_fit
+from sklearn.metrics import r2_score, mean_squared_error
 
 rcParams.update({'font.size': 25})
 
@@ -23,7 +25,7 @@ def slopeLinearRegression(x: np.array, y: np.array):
     b = y_mean - m * x_mean
     return m
 
-def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, savePathNoExtension: str, pcc:float,pvalue:float) -> None:
+def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, savePathNoExtension: str, pcc:float,pvalue:float, slope:float, r2Lin:float, r2Expo:float) -> None:
     fig, ax = plt.subplots(figsize=(10,10))
 
     ax.grid(axis="both")
@@ -37,7 +39,8 @@ def generatePlot(x: np.array, y: np.array, x_axis_tick: int, y_axis_tick: int, s
     
     ax.xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
     statPath = mpatches.Patch(color="None", label=f'PCC = {pcc:.2f}, p-value ={pvalue:.2E}')
-    ax.legend(handles=[statPath],handlelength=0, handleheight=0)
+    r2Path = mpatches.Patch(color="None", label=f'R2 lin = {r2Lin:.2}, R2 exp = {r2Expo:.2f}')
+    ax.legend(handles=[statPath, r2Path],handlelength=0, handleheight=0)
     ax.set_xlabel('ratio of HTTP request')
     ax.set_ylabel('ratio of execution time')
     
@@ -53,6 +56,33 @@ def aggregateReduction(reductionDataset: Dict[str, Optional[List[int | float]]],
             if reduction is not None:
                 globalAggregation.append(reduction)
 
+# Linear model
+def linear_model(x, m, c):
+    return m * x + c
+
+# Exponential model
+def exponential_model(x, a, b):
+    return a * np.exp(b * x)
+
+def evaluateR2LinExp(x, y):
+    # Fit the linear model
+    popt_linear, _ = curve_fit(linear_model,  x, y)
+
+    # Fit the exponential model
+    popt_exponential, _ = curve_fit(exponential_model, x, y)
+
+    # Predictions
+    y_pred_linear = linear_model(x, *popt_linear)
+    y_pred_exponential = exponential_model(x, *popt_exponential)
+
+    # R-squared for both models
+    r2_linear = r2_score(y, y_pred_linear)
+    r2_exponential = r2_score(y, y_pred_exponential)
+    
+    rmse_linear = np.sqrt(mean_squared_error(y, y_pred_linear))
+    rmse_exponential = np.sqrt(mean_squared_error(y, y_pred_exponential))
+    
+    return (r2_linear, r2_exponential, rmse_linear, rmse_exponential)
 
 def dividePoints(x: np.array, y: np.array, threshold: float) -> Tuple[Tuple[np.array, np.array], Tuple[np.array, np.array]]:
     x_right = []
@@ -165,25 +195,38 @@ PCC_better_performance = pearsonr(
 PCC_overall = pearsonr(np_x_general_reduction_http_req,
                        np_y_general_reduction_exec)
 
+(r2LinWorse, r2ExpWorse, rmse_linear_worse, rmse_exponential_worse) = evaluateR2LinExp(np.array(worse_dataset[0]), np.array(worse_dataset[1]))
+(r2LinBetter, r2ExpBetter, rmse_linear_better, rmse_exponential_better) = evaluateR2LinExp(np.array(better_dataset[0]), np.array(better_dataset[1]))
+(r2LinOverall, r2ExpOverall, rmse_linear_overall, rmse_exponential_overall) = evaluateR2LinExp(np_x_general_reduction_http_req, np_y_general_reduction_exec)
 pearsonrAnalysis = {
     "PCC_worse_performance": {
         "PCC": PCC_worse_performance[0].item(),
         "Pvalue": PCC_worse_performance[1].item(),
-        "slope": slopeLinearRegression(worse_dataset[0], worse_dataset[1])
+        "slope": slopeLinearRegression(worse_dataset[0], worse_dataset[1]),
+        "r2_lin": r2LinWorse,
+        "r2_exp": r2ExpWorse,
+        "rmse_lin":rmse_linear_worse,
+        "rmse_exp":rmse_exponential_worse,
     },
     "PCC_better_performance": {
         "PCC": PCC_better_performance[0].item(),
         "Pvalue": PCC_better_performance[1].item(),
-        "slope": slopeLinearRegression(better_dataset[0], better_dataset[1])
-
+        "slope": slopeLinearRegression(better_dataset[0], better_dataset[1]),
+        "r2_lin": r2LinBetter,
+        "r2_exp": r2ExpBetter,
+        "rmse_lin":rmse_linear_better,
+        "rmse_exp":rmse_exponential_better,
     },
     "PCC_overall": {
         "PCC": PCC_overall[0].item(),
         "Pvalue": PCC_overall[1].item(),
-        "slope": slopeLinearRegression(np_x_general_reduction_http_req, np_y_general_reduction_exec)
+        "slope": slopeLinearRegression(np_x_general_reduction_http_req, np_y_general_reduction_exec),
+        "r2_lin": r2LinOverall,
+        "r2_exp": r2ExpOverall,
+        "rmse_lin":rmse_linear_overall,
+        "rmse_exp":rmse_exponential_overall,
     }
 }
-
 
 with open(os.path.join(artefactFolder, "perason_analysis.json"), "w") as outfile:
     json_object = json.dumps(pearsonrAnalysis, indent=4)
@@ -196,7 +239,10 @@ generatePlot(
     0.1,
     os.path.join(artefactFolder,"http_req_exec_time_cor_better"),
     PCC_better_performance[0].item(),
-    PCC_better_performance[1].item()
+    PCC_better_performance[1].item(),
+    slopeLinearRegression(better_dataset[0], better_dataset[1]),
+    r2LinBetter, 
+    r2ExpBetter
 )
 generatePlot(
     worse_dataset[0],
@@ -205,5 +251,9 @@ generatePlot(
     0.1,
     os.path.join(artefactFolder,"http_req_exec_time_cor_worse"),
     PCC_worse_performance[0].item(),
-    PCC_worse_performance[1].item()
+    PCC_worse_performance[1].item(),
+    slopeLinearRegression(worse_dataset[0], worse_dataset[1]),
+    r2LinWorse, 
+    r2ExpWorse
     )
+

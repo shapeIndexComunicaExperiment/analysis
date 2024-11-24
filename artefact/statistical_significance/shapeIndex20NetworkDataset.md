@@ -1,7 +1,7 @@
 
     # Comparaison shape index absent in 20% of the network against an ideal shape index
     
-    | query template         | relation execution time   | p-value       |   avg ratio HTTP request |
+    | Query template         | relation execution time   | p-value       |   avg ratio HTTP request |
 |------------------------|---------------------------|---------------|--------------------------|
 | interactive-discover-1 | greater                   | 8.73E-36      |                     2.36 |
 | interactive-discover-2 | greater                   | 2.16E-02      |                     0.97 |

@@ -1,7 +1,7 @@
 
     # Comparaison shape index with shapes with only information about the dataset model against an ideal shape index
     
-    | query template         | relation execution time   | p-value       |   avg ratio HTTP request |
+    | Query template         | relation execution time   | p-value       |   avg ratio HTTP request |
 |------------------------|---------------------------|---------------|--------------------------|
 | interactive-discover-1 | lesser                    | 9.47E-03      |                     0.8  |
 | interactive-discover-2 | similar                   | 3.50E-01 (RH) |                     0.85 |

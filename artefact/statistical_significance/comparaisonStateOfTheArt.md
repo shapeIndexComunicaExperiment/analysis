@@ -1,7 +1,7 @@
 
 # Comparaison execution time shape index approach against the type index
 
-| query template         | relation execution time   | p-value       |   avg ratio HTTP request |
+| Query template         | relation execution time   | p-value       |   avg ratio HTTP request |
 |------------------------|---------------------------|---------------|--------------------------|
 | interactive-discover-1 | lesser                    | 1.14E-36      |                     0.57 |
 | interactive-discover-2 | lesser                    | 4.42E-04      |                     0.88 |
