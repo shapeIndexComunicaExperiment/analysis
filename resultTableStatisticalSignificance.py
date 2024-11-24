@@ -129,6 +129,7 @@ rows = generateTableInfo(results, stat_http_req)
 table_state_of_the_art = tabulate(rows, headers=head, tablefmt="github")
 
 textTable = Texttable()
+textTable.set_cols_dtype(['t', 't', 't', 't'])
 textTable.add_rows([head]+ rows)
 label = "tab:statSignificanceStateOfTheArt"
 caption = "Table comparing the shape index approach to the state-of-the-art. RH, indicate that the p-value is associated to the rejected hypothesis. Every query performs better or similarly to the state-of-the-art with the shape index approach except for interactive-short-4, which performs worse but is already a fast-running query."
