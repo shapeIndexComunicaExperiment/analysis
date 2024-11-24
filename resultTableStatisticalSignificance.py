@@ -29,7 +29,7 @@ def generateTableInfo(results, stat_http_req):
         if value["greater"] is not None:
             if value["different"] > p_value_significant:
                 relation = "similar"
-                p_value = f"{value["greater"]:.2E} (different distribution)"
+                p_value = f"{value["greater"]:.2E} (RH)"
             elif value["greater"] < p_value_significant:
                 relation = "greater"
                 p_value = f"{value["greater"]:.2E}"
@@ -131,7 +131,7 @@ table_state_of_the_art = tabulate(rows, headers=head, tablefmt="github")
 textTable = Texttable()
 textTable.add_rows([head]+ rows)
 label = "tab:statSignificanceStateOfTheArt"
-caption = "Table comparing the shape index approach to the state-of-the-art. Every query performs better or similarly to the state-of-the-art with the shape index approach except for interactive-short-4, which performs worse but is already a fast-running query."
+caption = "Table comparing the shape index approach to the state-of-the-art. RH, indicate that the p-value is associated to the rejected hypothesis. Every query performs better or similarly to the state-of-the-art with the shape index approach except for interactive-short-4, which performs worse but is already a fast-running query."
 
 latex_table_state_of_the_art = latextable.draw_latex(textTable, caption=caption, label=label)
 
