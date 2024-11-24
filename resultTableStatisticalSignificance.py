@@ -132,7 +132,7 @@ textTable = Texttable()
 textTable.set_cols_dtype(['t', 't', 't', 't'])
 textTable.add_rows([head]+ rows)
 label = "tab:statSignificanceStateOfTheArt"
-caption = "Table comparing the shape index approach to the state-of-the-art. RH, indicate that the p-value is associated to the rejected hypothesis. Every query performs better or similarly to the state-of-the-art with the shape index approach except for interactive-short-4, which performs worse but is already a fast-running query."
+caption = "Table comparing the shape index approach to the state-of-the-art. RH, indicate that the p-value is associated to the rejected hypothesis. Every query performs better or similarly to the state-of-the-art with the shape index approach except for interactive-short-4."
 
 latex_table_state_of_the_art = latextable.draw_latex(textTable, caption=caption, label=label)
 

@@ -32,7 +32,7 @@ for key, filePath in datasets.items():
             row = [query, value["average"],value["std"],value["max"] ]
             rows.append(row)
     
-    caption= "Query-Shape containment computation time is negligeable with the most restrictive shapes of our experiments. The results were obtained with 100 samples."
+    caption= "Query-Shape containment computation time (100 samples) is negligeable with the most restrictive shapes of our experiments."
     label="tab:queryShapeContainmentEval"
 
     textTable = Texttable()
