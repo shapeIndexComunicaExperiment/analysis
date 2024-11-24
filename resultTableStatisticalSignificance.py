@@ -145,7 +145,7 @@ with open(os.path.join(artefactFolder, "comparaisonStateOfTheArt.md"), "w") as o
     outfile.write(table_to_save)
 
 with open(os.path.join(artefactFolder, "comparaisonStateOfTheArt.tex"), "w") as outfile:
-    outfile.write(table_to_save)
+    outfile.write(latex_table_state_of_the_art)
     
 for (instance, file_name) in instances_shape_index:
     results = {}

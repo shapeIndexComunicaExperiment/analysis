@@ -10,3 +10,7 @@ python resultVariationShapeDetail.py &
 python resultVariationApproach.py &
 
 python resultVariationShapeIndexAll.py &
+
+python resultTableStatisticalSignificance.py &
+
+wait
