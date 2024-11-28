@@ -1,7 +1,7 @@
-
-    # Comparaison shape index with 50% entries incomplete against an ideal shape index
     
-    | Query template         | relation execution time   | p-value       |   avg ratio HTTP request |
+# Comparaison shape index with 50% entries incomplete against an ideal shape index
+    
+| Query template         | relation execution time   | p-value       |   avg ratio HTTP request |
 |------------------------|---------------------------|---------------|--------------------------|
 | interactive-discover-1 | greater                   | 1.07E-04      |                     2.54 |
 | interactive-discover-2 | lesser                    | 1.69E-17      |                     1.11 |
@@ -13,4 +13,3 @@
 | interactive-short-1    | greater                   | 1.12E-83      |                     2.52 |
 | interactive-short-4    | lesser                    | 1.22E-08      |                     0.69 |
 | interactive-short-5    | similar                   | 5.22E-01 (RH) |                     1.55 |
-    

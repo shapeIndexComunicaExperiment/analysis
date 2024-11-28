@@ -228,7 +228,7 @@ pearsonrAnalysis = {
     }
 }
 
-with open(os.path.join(artefactFolder, "perason_analysis.json"), "w") as outfile:
+with open(os.path.join(artefactFolder, "stats.json"), "w") as outfile:
     json_object = json.dumps(pearsonrAnalysis, indent=4)
     outfile.write(json_object)
 

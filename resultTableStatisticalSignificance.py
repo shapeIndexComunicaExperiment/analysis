@@ -171,11 +171,11 @@ for (instance, file_name) in instances_shape_index:
 
     table_state_of_the_art = tabulate(rows, headers=head, tablefmt="github")
 
-    table_to_save = f"""
-    # Comparaison {instance.name} against an ideal shape index
+    table_to_save = f"""    
+# Comparaison {instance.name} against an ideal shape index
     
-    {table_state_of_the_art}
-    """
+{table_state_of_the_art}
+"""
 
     with open(os.path.join(artefactFolder, f"{file_name}.md"), "w") as outfile:
         outfile.write(table_to_save)
