@@ -149,7 +149,7 @@ color_maps = [
     color_map_shape
 ]
 
-fontSize = 30
+fontSize = 35
 ylim = 11
 yaxisLabel = 'ratio execution time'
 
@@ -158,7 +158,7 @@ rcParams.update({'font.size': fontSize})
 x = np.arange(len(queries))
 
 
-fig, axs = plt.subplots(1,3, sharey=True, figsize=(35, 10))
+fig, axs = plt.subplots(1,3, sharey=True, figsize=(35, 15))
 
 for i, results in enumerate(variations):
     len_instance = len(results)
@@ -193,7 +193,7 @@ for i, results in enumerate(variations):
 
     ax.set_xticks(x + width, queries)
     ax.grid(axis="both")
-    ax.legend(fontsize="18")
+    ax.legend(fontsize="30")
 
 fig.text(0.5, 0.03, "Query Template", ha='center', va='center', fontsize=fontSize)
 fig.text(0.02, 0.5, yaxisLabel, ha='center', va='center', rotation='vertical', fontsize=fontSize)
