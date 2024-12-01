@@ -72,7 +72,7 @@ for queryTemplate, ratiosShapeIndex in ratioUsefullHttpRequestShapeIndex.items()
     if have_result:
         rowsShapeIndex.append(currentRow)
 
-caption= "Even with the shape index approach (denominator), most queries have a percentage of useful resources acquired. In some cases, the type index with LDP (numerator) can produce a percentage of 100\\%, whereas the shape index approach never produces a percentage as close to 100\\%."
+caption= "Even with the shape index approach (denominator), most queries have a low percentage of useful resources acquired. In some cases, the type index with LDP (numerator) can produce a percentage of 100\\%, whereas the shape index approach never produces a percentage as close to 100\\%."
 label="tab:ratioUsefulResources"
 
 textTable = Texttable()
