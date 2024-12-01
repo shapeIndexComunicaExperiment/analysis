@@ -26,15 +26,15 @@ shapeIndexDataset = generateDatasetFromResults(shapeIndexPathResult, shapeIndexP
 
 shapeIndex20PathResult = "./results/shape-entry-20-percent/shape_index_result.json"
 shapeIndex20PathSummary = "./results/shape-entry-20-percent/summary_shape_index_result.json"
-shapeIndex20EntryDataset = generateDatasetFromResults(shapeIndex20PathResult, shapeIndex20PathSummary, "shape index entries 20%")
+shapeIndex20EntryDataset = generateDatasetFromResults(shapeIndex20PathResult, shapeIndex20PathSummary, "20% closed entries")
 
 shapeIndex50PathResult = "./results/shape-entry-50-percent/shape_index_result.json"
 shapeIndex50PathSummary = "./results/shape-entry-50-percent/summary_shape_index_result.json"
-shapeIndex50EntryDataset = generateDatasetFromResults(shapeIndex50PathResult, shapeIndex50PathSummary, "shape index entries 50%")
+shapeIndex50EntryDataset = generateDatasetFromResults(shapeIndex50PathResult, shapeIndex50PathSummary, "50% closed entries")
 
 shapeIndex80PathResult = "./results/shape-entry-80-percent/shape_index_result.json"
 shapeIndex80PathSummary = "./results/shape-entry-80-percent/summary_shape_index_result.json"
-shapeIndex80EntryDataset = generateDatasetFromResults(shapeIndex80PathResult, shapeIndex80PathSummary, "shape index entries 80%")
+shapeIndex80EntryDataset = generateDatasetFromResults(shapeIndex80PathResult, shapeIndex80PathSummary, "80% closed entries")
 
 shapeIndex0PathResult = "./results/shape-index-0-percent/shape_index_result.json"
 shapeIndex0PathSummary = "./results/shape-index-0-percent/summary_shape_index_result.json"
@@ -54,11 +54,11 @@ shapeIndex80Dataset = generateDatasetFromResults(shapeIndex80PathResult, shapeIn
 
 shapeIndexInnerPathResult = "./results/shape-inner/shape_index_result.json"
 shapeIndexInnerPathSummary = "./results/shape-inner/summary_shape_index_result.json"
-shapeIndexInnerDataset = generateDatasetFromResults(shapeIndexInnerPathResult, shapeIndexInnerPathSummary, "Dataset shape model")
+shapeIndexInnerDataset = generateDatasetFromResults(shapeIndexInnerPathResult, shapeIndexInnerPathSummary, "shapes dataset model")
 
 shapeIndexMinimalPathResult = "./results/shape-minimal/shape_index_result.json"
 shapeIndexMinimalPathSummary = "./results/shape-minimal/summary_shape_index_result.json"
-shapeIndexMinimalDataset = generateDatasetFromResults(shapeIndexMinimalPathResult, shapeIndexMinimalPathSummary, "Minimal model")
+shapeIndexMinimalDataset = generateDatasetFromResults(shapeIndexMinimalPathResult, shapeIndexMinimalPathSummary, "shapes minimal information")
 
 instances_percentage_entry = [ shapeIndex20EntryDataset, shapeIndex50EntryDataset, shapeIndex80EntryDataset]
 (
@@ -119,9 +119,9 @@ for query in query_to_skip:
 color_map_entry = {
     "shape index entries 100%": '#1A85FF',
     "shape index entries 0%": '#D41159',
-    "shape index entries 20%": '#004D40',
-    "shape index entries 50%": '#FFC107',
-    "shape index entries 80%": '#994F00'
+    "20% closed entries": '#004D40',
+    "50% closed entries": '#FFC107',
+    "80% closed entries": '#994F00'
 }
 
 color_map_shape_index = {
@@ -134,8 +134,8 @@ color_map_shape_index = {
 
 color_map_shape = {
     "Full shape model": '#1A85FF',
-    "Dataset shape model": '#D41159',
-    "Minimal model": '#004D40',
+    "shapes dataset model": '#D41159',
+    "shapes minimal information": '#004D40',
 }
 
 variations = [
