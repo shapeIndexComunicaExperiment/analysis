@@ -146,6 +146,7 @@ def generatePlot(results, yaxisLabel, savePathNoExtension):
     ax.set_xticks(x + width, queries)
     ax.grid(axis="both")
     ax.legend(fontsize="18")
+    ax.set_xlabel("query template")
     
     fig.tight_layout()
     
