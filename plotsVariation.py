@@ -97,6 +97,7 @@ def generatePlot(results,
                    positions=x+offset,
                    widths=width,
                    patch_artist=True,
+                   medianprops={"linewidth": 3},
                    label=dataset,
                    boxprops=dict(facecolor=color_map[dataset]),
                   )
@@ -113,7 +114,7 @@ def generatePlot(results,
         
     ax.set_yscale('log', base=2)
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: '{:.1f}'.format(val)))
-    ax.axhline(1, color='gray', linestyle='--', label='No performance change')
+    #ax.axhline(1, color='gray', linestyle='--', label='No performance change')
     ax.set_xticks(x + width, queries)
     ax.grid(axis="both")
     ax.legend(loc='upper left',  fontsize="18")

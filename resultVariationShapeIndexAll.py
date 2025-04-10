@@ -181,6 +181,7 @@ for i, results in enumerate(variations):
                    positions=x+offset,
                    widths=width,
                    patch_artist=True,
+                   medianprops={"linewidth": 3},
                    label=dataset,
                    boxprops=dict(facecolor=color_map[dataset]),
                   )

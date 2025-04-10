@@ -10,23 +10,27 @@ artefactFolder = "./artefact/variation_approach"
 
 fontSize=25
 
+ldpLabel = "LDP without shape index"
+shapeIndexLabel = "shape index"
+typeIndexLdpLabel = "type index and LDP"
+
 color_map = {
-    "shape index": '#1A85FF',
-    "LDP": '#D41159',
-    "type index and LDP": '#004D40',
+    shapeIndexLabel: '#1A85FF',
+    ldpLabel: '#D41159',
+    typeIndexLdpLabel: '#004D40',
 }
 
 shapeIndexPathResult = "./results/standard/shape_index_result.json"
 shapeIndexPathSummary = "./results/standard/summary_shape_index_result.json"
-shapeIndexDataset = generateDatasetFromResults(shapeIndexPathResult, shapeIndexPathSummary, "shape index")
+shapeIndexDataset = generateDatasetFromResults(shapeIndexPathResult, shapeIndexPathSummary, shapeIndexLabel)
 
 ldpPathResult = "./results/standard/ldp_result.json"
 ldpPathSummary = "./results/standard/summary_ldp_result.json"
-ldpDataset = generateDatasetFromResults(ldpPathResult, ldpPathSummary, "LDP")
+ldpDataset = generateDatasetFromResults(ldpPathResult, ldpPathSummary, ldpLabel)
 
 typeIndexLdpPathResult = "./results/standard/type_index_ldp_result.json"
 typeIndexLdpPathSummary = "./results/standard/summary_type_index_ldp_result.json"
-typeIndexLdpDataset = generateDatasetFromResults(typeIndexLdpPathResult, typeIndexLdpPathSummary, "type index and LDP")
+typeIndexLdpDataset = generateDatasetFromResults(typeIndexLdpPathResult, typeIndexLdpPathSummary, typeIndexLdpLabel)
 
 def statisticTemplateMetric(serie):
     stat = {}
@@ -138,6 +142,7 @@ def generatePlot(results, yaxisLabel, savePathNoExtension):
                    widths=width,
                    patch_artist=True,
                    label=dataset,
+                   medianprops={"linewidth": 3},
                    boxprops=dict(facecolor=color_map[dataset]),
                   )
     #ax.set_yscale('log', base=2)
