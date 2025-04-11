@@ -177,5 +177,5 @@ for (instance, file_name) in instances_shape_index:
 {table_state_of_the_art}
 """
 
-    with open(os.path.join(artefactFolder, f"{file_name}.md"), "w") as outfile:
-        outfile.write(table_to_save)
+with open(os.path.join(artefactFolder, f"{file_name}.md"), "w") as outfile:
+    outfile.write(table_to_save)

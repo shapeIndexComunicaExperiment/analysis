@@ -1,6 +1,5 @@
 import json
 from texttable import Texttable
-import latextable
 from tabulate import tabulate
 import sys
 from typing import List, Dict, Optional
@@ -72,17 +71,17 @@ for queryTemplate, ratiosShapeIndex in ratioUsefullHttpRequestShapeIndex.items()
     if have_result:
         rowsShapeIndex.append(currentRow)
 
-caption= "Even with the shape index approach (denominator), most queries have a low percentage of useful resources acquired. In some cases, the type index with LDP (numerator) can produce a percentage of 100\\%."
-label="tab:ratioUsefulResources"
-
-textTable = Texttable()
-textTable.add_rows([head]+ rowsShapeIndex)
-
-latexTable = latextable.draw_latex(textTable, caption=caption, label=label)
 markdownTable = tabulate(rowsShapeIndex, headers=head, tablefmt="github")
 
-with open(os.path.join(artefactFolder, "table_ratio_useful_ressources.tex"), "w") as file:
-    file.write(latexTable)
+with open("./template_table_ratio_useful_resources.tex", "r") as file:
+    data = file.read()
+    for row in rowsShapeIndex:
+        for el in row[1:]:
+            si_value, ldp_type_index_value = el.split("/")
+            data = data.replace("{}", si_value, 1)
+            data = data.replace("{}", ldp_type_index_value, 1)
+    with open(os.path.join(artefactFolder, "table_ratio_useful_ressources.tex"), "w") as file:
+        file.write(data)
 
 with open(os.path.join(artefactFolder, "table_ratio_useful_ressources.md"), "w") as file:
     file.write(markdownTable)

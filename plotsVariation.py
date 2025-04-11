@@ -62,7 +62,8 @@ def generatePlot(results,
                  deactivate_x_axis_title=False,
                  fontSize=25,
                  ylim=11,
-                 query_to_skip=[]
+                 query_to_skip=[],
+                 formatYAxis = '{:.1f}'
                  ):
     rcParams.update({'font.size': fontSize})
 
@@ -113,7 +114,7 @@ def generatePlot(results,
         ax.set_xlabel("query template")
         
     ax.set_yscale('log', base=2)
-    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: '{:.1f}'.format(val)))
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: formatYAxis.format(val)))
     #ax.axhline(1, color='gray', linestyle='--', label='No performance change')
     ax.set_xticks(x + width, queries)
     ax.grid(axis="both")
