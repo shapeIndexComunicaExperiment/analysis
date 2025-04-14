@@ -6,6 +6,16 @@ from typing import List, Dict, Optional
 import os
 from generateDataset import generateDatasetFromResults, Dataset
 
+
+def valueInTable(value_1:str, value_2:str) -> str:
+    if value_1 == "-":
+        return value_1
+    if value_2 == "-":
+        return f"\textbf{value_1}"
+    if int(value_1)> int(value_2):
+        return f"\\textbf{{{value_1}}}"
+    return value_1
+    
 def generateRatio(dataset: Dataset)-> Dict[str, List[float] | None]:
     ratioUsefullHttpRequest = {}
     for queryTemplate, queryResults in dataset.numberHttpRequest.items():
@@ -78,8 +88,8 @@ with open("./template_table_ratio_useful_resources.tex", "r") as file:
     for row in rowsShapeIndex:
         for el in row[1:]:
             si_value, ldp_type_index_value = el.split("/")
-            data = data.replace("{}", si_value, 1)
-            data = data.replace("{}", ldp_type_index_value, 1)
+            data = data.replace("{}", valueInTable(si_value, ldp_type_index_value) , 1)
+            data = data.replace("{}", valueInTable(ldp_type_index_value, si_value), 1)
     with open(os.path.join(artefactFolder, "table_ratio_useful_ressources.tex"), "w") as file:
         file.write(data)
 
