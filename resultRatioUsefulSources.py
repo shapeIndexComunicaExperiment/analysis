@@ -5,7 +5,7 @@ import sys
 from typing import List, Dict, Optional
 import os
 from generateDataset import generateDatasetFromResults, Dataset
-
+import statistics 
 
 def valueInTable(value_1:str, value_2:str) -> str:
     if value_1 == "-":
@@ -95,3 +95,27 @@ with open("./template_table_ratio_useful_resources.tex", "r") as file:
 
 with open(os.path.join(artefactFolder, "table_ratio_useful_ressources.md"), "w") as file:
     file.write(markdownTable)
+
+summary = {"SI": [], "T-LDP":[]}
+
+for row in rowsShapeIndex:
+    siVal = []
+    TldpVal = []
+    for el in row[1:]:
+        si_value, ldp_type_index_value = el.split("/")
+        if si_value != "-":
+            siVal.append(int(si_value))
+        if ldp_type_index_value != "-":
+            TldpVal.append(int(ldp_type_index_value))
+    summary["SI"].append(f"${round(statistics.mean(siVal), 1)} \\pm {round(statistics.stdev(siVal), 1)}$")
+    summary["T-LDP"].append(f"${round(statistics.mean(TldpVal), 1)} \\pm {round(statistics.stdev(TldpVal), 1)}$")
+    
+print(summary)
+
+with open("./template_table_ratio_useful_resources_summary.tex", "r") as file:
+    data = file.read()
+    for row in summary.values():
+        for value in row:
+            data = data.replace("{}", f"{value}", 1)
+    with open(os.path.join(artefactFolder, "table_ratio_useful_resources_summary.tex"), "w") as file:
+        file.write(data)
