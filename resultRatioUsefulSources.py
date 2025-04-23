@@ -107,10 +107,26 @@ for row in rowsShapeIndex:
             siVal.append(int(si_value))
         if ldp_type_index_value != "-":
             TldpVal.append(int(ldp_type_index_value))
-    summary["SI"].append(f"${round(statistics.mean(siVal), 1)} \\pm {round(statistics.stdev(siVal), 1)}$")
-    summary["T-LDP"].append(f"${round(statistics.mean(TldpVal), 1)} \\pm {round(statistics.stdev(TldpVal), 1)}$")
+    averageSiVal = int(round(statistics.mean(siVal), 0))
+    maxSiVal = int(round(max(siVal), 0))
+    minSiVal = int(round(min(siVal), 0))
     
-print(summary)
+    averageTlpVal = int(round(statistics.mean(TldpVal), 0))
+    maxTlpVal = int(round(max(TldpVal), 0))
+    minTlpVal = int(round(min(TldpVal), 0))
+    
+    stringSi = f"{averageSiVal}^{{{maxSiVal}}}_{{{minSiVal}}}" 
+    stringTLDP = f"{averageTlpVal}^{{{maxTlpVal}}}_{{{minTlpVal}}}"
+    
+    if averageSiVal>averageTlpVal:
+        summary["SI"].append(f"$\\boldsymbol{{{stringSi}}}$")
+        summary["T-LDP"].append(f"${stringTLDP}$")
+    elif averageSiVal<averageTlpVal:
+        summary["SI"].append(f"${stringSi}$")
+        summary["T-LDP"].append(f"$\\boldsymbol{{{stringTLDP}}}$")
+    else:
+        summary["SI"].append(f"${stringSi}$")
+        summary["T-LDP"].append(f"${stringTLDP}$")
 
 with open("./template_table_ratio_useful_resources_summary.tex", "r") as file:
     data = file.read()

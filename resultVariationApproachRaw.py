@@ -10,9 +10,9 @@ artefactFolder = "./artefact/variation_approach"
 
 fontSize=25
 
-ldpLabel = "LDP without shape index"
+ldpLabel = "LDP"
 shapeIndexLabel = "shape index"
-typeIndexLdpLabel = "type index and LDP"
+typeIndexLdpLabel = "type index"
 
 color_map = {
     shapeIndexLabel: '#1A85FF',

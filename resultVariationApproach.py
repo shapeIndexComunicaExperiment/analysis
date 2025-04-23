@@ -4,14 +4,14 @@ import os
 
 artefactFolder = "./artefact/variation_approach"
 
-ldpLabel = "LDP without shape index"
+ldpLabel = "LDP"
 shapeIndexLabel = "shape index"
-typeIndexLdpLabel = "type index and LDP"
+typeIndexLdpLabel = "type index"
 
 color_map = {
     shapeIndexLabel: '#1A85FF',
     ldpLabel: '#D41159',
-    "type index and LDP": '#004D40',
+    typeIndexLdpLabel: '#004D40',
 }
 
 shapeIndexPathResult = "./results/standard/shape_index_result.json"
