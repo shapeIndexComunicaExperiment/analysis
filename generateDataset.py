@@ -17,17 +17,28 @@ class Dataset:
     results: Dict[str, Dict[str, List[Set[str]]]]
     arrivalTimes: Dict[str, Dict[str, List[List[float]]]]
     
-    def _resultsArrivalNth(self, query_name:str, version:str, nth:int)->List[float]:
+    def _resultsArrivalNth(self, query_name:str, version:str, nth:int)->Optional[List[float]]:
         arrival_times = self.arrivalTimes[query_name][version]
-        first_results = []
+        results = []
+        
+        if arrival_times == None:
+            return None
+        
+        if len(arrival_times) == 0:
+            return None
+        
         for times in arrival_times:
-            first_results.append(times[nth])
-        return first_results
+            if nth >= len(times) and nth != -1:
+                continue
+            if len(times) == 0:
+                continue
+            results.append(times[nth])
+        return results
     
-    def firstResultsTime(self, query_name:str, version:str)->List[float]:
-        return self._resultsArrivalNth(query_name, version,1)
+    def firstResultsTime(self, query_name:str, version:str)->Optional[List[float]]:
+        return self._resultsArrivalNth(query_name, version,0)
     
-    def lastResultsTime(self, query_name:str, version:str)->List[float]:
+    def lastResultsTime(self, query_name:str, version:str)->Optional[List[float]]:
         return self._resultsArrivalNth(query_name, version,-1)
         
 
@@ -70,6 +81,7 @@ def generateDatasetFromResults(filepathFullResuls: str, filepathSummaryResuls: s
                     meanExecutionTime[queryName].append(None)
                     numberHttpRequest[queryName].append(None)
                     stdExecutionTime[queryName].append(None)
+                    numberResults[queryName].append(None)
                 elif field == "n_http_requests":
                     numberHttpRequest[queryName].append(value)
                 elif field == "execution_time":
