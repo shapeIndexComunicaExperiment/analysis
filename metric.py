@@ -81,7 +81,7 @@ def calculatePercentageReductionSeries(
 
 def diefficiency(times: List[float], t: float) -> float:
     try:
-        if len(times) == 0:
+        if len(times) < 1:
             return 0
         if  t >= max(times):
             t = max(times) - 0.0001

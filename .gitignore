@@ -1,4 +1,5 @@
 **/*.ipynb_checkpoints
+**/*/__marimo__
 /venv/*
 /plots/query-discovery/*
 /plots/query-short/*
