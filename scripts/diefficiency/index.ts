@@ -11,7 +11,13 @@ cli.help();
 
 const parsed = cli.parse();
 
-const execTimes = parsed.options["execTimes"].split(",").map(Number);
+let execTimes: number[] = [];
+
+if(typeof parsed.options["execTimes"] === "number"){
+    execTimes = [parsed.options["execTimes"]]
+}else{
+    execTimes = parsed.options["execTimes"].split(",").map(Number);
+}
 const time = parsed.options["t"]
 
 const granularity = 500;

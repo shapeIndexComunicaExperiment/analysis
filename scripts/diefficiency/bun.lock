@@ -5,7 +5,7 @@
       "name": "diefficiency",
       "dependencies": {
         "cac": "^6.7.14",
-        "diefficiency": "^1.0.4",
+        "diefficiency": "^1.0.5",
       },
       "devDependencies": {
         "@types/bun": "latest",
@@ -24,7 +24,7 @@
 
     "cac": ["cac@6.7.14", "", {}, "sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ=="],
 
-    "diefficiency": ["diefficiency@1.0.4", "", { "dependencies": { "fs": "^0.0.1-security", "typescript": "^5.6.3" } }, "sha512-djYv4BFKCtClOUAa9Q8MrfrJvWdDJI84FLUUjsmhvolZKaZhk54LCCgXldDZG0YG7tlc6RwPHPoKdW4QSvWv7g=="],
+    "diefficiency": ["diefficiency@1.0.5", "", { "dependencies": { "fs": "^0.0.1-security", "typescript": "^5.6.3" } }, "sha512-fGY1Xul/ou9GKiWbCqRg2yIOLojpFaSdxpljQZVgJhSqlawHcyTsu2keHHuB7IqQxS7hZqB8hVB5zmpUfJtcWg=="],
 
     "fs": ["fs@0.0.1-security", "", {}, "sha512-3XY9e1pP0CVEUCdj5BmfIZxRBTSDycnbqhIOGec9QYtmVH2fbLpj86CFWkrNOkt/Fvty4KZG5lTglL9j/gJ87w=="],
 
