@@ -6,12 +6,13 @@ app = marimo.App()
 
 @app.cell
 def _():
+    import marimo as mo
     import json
     from texttable import Texttable
     import latextable
     from tabulate import tabulate
     import sys
-    file_directory = "../"
+    file_directory = "./"
     sys.path.append(file_directory)
     from generateDataset import generateDatasetFromResults
     from metric import internalResultConsistency, calculatePercentageReductionSeries
@@ -28,6 +29,7 @@ def _():
         MultipleLocator,
         calculatePercentageReductionSeries,
         generateDatasetFromResults,
+        mo,
         np,
         plt,
         statistics,
@@ -36,24 +38,24 @@ def _():
 
 @app.cell
 def _(generateDatasetFromResults):
-    shapeIndexPathResult = "../results/standard/shape_index_result.json"
-    shapeIndexPathSummary = "../results/standard/summary_shape_index_result.json"
+    shapeIndexPathResult = "./results/standard/shape_index_result.json"
+    shapeIndexPathSummary = "./results/standard/summary_shape_index_result.json"
     shapeIndexDataset = generateDatasetFromResults(shapeIndexPathResult, shapeIndexPathSummary, "Full shape model")
     return (shapeIndexDataset,)
 
 
 @app.cell
 def _(generateDatasetFromResults):
-    shapeIndexInnerPathResult = "../results/shape-inner/shape_index_result.json"
-    shapeIndexInnerPathSummary = "../results/shape-inner/summary_shape_index_result.json"
+    shapeIndexInnerPathResult = "./results/shape-inner/shape_index_result.json"
+    shapeIndexInnerPathSummary = "./results/shape-inner/summary_shape_index_result.json"
     shapeIndexInnerDataset = generateDatasetFromResults(shapeIndexInnerPathResult, shapeIndexInnerPathSummary, "Dataset shape model")
     return (shapeIndexInnerDataset,)
 
 
 @app.cell
 def _(generateDatasetFromResults):
-    shapeIndexMinimalPathResult = "../results/shape-minimal/shape_index_result.json"
-    shapeIndexMinimalPathSummary = "../results/shape-minimal/summary_shape_index_result.json"
+    shapeIndexMinimalPathResult = "./results/shape-minimal/shape_index_result.json"
+    shapeIndexMinimalPathSummary = "./results/shape-minimal/summary_shape_index_result.json"
     shapeIndexMinimalDataset = generateDatasetFromResults(shapeIndexMinimalPathResult, shapeIndexMinimalPathSummary, "Minimal model")
     return (shapeIndexMinimalDataset,)
 
@@ -65,7 +67,7 @@ def _(shapeIndexDataset, shapeIndexInnerDataset, shapeIndexMinimalDataset):
 
 
 @app.cell
-def _(Line2D, evalInstances, np, plt):
+def _(Line2D, evalInstances, mo, np, plt):
     def colorViolon(part, color):
         for pc in part['bodies']:
             pc.set_color(color)
@@ -100,26 +102,21 @@ def _(Line2D, evalInstances, np, plt):
             colorViolon(plot, color)
             legend_elements.append(Line2D([0], [0], color=color, label=label))
         ax.legend(handles=legend_elements)
+
+        mo.mpl.interactive(ax)
+        return fig
     return color_map, plotOneQueryExecutionTime
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
-        ## Single plots
-        """
-    )
+    mo.md(r"""## Single plots""")
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
-        ### Discover
-        """
-    )
+    mo.md(r"""### Discover""")
     return
 
 
@@ -167,11 +164,7 @@ def _(color_map, evalInstances, plotOneQueryExecutionTime):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
-        ### Short
-        """
-    )
+    mo.md(r"""### Short""")
     return
 
 
@@ -219,11 +212,7 @@ def _(color_map, evalInstances, plotOneQueryExecutionTime):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
-        # Reduction by query templates
-        """
-    )
+    mo.md(r"""# Reduction by query templates""")
     return
 
 
@@ -281,11 +270,7 @@ def _(
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
-        # Reduction by query templates figure
-        """
-    )
+    mo.md(r"""# Reduction by query templates figure""")
     return
 
 
@@ -337,13 +322,13 @@ def _():
 
 
 @app.cell
-def _(MultipleLocator, color_map, instances, np, plt, queries):
+def _(MultipleLocator, color_map, instances, mo, np, plt, queries):
     def generatePlot(results, yaxisLabel):
-    
+
         x = np.arange(len(queries))
         width = 1/len(instances) -0.1 # the width of the bars
         multiplier = 0
-    
+
         fig, ax = plt.subplots(figsize=(10, 8))
 
         for dataset, measurements in results.items():
@@ -363,7 +348,10 @@ def _(MultipleLocator, color_map, instances, np, plt, queries):
         ax.set_ylabel(yaxisLabel)
         ax.set_xticks(x + width, queries)
         ax.grid(axis="both")
-        ax.legend()
+        #ax.legend(fontsize="x-large")
+        mo.mpl.interactive(ax)
+    
+        return fig
     return (generatePlot,)
 
 
@@ -381,10 +369,8 @@ def _(generatePlot, result_object_http):
 
 @app.cell
 def _():
-    import marimo as mo
-    return (mo,)
+    return
 
 
 if __name__ == "__main__":
     app.run()
-
