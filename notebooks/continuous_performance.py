@@ -25,6 +25,7 @@ def _():
         Path,
         diefficiency,
         generateDatasetFromResults,
+        json,
         mo,
         np,
     )
@@ -390,7 +391,7 @@ def _(mo):
 @app.cell
 def _(Path):
     artefact_path = Path("artefact") / "continuous_performance"
-    return
+    return (artefact_path,)
 
 
 @app.cell
@@ -426,7 +427,14 @@ def _(
     (resp_si, resp_by_template_si) = generate_continuous_performances(shapeIndexDataset)
     (resp_ldp, resp_by_template_ldp) = generate_continuous_performances(ldpDataset)
     (resp_ti, resp_by_template_ti) = generate_continuous_performances(typeIndexLdpDataset)
-    return resp_by_template_ldp, resp_by_template_si, resp_by_template_ti
+    return (
+        resp_by_template_ldp,
+        resp_by_template_si,
+        resp_by_template_ti,
+        resp_ldp,
+        resp_si,
+        resp_ti,
+    )
 
 
 @app.cell
@@ -441,49 +449,56 @@ def _(mo):
     return
 
 
-app._unparsable_cell(
-    r"""
-    with open( / \"raw_shape_index.json\", 'w') as f:
+@app.cell
+def _(
+    artefact_path,
+    json,
+    resp_by_template_ldp,
+    resp_by_template_si,
+    resp_by_template_ti,
+    resp_ldp,
+    resp_si,
+    resp_ti,
+):
+    with open(artefact_path / "raw_shape_index.json", 'w') as f:
         json.dump(resp_si, f)
 
-    with open( / \"raw_ldp.json\", 'w') as f:
+    with open(artefact_path / "raw_ldp.json", 'w') as f:
         json.dump(resp_ldp, f)
 
-    with open( / \"raw_type_index.json\", 'w') as f:
+    with open(artefact_path / "raw_type_index.json", 'w') as f:
         json.dump(resp_ti, f)
 
 
-    with open( / \"summary_shape_index.json\", 'w') as f:
+    with open(artefact_path / "summary_shape_index.json", 'w') as f:
         json.dump(resp_no_raw(resp_si), f)
 
-    with open( / \"summary_ldp.json\", 'w') as f:
+    with open(artefact_path / "summary_ldp.json", 'w') as f:
         json.dump(resp_no_raw(resp_ldp), f)
 
-    with open( / \"summary_type_index.json\", 'w') as f:
+    with open(artefact_path / "summary_type_index.json", 'w') as f:
         json.dump(resp_no_raw(resp_ti), f)
 
 
-    with open( / \"shape_index_by_template.json\", 'w') as f:
+    with open(artefact_path / "shape_index_by_template.json", 'w') as f:
         json.dump(resp_by_template_si, f)
 
-    with open( / \"ldp_by_template.json\", 'w') as f:
+    with open(artefact_path / "ldp_by_template.json", 'w') as f:
         json.dump(resp_by_template_ldp, f)
 
-    with open( / \"type_index_by_template.json\", 'w') as f:
+    with open(artefact_path / "type_index_by_template.json", 'w') as f:
         json.dump(resp_by_template_ti, f)
 
 
-    with open( / \"summary_shape_index_by_template.json\", 'w') as f:
+    with open(artefact_path / "summary_shape_index_by_template.json", 'w') as f:
         json.dump(resp_no_raw_by_template(resp_by_template_si), f)
 
-    with open( / \"summary_ldp_by_template.json\", 'w') as f:
+    with open(artefact_path / "summary_ldp_by_template.json", 'w') as f:
         json.dump(resp_no_raw_by_template(resp_by_template_ldp), f)
 
-    with open( / \"summary_type_indexby_template.json\", 'w') as f:
+    with open(artefact_path / "summary_type_indexby_template.json", 'w') as f:
         json.dump(resp_no_raw_by_template(resp_by_template_ti), f)
-    """,
-    name="_"
-)
+    return
 
 
 @app.cell
@@ -646,43 +661,37 @@ def _(
     return (plot,)
 
 
-app._unparsable_cell(
-    r"""
-    fig_first_results = plot(\"firstResult\")
+@app.cell
+def _(artefact_path, plot):
+    fig_first_results = plot("firstResult")
 
-    fig_first_results.savefig( / \"first_result.svg\", format=\"svg\")
-    fig_first_results.savefig( / \"first_result.eps\", format=\"eps\")
+    fig_first_results.savefig(artefact_path / "first_result.svg", format="svg")
+    fig_first_results.savefig(artefact_path / "first_result.eps", format="eps")
 
     fig_first_results
-    """,
-    name="_"
-)
+    return
 
 
-app._unparsable_cell(
-    r"""
-    fig_termination_time = plot(\"terminationTime\")
+@app.cell
+def _(artefact_path, plot):
+    fig_termination_time = plot("terminationTime")
 
-    fig_termination_time.savefig( / \"termination_time.svg\", format=\"svg\")
-    fig_termination_time.savefig( / \"termination_time.eps\", format=\"eps\")
+    fig_termination_time.savefig(artefact_path / "termination_time.svg", format="svg")
+    fig_termination_time.savefig(artefact_path / "termination_time.eps", format="eps")
 
     fig_termination_time
-    """,
-    name="_"
-)
+    return
 
 
-app._unparsable_cell(
-    r"""
-    fig_waiting_time = plot(\"waitingTime\")
+@app.cell
+def _(artefact_path, plot):
+    fig_waiting_time = plot("waitingTime")
 
-    fig_waiting_time.savefig( / \"waiting_time.svg\", format=\"svg\")
-    fig_waiting_time.savefig( / \"waiting_time.eps\", format=\"eps\")
+    fig_waiting_time.savefig(artefact_path / "waiting_time.svg", format="svg")
+    fig_waiting_time.savefig(artefact_path / "waiting_time.eps", format="eps")
 
     fig_waiting_time
-    """,
-    name="_"
-)
+    return
 
 
 @app.cell
@@ -691,30 +700,26 @@ def _(plot):
     return
 
 
-app._unparsable_cell(
-    r"""
-    fig_dief_1 = plot(\"dief@1s\")
+@app.cell
+def _(artefact_path, plot):
+    fig_dief_1 = plot("dief@1s")
 
-    fig_dief_1.savefig( / \"dief_1.svg\", format=\"svg\")
-    fig_dief_1.savefig( / \"dief_1.eps\", format=\"eps\")
+    fig_dief_1.savefig(artefact_path / "dief_1.svg", format="svg")
+    fig_dief_1.savefig(artefact_path / "dief_1.eps", format="eps")
 
     fig_dief_1
-    """,
-    name="_"
-)
+    return
 
 
-app._unparsable_cell(
-    r"""
-    fig_dief_10 = plot(\"dief@10s\")
+@app.cell
+def _(artefact_path, plot):
+    fig_dief_10 = plot("dief@10s")
 
-    fig_dief_10.savefig( / \"dief_10.svg\", format=\"svg\")
-    fig_dief_10.savefig( / \"dief_10.eps\", format=\"eps\")
+    fig_dief_10.savefig(artefact_path / "dief_10.svg", format="svg")
+    fig_dief_10.savefig(artefact_path / "dief_10.eps", format="eps")
 
     fig_dief_10
-    """,
-    name="_"
-)
+    return
 
 
 @app.cell
