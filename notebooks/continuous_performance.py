@@ -25,7 +25,6 @@ def _():
         Path,
         diefficiency,
         generateDatasetFromResults,
-        json,
         mo,
         np,
     )
@@ -391,7 +390,7 @@ def _(mo):
 @app.cell
 def _(Path):
     artefact_path = Path("artefact") / "continuous_performance"
-    return (artefact_path,)
+    return
 
 
 @app.cell
@@ -427,14 +426,7 @@ def _(
     (resp_si, resp_by_template_si) = generate_continuous_performances(shapeIndexDataset)
     (resp_ldp, resp_by_template_ldp) = generate_continuous_performances(ldpDataset)
     (resp_ti, resp_by_template_ti) = generate_continuous_performances(typeIndexLdpDataset)
-    return (
-        resp_by_template_ldp,
-        resp_by_template_si,
-        resp_by_template_ti,
-        resp_ldp,
-        resp_si,
-        resp_ti,
-    )
+    return resp_by_template_ldp, resp_by_template_si, resp_by_template_ti
 
 
 @app.cell
@@ -449,56 +441,49 @@ def _(mo):
     return
 
 
-@app.cell
-def _(
-    artefact_path,
-    json,
-    resp_by_template_ldp,
-    resp_by_template_si,
-    resp_by_template_ti,
-    resp_ldp,
-    resp_si,
-    resp_ti,
-):
-    with open(artefact_path / "raw_shape_index.json", 'w') as f:
+app._unparsable_cell(
+    r"""
+    with open( / \"raw_shape_index.json\", 'w') as f:
         json.dump(resp_si, f)
 
-    with open(artefact_path / "raw_ldp.json", 'w') as f:
+    with open( / \"raw_ldp.json\", 'w') as f:
         json.dump(resp_ldp, f)
 
-    with open(artefact_path / "raw_type_index.json", 'w') as f:
+    with open( / \"raw_type_index.json\", 'w') as f:
         json.dump(resp_ti, f)
 
 
-    with open(artefact_path / "summary_shape_index.json", 'w') as f:
+    with open( / \"summary_shape_index.json\", 'w') as f:
         json.dump(resp_no_raw(resp_si), f)
 
-    with open(artefact_path / "summary_ldp.json", 'w') as f:
+    with open( / \"summary_ldp.json\", 'w') as f:
         json.dump(resp_no_raw(resp_ldp), f)
 
-    with open(artefact_path / "summary_type_index.json", 'w') as f:
+    with open( / \"summary_type_index.json\", 'w') as f:
         json.dump(resp_no_raw(resp_ti), f)
 
 
-    with open(artefact_path / "shape_index_by_template.json", 'w') as f:
+    with open( / \"shape_index_by_template.json\", 'w') as f:
         json.dump(resp_by_template_si, f)
 
-    with open(artefact_path / "ldp_by_template.json", 'w') as f:
+    with open( / \"ldp_by_template.json\", 'w') as f:
         json.dump(resp_by_template_ldp, f)
 
-    with open(artefact_path / "type_index_by_template.json", 'w') as f:
+    with open( / \"type_index_by_template.json\", 'w') as f:
         json.dump(resp_by_template_ti, f)
 
 
-    with open(artefact_path / "summary_shape_index_by_template.json", 'w') as f:
+    with open( / \"summary_shape_index_by_template.json\", 'w') as f:
         json.dump(resp_no_raw_by_template(resp_by_template_si), f)
 
-    with open(artefact_path / "summary_ldp_by_template.json", 'w') as f:
+    with open( / \"summary_ldp_by_template.json\", 'w') as f:
         json.dump(resp_no_raw_by_template(resp_by_template_ldp), f)
 
-    with open(artefact_path / "summary_type_indexby_template.json", 'w') as f:
+    with open( / \"summary_type_indexby_template.json\", 'w') as f:
         json.dump(resp_no_raw_by_template(resp_by_template_ti), f)
-    return
+    """,
+    name="_"
+)
 
 
 @app.cell
@@ -567,7 +552,7 @@ def _(
             template = template.replace("{}", wt, 1)
 
     print(template)
-        
+
     return
 
 
@@ -594,7 +579,6 @@ def colorViolon(part, color):
     part['cmins'].set_color(color)
     part['cmaxes'].set_color(color)
     part['cbars'].set_color(color)
-    #part['cmedians'].set_color(color)
 
 
 @app.cell
@@ -611,7 +595,7 @@ def _(
     typeIndexLdpDataset,
 ):
     def plot(metric):
-    
+
         query_map = {
             'interactive-discover-1': 'D1',
             'interactive-discover-2': 'D2',
@@ -628,10 +612,10 @@ def _(
         indexes = np.linspace(0, 0.25, len(query_map))
         width = 0.02
         fig, ax = plt.subplots()
-    
+
         ax.set_xticks(indexes)
         ax.set_xticklabels([label for label in query_map.values()])
-    
+
         summaries = [
             (resp_by_template_si, shapeIndexDataset),
             (resp_by_template_ti, typeIndexLdpDataset), 
@@ -644,55 +628,61 @@ def _(
             for instance in reported_templates:
                 data = np.array(summary[instance][metric]["raw"])/1000 if summary[instance][metric] != None else [float('nan'), float('nan')]
                 all_data.append(data)
-        
+
             current_plot = ax.violinplot(all_data, indexes, widths=width, showmeans=True, showmedians=False)
             violon_plots[dataset.name] = current_plot
             color = color_map[dataset.name]
             colorViolon(current_plot, color)
             legend_elements.append(Line2D([0], [0], color=color, label=dataset.name))
-            
+
         ax.legend(handles=legend_elements)
         ax.grid(axis='both')
-    
+
         ax.set_xlabel('Query')
         ax.set_ylabel('time (s)')
-    
+
         mo.mpl.interactive(ax)
         return fig
     return (plot,)
 
 
-@app.cell
-def _(artefact_path, plot):
-    fig_first_results = plot("firstResult")
+app._unparsable_cell(
+    r"""
+    fig_first_results = plot(\"firstResult\")
 
-    fig_first_results.savefig(artefact_path / "first_result.svg", format="svg")
-    fig_first_results.savefig(artefact_path / "first_result.eps", format="eps")
+    fig_first_results.savefig( / \"first_result.svg\", format=\"svg\")
+    fig_first_results.savefig( / \"first_result.eps\", format=\"eps\")
 
     fig_first_results
-    return
+    """,
+    name="_"
+)
 
 
-@app.cell
-def _(artefact_path, plot):
-    fig_termination_time = plot("terminationTime")
+app._unparsable_cell(
+    r"""
+    fig_termination_time = plot(\"terminationTime\")
 
-    fig_termination_time.savefig(artefact_path / "termination_time.svg", format="svg")
-    fig_termination_time.savefig(artefact_path / "termination_time.eps", format="eps")
+    fig_termination_time.savefig( / \"termination_time.svg\", format=\"svg\")
+    fig_termination_time.savefig( / \"termination_time.eps\", format=\"eps\")
 
     fig_termination_time
-    return
+    """,
+    name="_"
+)
 
 
-@app.cell
-def _(artefact_path, plot):
-    fig_waiting_time = plot("waitingTime")
+app._unparsable_cell(
+    r"""
+    fig_waiting_time = plot(\"waitingTime\")
 
-    fig_waiting_time.savefig(artefact_path / "waiting_time.svg", format="svg")
-    fig_waiting_time.savefig(artefact_path / "waiting_time.eps", format="eps")
+    fig_waiting_time.savefig( / \"waiting_time.svg\", format=\"svg\")
+    fig_waiting_time.savefig( / \"waiting_time.eps\", format=\"eps\")
 
     fig_waiting_time
-    return
+    """,
+    name="_"
+)
 
 
 @app.cell
@@ -701,26 +691,30 @@ def _(plot):
     return
 
 
-@app.cell
-def _(artefact_path, plot):
-    fig_dief_1 = plot("dief@1s")
+app._unparsable_cell(
+    r"""
+    fig_dief_1 = plot(\"dief@1s\")
 
-    fig_dief_1.savefig(artefact_path / "dief_1.svg", format="svg")
-    fig_dief_1.savefig(artefact_path / "dief_1.eps", format="eps")
+    fig_dief_1.savefig( / \"dief_1.svg\", format=\"svg\")
+    fig_dief_1.savefig( / \"dief_1.eps\", format=\"eps\")
 
     fig_dief_1
-    return
+    """,
+    name="_"
+)
 
 
-@app.cell
-def _(artefact_path, plot):
-    fig_dief_10 = plot("dief@10s")
+app._unparsable_cell(
+    r"""
+    fig_dief_10 = plot(\"dief@10s\")
 
-    fig_dief_10.savefig(artefact_path / "dief_10.svg", format="svg")
-    fig_dief_10.savefig(artefact_path / "dief_10.eps", format="eps")
+    fig_dief_10.savefig( / \"dief_10.svg\", format=\"svg\")
+    fig_dief_10.savefig( / \"dief_10.eps\", format=\"eps\")
 
     fig_dief_10
-    return
+    """,
+    name="_"
+)
 
 
 @app.cell
