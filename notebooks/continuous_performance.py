@@ -532,17 +532,27 @@ def _():
 
 
 @app.function
-def displayed_stat(stat):
+def displayed_stat(stat, bold):
     if stat is None:
         return "-"
     avg_val = stat["avg"]/1000
     min_val = stat["min"]/1000
     max_val = stat["max"]/1000
     std_val = stat["std"]/1000
-    if avg_val < 0.009 and min_val < 0.009 and max_val < 0.009:
-        return "$0$"
-    else:
-        return f"${avg_val:.2f}_{{{min_val:.2f}}}^{{{max_val:.2f}}}$"
+    if bold:
+        return f"$\\boldsymbol{{{avg_val:.2f}}}$"
+    return f"${avg_val:.2f}$"
+
+
+@app.function
+def best_result(value, field, best_value):
+    if value[field] == None:
+        return False
+    if best_value == None:
+        return True
+    if best_value[field]["avg"] > value[field]["avg"]:
+        return True
+    return False
 
 
 @app.cell
@@ -558,16 +568,49 @@ def _(
 
     for q in reported_templates:
         summaries = [resp_by_template_si[q], resp_by_template_ti[q], resp_by_template_ldp[q]]
+        best_ft = None
+        best_tt = None
+        best_wt = None
         for summary in summaries:
-            ft = displayed_stat(summary["firstResult"])
-            tt = displayed_stat(summary["terminationTime"])
-            wt = displayed_stat(summary["waitingTime"])
+            if best_result(summary, "firstResult", best_ft):
+                best_ft = summary
+        
+            if best_result(summary, "terminationTime", best_tt):
+                best_tt = summary 
+    
+            if best_result(summary,"waitingTime", best_wt):
+                best_wt = summary             
+    
+        for summary in summaries:
+            ft = None
+            tt = None 
+            wt = None 
+        
+            if best_ft == summary:
+                ft = displayed_stat(summary["firstResult"], True)
+            else:
+                ft = displayed_stat(summary["firstResult"], False)
+
+            if best_tt == summary:
+                tt = displayed_stat(summary["terminationTime"], True)
+            else:
+                tt = displayed_stat(summary["terminationTime"], False)
+
+            if best_wt == summary:    
+                wt = displayed_stat(summary["waitingTime"], True)
+            else:
+                wt = displayed_stat(summary["waitingTime"], False)
+            
             template = template.replace("{}", ft, 1)
             template = template.replace("{}", tt, 1)
             template = template.replace("{}", wt, 1)
+    return (template,)
 
-    print(template)
 
+@app.cell
+def _(artefact_path, template):
+    with open(artefact_path / "table_continuous_performance.tex", "w") as table_file:
+        table_file.write(template)
     return
 
 
