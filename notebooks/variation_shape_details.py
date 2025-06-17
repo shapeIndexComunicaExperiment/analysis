@@ -24,15 +24,17 @@ def _():
     from matplotlib.ticker import FormatStrFormatter
     from matplotlib.lines import Line2D
     import statistics
+    from plotsVariation import generatePlot, generate_stats
+    from pathlib import Path
     return (
         Line2D,
-        MultipleLocator,
-        calculatePercentageReductionSeries,
+        Path,
         generateDatasetFromResults,
+        generatePlot,
+        generate_stats,
         mo,
         np,
         plt,
-        statistics,
     )
 
 
@@ -79,6 +81,7 @@ def _(Line2D, evalInstances, mo, np, plt):
         part['cmaxes'].set_color('black')
         part['cbars'].set_color('black')
         part['cmedians'].set_color('black')
+    
     color_map = {'Full shape model': '#1A85FF', 'Dataset shape model': '#D41159', 'Minimal model': '#004D40'}
 
     def plotOneQueryExecutionTime(instances, queryName, color_map):
@@ -212,89 +215,21 @@ def _(color_map, evalInstances, plotOneQueryExecutionTime):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""# Reduction by query templates""")
-    return
-
-
-@app.cell
-def _(np, statistics):
-    def statisticTemplateMetric(serie):
-        stat = {}
-        for query_template, val in serie.items():
-            clean_list = list(filter(lambda a: a != None, val))
-            avg = np.nan
-            std = np.nan
-            min_val = np.nan
-            max_val = np.nan
-            if len(clean_list) !=0:
-                avg = statistics.mean(clean_list)
-                if len(clean_list) > 2:
-                    std = statistics.stdev(clean_list)
-                min_val = min(clean_list)
-                max_val = max(clean_list)
-            stat[query_template] = {
-                "avg": avg,
-                "std": std,
-                "min":min_val,
-                "max": max_val,
-                "raw": list(map(lambda x: x if x != None else 0, val))
-            }
-        return stat
-    return (statisticTemplateMetric,)
-
-
-@app.cell
-def _():
-    result_object = {}
-    return (result_object,)
-
-
-@app.cell
-def _(
-    calculatePercentageReductionSeries,
-    result_object,
-    shapeIndexDataset,
-    shapeIndexInnerDataset,
-    shapeIndexMinimalDataset,
-    statisticTemplateMetric,
-):
-    instances = [shapeIndexInnerDataset, shapeIndexMinimalDataset]
-    for _instance in instances:
-        reduction_http_req = calculatePercentageReductionSeries(_instance.numberHttpRequest, shapeIndexDataset.numberHttpRequest)
-        reduction_time = calculatePercentageReductionSeries(_instance.meanExecutionTime, shapeIndexDataset.meanExecutionTime)
-        stat_http_req = statisticTemplateMetric(reduction_http_req)
-        stat_time = statisticTemplateMetric(reduction_time)
-        result_object[_instance.name] = {'http_request': stat_http_req, 'time': stat_time}
-    return (instances,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
     mo.md(r"""# Reduction by query templates figure""")
     return
 
 
 @app.cell
-def _(result_object):
-    result_object_means_http = {}
-    result_object_http = {}
-    result_object_means_time = {}
-    result_object_time = {}
-    for _instance, results in result_object.items():
-        result_object_means_http[_instance] = []
-        result_object_means_time[_instance] = []
-        result_object_http[_instance] = []
-        result_object_time[_instance] = []
-        for key, values in results.items():
-            if key == 'time':
-                for value in values.values():
-                    result_object_means_time[_instance].append(value['avg'])
-                    result_object_time[_instance].append(value['raw'])
-            if key == 'http_request':
-                for value in values.values():
-                    result_object_means_http[_instance].append(value['avg'])
-                    result_object_http[_instance].append(value['raw'])
-    return result_object_http, result_object_time
+def _(
+    generate_stats,
+    shapeIndexDataset,
+    shapeIndexInnerDataset,
+    shapeIndexMinimalDataset,
+):
+    instances = [shapeIndexInnerDataset, shapeIndexMinimalDataset]
+
+    (result_object_means_http, result_object_http, result_object_means_time, result_object_time) = generate_stats(instances, shapeIndexDataset)
+    return instances, result_object_http, result_object_time
 
 
 @app.cell
@@ -318,52 +253,55 @@ def _():
         }
 
     queries = query_map.values()
-    return (queries,)
+    query_to_skip = ["D8", "S2", "S3", "S6"]
+    return (query_to_skip,)
 
 
 @app.cell
-def _(MultipleLocator, color_map, instances, mo, np, plt, queries):
-    def generatePlot(results, yaxisLabel):
-
-        x = np.arange(len(queries))
-        width = 1/len(instances) -0.1 # the width of the bars
-        multiplier = 0
-
-        fig, ax = plt.subplots(figsize=(10, 8))
-
-        for dataset, measurements in results.items():
-            offset = width * multiplier + width/len(results)
-            data = list(range(len(queries)))
-            for i, measurement in enumerate(measurements):
-                data[i] = measurement
-            multiplier += 1
-            ax.boxplot(data,
-                       positions=x+offset,
-                       widths=width,
-                       patch_artist=True,
-                       label=dataset,
-                       boxprops=dict(facecolor=color_map[dataset]),
-                      )
-        ax.yaxis.set_major_locator(MultipleLocator(1))
-        ax.set_ylabel(yaxisLabel)
-        ax.set_xticks(x + width, queries)
-        ax.grid(axis="both")
-        #ax.legend(fontsize="x-large")
-        mo.mpl.interactive(ax)
-    
-        return fig
-    return (generatePlot,)
+def _(Path):
+    artefact_path = Path("artefact") / "variation_detail_shape"
+    return (artefact_path,)
 
 
 @app.cell
-def _(generatePlot, result_object_time):
-    generatePlot(result_object_time,'ratio execution time')
+def _(color_map, generatePlot, instances, query_to_skip, result_object_time):
+    time_figure = generatePlot(
+        result_object_time,
+        'ratio execution time',
+        len(instances),
+        color_map=color_map,
+        query_to_skip=query_to_skip,
+    )
+
+    time_figure
+    return (time_figure,)
+
+
+@app.cell
+def _(artefact_path, time_figure):
+    time_figure.savefig(artefact_path / "reduction_query_execution_time.svg", format="svg")
+    time_figure.savefig(artefact_path / "reduction_query_execution_time.eps", format="eps")
     return
 
 
 @app.cell
-def _(generatePlot, result_object_http):
-    generatePlot(result_object_http,'ratio HTTP request')
+def _(color_map, generatePlot, instances, query_to_skip, result_object_http):
+    http_req_fig = generatePlot(
+        result_object_http,
+        'ratio HTTP request',
+        len(instances),
+        color_map=color_map,
+        query_to_skip=query_to_skip,
+        ylim=16
+    )
+    http_req_fig
+    return (http_req_fig,)
+
+
+@app.cell
+def _(artefact_path, http_req_fig):
+    http_req_fig.savefig(artefact_path / "reduction_number_HTTP_requests.svg", format="svg")
+    http_req_fig.savefig(artefact_path / "reduction_number_HTTP_requests.eps", format="eps")
     return
 
 

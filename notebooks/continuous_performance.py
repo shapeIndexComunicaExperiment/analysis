@@ -3,9 +3,7 @@ import marimo
 __generated_with = "0.13.15"
 app = marimo.App(width="medium")
 
-
-@app.cell
-def _():
+with app.setup:
     import marimo as mo
     import json
     from texttable import Texttable
@@ -19,34 +17,19 @@ def _():
     import numpy as np
     from typing import List, Optional
     from pathlib import Path
-    return (
-        List,
-        Optional,
-        Path,
-        diefficiency,
-        generateDatasetFromResults,
-        json,
-        mo,
-        np,
-    )
+    import matplotlib.pyplot as plt
+    from matplotlib.ticker import FormatStrFormatter
+    from matplotlib.lines import Line2D
 
 
 @app.cell
 def _():
-    import matplotlib.pyplot as plt
-    from matplotlib.ticker import FormatStrFormatter
-    from matplotlib.lines import Line2D
-    return Line2D, plt
-
-
-@app.cell
-def _(mo):
     mo.md(r"""# Preambule""")
     return
 
 
 @app.cell
-def _(mo):
+def _():
     mo.md(
         r"""
     On this notebook we are calculating the continuous performances of the approaches.
@@ -69,7 +52,7 @@ def _(mo):
 
 
 @app.cell
-def _(mo):
+def _():
     mo.md(r"""# Function definition""")
     return
 
@@ -113,9 +96,6 @@ def _(queries):
                     "execTime": None,
                     "terminationTime":None,
                     "waitingTime":None,
-                    "dief@0.1s":None,
-                    "dief@1s":None,
-                    "dief@10s":None,
                 }
                 resp[query].append(metrics)
         return resp
@@ -139,21 +119,18 @@ def resp_no_raw(resp):
     return clean_resp
 
 
-@app.cell
-def _(List, Optional, np):
-    def stats(results: Optional[List[float]]):
-        if results == None:
-            return None
-        arr = np.array(results)
+@app.function
+def stats(results: Optional[List[float]]):
+    if results == None:
+        return None
+    arr = np.array(results)
 
-        avg = float(np.mean(arr))
-        max = float(np.max(arr))
-        min = float(np.min(arr))
-        std = float(np.std(arr))
+    avg = float(np.mean(arr))
+    max = float(np.max(arr))
+    min = float(np.min(arr))
+    std = float(np.std(arr))
 
-        return {"avg": avg, "min": min, "max":max, "std":std, "raw": results}
-
-    return (stats,)
+    return {"avg": avg, "min": min, "max":max, "std":std, "raw": results}
 
 
 @app.function
@@ -164,7 +141,7 @@ def populate_number_of_results(resp, dataset):
 
 
 @app.cell
-def _(stats, version_dict, versions):
+def _(version_dict, versions):
     def populate_exec_times(resp, dataset):
         for q, execTimes in dataset.executionTime.items():
             for v in versions:
@@ -179,7 +156,7 @@ def _(stats, version_dict, versions):
 
 
 @app.cell
-def _(queries, stats, version_dict, versions):
+def _(queries, version_dict, versions):
     def populate_first_results(resp, dataset):
         for q in queries:
             for v in versions:
@@ -200,7 +177,7 @@ def _(queries, stats, version_dict, versions):
 
 
 @app.cell
-def _(queries, stats, version_dict, versions):
+def _(queries, version_dict, versions):
     def populate_last_results(resp, dataset):
         for q in queries:
             for v in versions:
@@ -219,23 +196,20 @@ def _(queries, stats, version_dict, versions):
     return (populate_last_results,)
 
 
-@app.cell
-def _(np, stats):
-    def populate_termination_time(resp):
-        for q, value in resp.items():
-            for metrics in value:
-                last_result = metrics["lastResult"]
-                exec_time = metrics["execTime"]
-                if last_result != None and exec_time != None:
-                    termination_time = np.array(exec_time["raw"]) - np.array(last_result["raw"]) 
-                    metrics["terminationTime"] = stats(termination_time.tolist())
-        return
-
-    return (populate_termination_time,)
+@app.function
+def populate_termination_time(resp):
+    for q, value in resp.items():
+        for metrics in value:
+            last_result = metrics["lastResult"]
+            exec_time = metrics["execTime"]
+            if last_result != None and exec_time != None:
+                termination_time = np.array(exec_time["raw"]) - np.array(last_result["raw"]) 
+                metrics["terminationTime"] = stats(termination_time.tolist())
+    return
 
 
 @app.cell
-def _(queries, stats, version_dict, versions):
+def _(queries, version_dict, versions):
     def populate_waiting_time(resp, dataset):
         for q in queries:
             for v in versions:
@@ -259,86 +233,33 @@ def _(queries, stats, version_dict, versions):
     return (populate_waiting_time,)
 
 
-@app.cell
-def _(diefficiency, stats, version_dict):
-    def populate_diefficiency(resp, dataset):
-        for q, value in dataset.arrivalTimes.items():
-            for v, arrival_time_rep in value.items():
-                exec_time = resp[q][version_dict[v]]["execTime"]
-                if exec_time == None:
-                    resp[q][version_dict[v]]["dief@0.1s"] = None
-                    resp[q][version_dict[v]]["dief@1s"] = None
-                    resp[q][version_dict[v]]["dief@10s"] = None
+@app.function
+def create_resp_by_template(resp):
+    resp_by_template = {}
+
+    for q, values in resp.items():
+        resp_by_template[q] = {}
+        for entry in resp.values():
+            for instantiation in entry:
+                for key in instantiation.keys():
+                    resp_by_template[q][key] = []
+            break
+        for instantiation in values:
+            for name, metric in instantiation.items():
+                if metric is None:
                     continue
+                if isinstance(metric, int):
+                    resp_by_template[q][name].append(metric)
+                elif isinstance(metric, dict) and "raw" in metric:
+                    resp_by_template[q][name].extend(metric["raw"])
 
-                n_results = resp[q][version_dict[v]]["nResult"]
+        for name, metric_list in resp_by_template[q].items():
+            if metric_list:
+                resp_by_template[q][name] = stats(metric_list)
+            else:
+                resp_by_template[q][name] = None
 
-                if n_results <=1:
-                    resp[q][version_dict[v]]["dief@0.1s"] = stats([0])
-                    resp[q][version_dict[v]]["dief@1s"] = stats([0])
-                    resp[q][version_dict[v]]["dief@10s"] = stats([0])
-                    continue
-
-                diefficiencies_0_1s = []
-                diefficiencies_1s = []
-                diefficiencies_10s = []
-
-                for arrival_time in arrival_time_rep:
-                    diefficiency_val_0_1s = diefficiency(arrival_time, 0.1*1_000)
-                    diefficiency_val_1s = diefficiency(arrival_time, 1_000)
-                    diefficiency_val_10s = diefficiency(arrival_time, 10*1_000)
-
-                    diefficiencies_0_1s.append(diefficiency_val_0_1s)
-                    diefficiencies_1s.append(diefficiency_val_1s)
-                    diefficiencies_10s.append(diefficiency_val_10s)
-
-                stat_0_1s = stats(diefficiencies_0_1s)
-                stat_1s = stats(diefficiencies_1s)
-                stat_10s = stats(diefficiencies_10s)
-
-                resp[q][version_dict[v]]["dief@0.1s"] = stat_0_1s
-                resp[q][version_dict[v]]["dief@1s"] = stat_1s
-                resp[q][version_dict[v]]["dief@10s"] = stat_10s
-        return
-    return (populate_diefficiency,)
-
-
-@app.cell
-def _(stats):
-    def create_resp_by_template(resp):
-        resp_by_template = {}
-
-        for q, values in resp.items():
-            resp_by_template[q] = {
-                "nResult": [],
-                "firstResult": [],
-                "lastResult": [],
-                "execTime": [],
-                "terminationTime": [],
-                "waitingTime": [],
-                "dief@0.1s": [],
-                "dief@1s": [],
-                "dief@10s": [],
-            }
-
-            for instantiation in values:
-                for name, metric in instantiation.items():
-                    if metric is None:
-                        continue
-                    if isinstance(metric, int):
-                        resp_by_template[q][name].append(metric)
-                    elif isinstance(metric, dict) and "raw" in metric:
-                        resp_by_template[q][name].extend(metric["raw"])
-
-            for name, metric_list in resp_by_template[q].items():
-                if metric_list:
-                    resp_by_template[q][name] = stats(metric_list)
-                else:
-                    resp_by_template[q][name] = None
-
-        return resp_by_template
-
-    return (create_resp_by_template,)
+    return resp_by_template
 
 
 @app.function
@@ -358,12 +279,9 @@ def resp_no_raw_by_template(resp_by_template):
 
 @app.cell
 def _(
-    create_resp_by_template,
-    populate_diefficiency,
     populate_exec_times,
     populate_first_results,
     populate_last_results,
-    populate_termination_time,
     populate_waiting_time,
     produce_initial_resp,
 ):
@@ -375,7 +293,6 @@ def _(
         populate_last_results(resp, dataset)
         populate_termination_time(resp)
         populate_waiting_time(resp, dataset)
-        populate_diefficiency(resp, dataset)
         resp_by_template = create_resp_by_template(resp)
 
         return (resp, resp_by_template)
@@ -383,19 +300,19 @@ def _(
 
 
 @app.cell
-def _(mo):
+def _():
     mo.md(r"""# Dataset""")
     return
 
 
 @app.cell
-def _(Path):
+def _():
     artefact_path = Path("artefact") / "continuous_performance"
     return (artefact_path,)
 
 
 @app.cell
-def _(generateDatasetFromResults):
+def _():
     shapeIndexPathResult = "./results/standard/shape_index_result.json"
     shapeIndexPathSummary = "./results/standard/summary_shape_index_result.json"
     shapeIndexDataset = generateDatasetFromResults(shapeIndexPathResult, shapeIndexPathSummary, "shape index")
@@ -412,7 +329,7 @@ def _(generateDatasetFromResults):
 
 
 @app.cell
-def _(mo):
+def _():
     mo.md(r"""# Calculation""")
     return
 
@@ -438,13 +355,13 @@ def _(
 
 
 @app.cell
-def _(mo):
+def _():
     mo.md(r"""# Artefact""")
     return
 
 
 @app.cell
-def _(mo):
+def _():
     mo.md(r"""## Json""")
     return
 
@@ -452,7 +369,6 @@ def _(mo):
 @app.cell
 def _(
     artefact_path,
-    json,
     resp_by_template_ldp,
     resp_by_template_si,
     resp_by_template_ti,
@@ -496,19 +412,19 @@ def _(
     with open(artefact_path / "summary_ldp_by_template.json", 'w') as f:
         json.dump(resp_no_raw_by_template(resp_by_template_ldp), f)
 
-    with open(artefact_path / "summary_type_indexby_template.json", 'w') as f:
+    with open(artefact_path / "summary_type_index_by_template.json", 'w') as f:
         json.dump(resp_no_raw_by_template(resp_by_template_ti), f)
     return
 
 
 @app.cell
-def _(mo):
+def _():
     mo.md(r"""## Visualization""")
     return
 
 
 @app.cell
-def _(mo):
+def _():
     mo.md(r"""## Table""")
     return
 
@@ -555,6 +471,13 @@ def best_result(value, field, best_value):
     return False
 
 
+@app.function
+def is_zero(value):
+    if value != None:
+        return round(value["avg"]/1000, 3) <= 0.01
+    return False
+
+
 @app.cell
 def _(
     reported_templates,
@@ -571,36 +494,45 @@ def _(
         best_ft = None
         best_tt = None
         best_wt = None
+    
+        all_zero_ft = True
+        all_zero_tt = True
+        all_zero_wt = True
+    
         for summary in summaries:
+            all_zero_ft = all_zero_ft and is_zero(summary["firstResult"])
+            all_zero_tt = all_zero_tt and is_zero(summary["terminationTime"])
+            all_zero_wt = all_zero_wt and is_zero(summary["waitingTime"])
+        
             if best_result(summary, "firstResult", best_ft):
                 best_ft = summary
-        
+
             if best_result(summary, "terminationTime", best_tt):
                 best_tt = summary 
-    
+
             if best_result(summary,"waitingTime", best_wt):
-                best_wt = summary             
-    
+                best_wt = summary
+            
         for summary in summaries:
             ft = None
             tt = None 
             wt = None 
-        
-            if best_ft == summary:
+
+            if best_ft == summary and not all_zero_ft:
                 ft = displayed_stat(summary["firstResult"], True)
             else:
                 ft = displayed_stat(summary["firstResult"], False)
 
-            if best_tt == summary:
+            if best_tt == summary and not all_zero_tt:
                 tt = displayed_stat(summary["terminationTime"], True)
             else:
                 tt = displayed_stat(summary["terminationTime"], False)
 
-            if best_wt == summary:    
+            if best_wt == summary and not all_zero_wt:    
                 wt = displayed_stat(summary["waitingTime"], True)
             else:
                 wt = displayed_stat(summary["waitingTime"], False)
-            
+
             template = template.replace("{}", ft, 1)
             template = template.replace("{}", tt, 1)
             template = template.replace("{}", wt, 1)
@@ -615,15 +547,18 @@ def _(artefact_path, template):
 
 
 @app.cell
-def _(mo):
+def _():
     mo.md(r"""## Plot""")
     return
 
 
-@app.cell
-def _(ldpDataset, shapeIndexDataset, typeIndexLdpDataset):
-    color_map = {shapeIndexDataset.name: '#1AFF1A', typeIndexLdpDataset.name: '#4B0092', ldpDataset.name: '#004D40'}
-    return (color_map,)
+@app.function
+def colorMap():
+    return {
+        "shape index": '#1AFF1A',
+        "type index": '#4B0092',
+        "LDP": '#004D40'
+    }
 
 
 @app.function
@@ -639,74 +574,68 @@ def colorViolon(part, color):
     part['cbars'].set_color(color)
 
 
+@app.function
+def plot(metric, resp_by_template_si, resp_by_template_ti, shapeIndexDataset, typeIndexLdpDataset, reported_templates, y_label = 'time (s)'):
+    color_map = colorMap()
+    query_map = {
+        'interactive-discover-1': 'D1',
+        'interactive-discover-2': 'D2',
+        'interactive-discover-3': 'D3',
+        'interactive-discover-4': 'D4',
+        'interactive-discover-5': 'D5',
+        'interactive-discover-6': 'D6',
+        'interactive-discover-7': 'D7',
+        'interactive-short-1': 'S1',
+        'interactive-short-4': 'S4',
+        'interactive-short-5': 'S5',
+        'interactive-short-7': 'S7'
+    }
+    indexes = np.linspace(0, 0.25, len(query_map))
+    width = 0.02
+    fig, ax = plt.subplots()
+
+    ax.set_xticks(indexes)
+    ax.set_xticklabels([label for label in query_map.values()])
+
+    summaries = [
+        (resp_by_template_si, shapeIndexDataset),
+        (resp_by_template_ti, typeIndexLdpDataset), 
+        #(resp_by_template_ldp, ldpDataset)
+    ]
+    legend_elements = []
+    for (summary, dataset) in summaries:
+        all_data = []
+        violon_plots = {}
+        for instance in reported_templates:
+            data = np.array(summary[instance][metric]["raw"])/1000 if summary[instance][metric] != None else [float('nan'), float('nan')]
+            all_data.append(data)
+
+        current_plot = ax.violinplot(all_data, indexes, widths=width, showmeans=True, showmedians=False)
+        violon_plots[dataset.name] = current_plot
+        color = color_map[dataset.name]
+        colorViolon(current_plot, color)
+        legend_elements.append(Line2D([0], [0], color=color, label=dataset.name))
+
+    ax.legend(handles=legend_elements)
+    ax.grid(axis='both')
+
+    ax.set_xlabel('Query')
+    ax.set_ylabel(y_label)
+
+    mo.mpl.interactive(ax)
+    return fig
+
+
 @app.cell
 def _(
-    Line2D,
-    color_map,
-    mo,
-    np,
-    plt,
+    artefact_path,
     reported_templates,
     resp_by_template_si,
     resp_by_template_ti,
     shapeIndexDataset,
     typeIndexLdpDataset,
 ):
-    def plot(metric):
-
-        query_map = {
-            'interactive-discover-1': 'D1',
-            'interactive-discover-2': 'D2',
-            'interactive-discover-3': 'D3',
-            'interactive-discover-4': 'D4',
-            'interactive-discover-5': 'D5',
-            'interactive-discover-6': 'D6',
-            'interactive-discover-7': 'D7',
-            'interactive-short-1': 'S1',
-            'interactive-short-4': 'S4',
-            'interactive-short-5': 'S5',
-            'interactive-short-7': 'S7'
-        }
-        indexes = np.linspace(0, 0.25, len(query_map))
-        width = 0.02
-        fig, ax = plt.subplots()
-
-        ax.set_xticks(indexes)
-        ax.set_xticklabels([label for label in query_map.values()])
-
-        summaries = [
-            (resp_by_template_si, shapeIndexDataset),
-            (resp_by_template_ti, typeIndexLdpDataset), 
-            #(resp_by_template_ldp, ldpDataset)
-        ]
-        legend_elements = []
-        for (summary, dataset) in summaries:
-            all_data = []
-            violon_plots = {}
-            for instance in reported_templates:
-                data = np.array(summary[instance][metric]["raw"])/1000 if summary[instance][metric] != None else [float('nan'), float('nan')]
-                all_data.append(data)
-
-            current_plot = ax.violinplot(all_data, indexes, widths=width, showmeans=True, showmedians=False)
-            violon_plots[dataset.name] = current_plot
-            color = color_map[dataset.name]
-            colorViolon(current_plot, color)
-            legend_elements.append(Line2D([0], [0], color=color, label=dataset.name))
-
-        ax.legend(handles=legend_elements)
-        ax.grid(axis='both')
-
-        ax.set_xlabel('Query')
-        ax.set_ylabel('time (s)')
-
-        mo.mpl.interactive(ax)
-        return fig
-    return (plot,)
-
-
-@app.cell
-def _(artefact_path, plot):
-    fig_first_results = plot("firstResult")
+    fig_first_results = plot("firstResult", resp_by_template_si, resp_by_template_ti, shapeIndexDataset, typeIndexLdpDataset, reported_templates)
 
     fig_first_results.savefig(artefact_path / "first_result.svg", format="svg")
     fig_first_results.savefig(artefact_path / "first_result.eps", format="eps")
@@ -716,8 +645,15 @@ def _(artefact_path, plot):
 
 
 @app.cell
-def _(artefact_path, plot):
-    fig_termination_time = plot("terminationTime")
+def _(
+    artefact_path,
+    reported_templates,
+    resp_by_template_si,
+    resp_by_template_ti,
+    shapeIndexDataset,
+    typeIndexLdpDataset,
+):
+    fig_termination_time = plot("terminationTime", resp_by_template_si, resp_by_template_ti, shapeIndexDataset, typeIndexLdpDataset, reported_templates)
 
     fig_termination_time.savefig(artefact_path / "termination_time.svg", format="svg")
     fig_termination_time.savefig(artefact_path / "termination_time.eps", format="eps")
@@ -727,41 +663,20 @@ def _(artefact_path, plot):
 
 
 @app.cell
-def _(artefact_path, plot):
-    fig_waiting_time = plot("waitingTime")
+def _(
+    artefact_path,
+    reported_templates,
+    resp_by_template_si,
+    resp_by_template_ti,
+    shapeIndexDataset,
+    typeIndexLdpDataset,
+):
+    fig_waiting_time = plot("waitingTime", resp_by_template_si, resp_by_template_ti, shapeIndexDataset, typeIndexLdpDataset, reported_templates)
 
     fig_waiting_time.savefig(artefact_path / "waiting_time.svg", format="svg")
     fig_waiting_time.savefig(artefact_path / "waiting_time.eps", format="eps")
 
     fig_waiting_time
-    return
-
-
-@app.cell
-def _(plot):
-    plot("dief@0.1s")
-    return
-
-
-@app.cell
-def _(artefact_path, plot):
-    fig_dief_1 = plot("dief@1s")
-
-    fig_dief_1.savefig(artefact_path / "dief_1.svg", format="svg")
-    fig_dief_1.savefig(artefact_path / "dief_1.eps", format="eps")
-
-    fig_dief_1
-    return
-
-
-@app.cell
-def _(artefact_path, plot):
-    fig_dief_10 = plot("dief@10s")
-
-    fig_dief_10.savefig(artefact_path / "dief_10.svg", format="svg")
-    fig_dief_10.savefig(artefact_path / "dief_10.eps", format="eps")
-
-    fig_dief_10
     return
 
 

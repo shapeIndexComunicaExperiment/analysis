@@ -57,7 +57,6 @@ def generatePlot(results,
                  yaxisLabel,
                  len_instance,
                  color_map,
-                 savePathNoExtension,
                  deactivate_y_axis=False,
                  deactivate_x_axis_title=False,
                  fontSize=25,
@@ -121,9 +120,9 @@ def generatePlot(results,
     ax.legend(loc='upper left',  fontsize="18")
     
     fig.tight_layout()
+    return fig
     
-    fig.savefig("{}.svg".format(savePathNoExtension), format="svg")
-    fig.savefig("{}.eps".format(savePathNoExtension), format="eps")
+    
 
 def generate_stats(instances:List[Dataset], comparatorInstance:Dataset)->Tuple[dict,dict,dict,dict]:
     result_object = {}
