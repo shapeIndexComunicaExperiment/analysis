@@ -94,6 +94,12 @@ OUTPUT_VARIATION_PERCENTAGE_ENTRY_SI = $(VARIATION_PERCENTAGE_SI_ENTRY_DIR)/redu
 	$(VARIATION_PERCENTAGE_SI_ENTRY_DIR)/reduction_query_execution_time.svg \
 	$(VARIATION_PERCENTAGE_SI_ENTRY_DIR)/reduction_query_execution_time.eps  
 
+VARIATION_PERCENTAGE_SI_DIR = $(ARTEFACT_DIR)/variation_percentage_shape_index
+OUTPUT_VARIATION_PERCENTAGE_SI = $(VARIATION_PERCENTAGE_SI_DIR)/reduction_number_HTTP_requests.eps \
+	$(VARIATION_PERCENTAGE_SI_DIR)/reduction_number_HTTP_requests.svg \
+	$(VARIATION_PERCENTAGE_SI_DIR)/reduction_query_execution_time.svg \
+	$(VARIATION_PERCENTAGE_SI_DIR)/reduction_query_execution_time.eps  
+
 all: 
 	$(MAKE) $(OUTPUTS_CONTINUOUS_PERFORMANCE_DIEF)
 	$(MAKE) $(OUTPUTS_CONTINUOUS_PERFORMANCE)
@@ -106,6 +112,7 @@ all:
 	$(MAKE) $(OUTPUT_VARIATION_APPROACH)
     $(MAKE) $(OUTPUT_VARIATION_APPROACH_NET)
     $(MAKE) $(OUTPUT_VARIATION_PERCENTAGE_ENTRY_SI)
+    $(MAKE) $(OUTPUT_VARIATION_PERCENTAGE_SI)
 
 $(OUTPUTS_CONTINUOUS_PERFORMANCE) &: ./notebooks/continuous_performance.py ./templates/table_continuous_performance.tex
 	$(RUN) ./notebooks/continuous_performance.py
@@ -139,6 +146,9 @@ $(OUTPUT_VARIATION_APPROACH_NET) &: ./notebooks/variation_net_approach.py
 
 $(OUTPUT_VARIATION_PERCENTAGE_ENTRY_SI) &: ./notebooks/variation_percentage_shape_entries.py
     $(RUN) ./notebooks/variation_percentage_shape_entries.py
+
+$(OUTPUT_VARIATION_PERCENTAGE_SI) &: ./notebooks/variation_percentage_shape_index.py
+    $(RUN) ./notebooks/variation_percentage_shape_index.py
 
 .PHONY: notebook
 

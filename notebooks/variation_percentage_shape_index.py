@@ -1,7 +1,7 @@
 import marimo
 
 __generated_with = "0.13.15"
-app = marimo.App(width="full")
+app = marimo.App()
 
 
 @app.cell
@@ -42,36 +42,52 @@ def _():
 def _(generateDatasetFromResults):
     shapeIndexPathResult = "./results/standard/shape_index_result.json"
     shapeIndexPathSummary = "./results/standard/summary_shape_index_result.json"
-    shapeIndexDataset = generateDatasetFromResults(shapeIndexPathResult, shapeIndexPathSummary, "shape index")
+    shapeIndexDataset = generateDatasetFromResults(shapeIndexPathResult, shapeIndexPathSummary, "shape index network 100%")
     return (shapeIndexDataset,)
 
 
 @app.cell
 def _(generateDatasetFromResults):
-    ldpPathResult = "./results/standard/ldp_result.json"
-    ldpPathSummary = "./results/standard/summary_ldp_result.json"
-    ldpDataset = generateDatasetFromResults(ldpPathResult, ldpPathSummary, "ldp")
-    return (ldpDataset,)
+    shapeIndex0PathResult = "./results/shape-index-0-percent/shape_index_result.json"
+    shapeIndex0PathSummary = "./results/shape-index-0-percent/summary_shape_index_result.json"
+    shapeIndex0Dataset = generateDatasetFromResults(shapeIndex0PathResult, shapeIndex0PathSummary, "shape index network 0%")
+    return (shapeIndex0Dataset,)
 
 
 @app.cell
 def _(generateDatasetFromResults):
-    typeIndexLdpPathResult = "./results/standard/type_index_ldp_result.json"
-    typeIndexLdpPathSummary = "./results/standard/summary_type_index_ldp_result.json"
-    typeIndexLdpDataset = generateDatasetFromResults(typeIndexLdpPathResult, typeIndexLdpPathSummary, "type index and ldp")
-    return (typeIndexLdpDataset,)
+    shapeIndex20PathResult = "./results/shape-index-20-percent/shape_index_result.json"
+    shapeIndex20PathSummary = "./results/shape-index-20-percent/summary_shape_index_result.json"
+    shapeIndex20Dataset = generateDatasetFromResults(shapeIndex20PathResult, shapeIndex20PathSummary, "shape index network 20%")
+    return (shapeIndex20Dataset,)
 
 
 @app.cell
-def _(ldpDataset, shapeIndexDataset, typeIndexLdpDataset):
-    evalInstances = [shapeIndexDataset, ldpDataset, typeIndexLdpDataset]
+def _(generateDatasetFromResults):
+    shapeIndex50PathResult = "./results/shape-index-50-percent/shape_index_result.json"
+    shapeIndex50PathSummary = "./results/shape-index-50-percent/summary_shape_index_result.json"
+    shapeIndex50Dataset = generateDatasetFromResults(shapeIndex50PathResult, shapeIndex50PathSummary, "shape index network 50%")
+    return (shapeIndex50Dataset,)
+
+
+@app.cell
+def _(generateDatasetFromResults):
+    shapeIndex80PathResult = "./results/shape-index-80-percent/shape_index_result.json"
+    shapeIndex80PathSummary = "./results/shape-index-80-percent/summary_shape_index_result.json"
+    shapeIndex80Dataset = generateDatasetFromResults(shapeIndex80PathResult, shapeIndex80PathSummary, "shape index network 80%")
+    return (shapeIndex80Dataset,)
+
+
+@app.cell
+def _(
+    shapeIndex0Dataset,
+    shapeIndex20Dataset,
+    shapeIndex50Dataset,
+    shapeIndex80Dataset,
+    shapeIndexDataset,
+):
+    evalInstances = [shapeIndexDataset, shapeIndex0Dataset, shapeIndex20Dataset, shapeIndex50Dataset, shapeIndex80Dataset]
     return (evalInstances,)
-
-
-@app.cell
-def _():
-    color_map = {'shape index': '#1A85FF', 'ldp': '#D41159', 'type index and ldp': '#004D40'}
-    return (color_map,)
 
 
 @app.cell
@@ -87,6 +103,7 @@ def _(Line2D, evalInstances, np, plt):
         part['cmaxes'].set_color('black')
         part['cbars'].set_color('black')
         part['cmedians'].set_color('black')
+    color_map = {'shape index network 100%': '#1A85FF', 'shape index network 0%': '#D41159', 'shape index network 20%': '#004D40', 'shape index network 50%': '#FFC107', 'shape index network 80%': '#994F00'}
 
     def plotOneQueryExecutionTime(instances, queryName, color_map):
         query_map = {'interactive-discover-1': 'D1', 'interactive-discover-2': 'D2', 'interactive-discover-3': 'D3', 'interactive-discover-4': 'D4', 'interactive-discover-5': 'D5', 'interactive-discover-6': 'D6', 'interactive-discover-7': 'D7', 'interactive-discover-8': 'D8', 'interactive-short-1': 'S1', 'interactive-short-2': 'S2', 'interactive-short-3': 'S3', 'interactive-short-4': 'S4', 'interactive-short-5': 'S5', 'interactive-short-6': 'S6', 'interactive-short-7': 'S7'}
@@ -110,7 +127,7 @@ def _(Line2D, evalInstances, np, plt):
             legend_elements.append(Line2D([0], [0], color=color, label=label))
         ax.legend(handles=legend_elements)
         return fig
-    return (plotOneQueryExecutionTime,)
+    return color_map, plotOneQueryExecutionTime
 
 
 @app.cell(hide_code=True)
@@ -222,14 +239,19 @@ def _(mo):
 
 
 @app.cell
-def _(ldpDataset, shapeIndexDataset):
-    instances = [shapeIndexDataset, ldpDataset]
+def _(
+    shapeIndex0Dataset,
+    shapeIndex20Dataset,
+    shapeIndex50Dataset,
+    shapeIndex80Dataset,
+):
+    instances = [shapeIndex0Dataset, shapeIndex20Dataset, shapeIndex50Dataset, shapeIndex80Dataset]
     return (instances,)
 
 
 @app.cell
-def _(generate_stats, instances, typeIndexLdpDataset):
-    (result_object_means_http, result_object_http, result_object_means_time, result_object_time) = generate_stats(instances, typeIndexLdpDataset)
+def _(generate_stats, instances, shapeIndexDataset):
+    (result_object_means_http, result_object_http, result_object_means_time, result_object_time) = generate_stats(instances, shapeIndexDataset)
     return result_object_http, result_object_time
 
 
@@ -241,7 +263,7 @@ def _(mo):
 
 @app.cell
 def _(Path):
-    artefactFolder = Path("./artefact/variation_approach")
+    artefactFolder = Path("./artefact/variation_percentage_shape_index")
     return (artefactFolder,)
 
 
