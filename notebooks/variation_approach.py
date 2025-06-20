@@ -1,7 +1,7 @@
 import marimo
 
 __generated_with = "0.13.15"
-app = marimo.App()
+app = marimo.App(width="full")
 
 
 @app.cell
@@ -25,8 +25,10 @@ def _():
     from matplotlib.ticker import FormatStrFormatter
     from matplotlib.lines import Line2D
     import statistics
+    from pathlib import Path
     return (
         Line2D,
+        Path,
         generateDatasetFromResults,
         generatePlot,
         generate_stats,
@@ -67,6 +69,12 @@ def _(ldpDataset, shapeIndexDataset, typeIndexLdpDataset):
 
 
 @app.cell
+def _():
+    color_map = {'shape index': '#1A85FF', 'ldp': '#D41159', 'type index and ldp': '#004D40'}
+    return (color_map,)
+
+
+@app.cell
 def _(Line2D, evalInstances, np, plt):
     def colorViolon(part, color):
         for pc in part['bodies']:
@@ -79,7 +87,6 @@ def _(Line2D, evalInstances, np, plt):
         part['cmaxes'].set_color('black')
         part['cbars'].set_color('black')
         part['cmedians'].set_color('black')
-    color_map = {'shape index': '#1A85FF', 'ldp': '#D41159', 'type index and ldp': '#004D40'}
 
     def plotOneQueryExecutionTime(instances, queryName, color_map):
         query_map = {'interactive-discover-1': 'D1', 'interactive-discover-2': 'D2', 'interactive-discover-3': 'D3', 'interactive-discover-4': 'D4', 'interactive-discover-5': 'D5', 'interactive-discover-6': 'D6', 'interactive-discover-7': 'D7', 'interactive-discover-8': 'D8', 'interactive-short-1': 'S1', 'interactive-short-2': 'S2', 'interactive-short-3': 'S3', 'interactive-short-4': 'S4', 'interactive-short-5': 'S5', 'interactive-short-6': 'S6', 'interactive-short-7': 'S7'}
@@ -103,7 +110,7 @@ def _(Line2D, evalInstances, np, plt):
             legend_elements.append(Line2D([0], [0], color=color, label=label))
         ax.legend(handles=legend_elements)
         return fig
-    return color_map, plotOneQueryExecutionTime
+    return (plotOneQueryExecutionTime,)
 
 
 @app.cell(hide_code=True)
@@ -233,6 +240,12 @@ def _(mo):
 
 
 @app.cell
+def _(Path):
+    artefactFolder = Path("./artefact/variation_approach")
+    return (artefactFolder,)
+
+
+@app.cell
 def _():
     query_to_skip = ["D8", "S2", "S3", "S6", "S7" ]
     return (query_to_skip,)
@@ -240,7 +253,7 @@ def _():
 
 @app.cell
 def _(color_map, generatePlot, instances, query_to_skip, result_object_time):
-    generatePlot(
+    exec_time_plot = generatePlot(
         result_object_time,
         'ratio execution time',
         len(instances),
@@ -249,12 +262,21 @@ def _(color_map, generatePlot, instances, query_to_skip, result_object_time):
         query_to_skip=query_to_skip,
 
     )
+    exec_time_plot
+    return (exec_time_plot,)
+
+
+@app.cell
+def _(artefactFolder, exec_time_plot):
+    exec_time_plot.savefig(artefactFolder/ "reduction_query_execution_time.svg", format="svg")
+
+    exec_time_plot.savefig(artefactFolder/ "reduction_query_execution_time.eps", format="eps")
     return
 
 
 @app.cell
 def _(color_map, generatePlot, instances, query_to_skip, result_object_http):
-    generatePlot(
+    http_req_plot = generatePlot(
         result_object_http,
         'ratio HTTP request',
         len(instances),
@@ -263,11 +285,16 @@ def _(color_map, generatePlot, instances, query_to_skip, result_object_http):
         ylim=None,
         formatYAxis = '{:.2f}'
     )
-    return
+    http_req_plot
+    return (http_req_plot,)
 
 
 @app.cell
-def _():
+def _(artefactFolder, http_req_plot):
+    http_req_plot.savefig(artefactFolder/ "reduction_number_HTTP_requests.svg", format="svg")
+
+    http_req_plot.savefig(artefactFolder/ "reduction_number_HTTP_requests.eps", format="eps")
+
     return
 
 

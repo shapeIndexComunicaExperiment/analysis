@@ -81,7 +81,10 @@ def generatePlot(results,
     multiplier = 0
     
     fig, ax = plt.subplots(figsize=(10, 10))
-
+    
+    for text in fig.findobj(match=plt.Text):
+        text.set_fontsize(fontSize)
+        
     for dataset, measurements in results.items():
         offset = width * multiplier + width/len(results)
         data = list(range(len(queries)))
@@ -120,6 +123,7 @@ def generatePlot(results,
     ax.legend(loc='upper left',  fontsize="18")
     
     fig.tight_layout()
+    
     return fig
     
     

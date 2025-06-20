@@ -1,7 +1,7 @@
 import marimo
 
 __generated_with = "0.13.15"
-app = marimo.App()
+app = marimo.App(width="full")
 
 
 @app.cell
@@ -24,7 +24,8 @@ def _():
     from matplotlib.ticker import FormatStrFormatter
     from matplotlib.lines import Line2D
     import statistics
-    return Line2D, generateDatasetFromResults, mo, np, plt, statistics
+    from pathlib import Path
+    return Path, generateDatasetFromResults, mo, np, plt, statistics
 
 
 @app.cell
@@ -51,158 +52,22 @@ def _(generateDatasetFromResults):
     return (typeIndexLdpDataset,)
 
 
-@app.cell
-def _(ldpDataset, shapeIndexDataset, typeIndexLdpDataset):
-    evalInstances = [shapeIndexDataset, ldpDataset, typeIndexLdpDataset]
-    return (evalInstances,)
-
-
-@app.cell
-def _(Line2D, evalInstances, np, plt):
-    def colorViolon(part, color):
-        for pc in part['bodies']:
-            pc.set_color(color)
-            pc.set_edgecolor(color)
-            pc.set_edgecolor(color)
-            pc.set_alpha(0.75)
-        part['cmeans'].set_color('black')
-        part['cmins'].set_color('black')
-        part['cmaxes'].set_color('black')
-        part['cbars'].set_color('black')
-        part['cmedians'].set_color('black')
-    color_map = {'shape index': '#1A85FF', 'ldp': '#D41159', 'type index and ldp': '#004D40'}
-
-    def plotOneQueryExecutionTime(instances, queryName, color_map):
-        query_map = {'interactive-discover-1': 'D1', 'interactive-discover-2': 'D2', 'interactive-discover-3': 'D3', 'interactive-discover-4': 'D4', 'interactive-discover-5': 'D5', 'interactive-discover-6': 'D6', 'interactive-discover-7': 'D7', 'interactive-discover-8': 'D8', 'interactive-short-1': 'S1', 'interactive-short-2': 'S2', 'interactive-short-3': 'S3', 'interactive-short-4': 'S4', 'interactive-short-5': 'S5', 'interactive-short-6': 'S6', 'interactive-short-7': 'S7'}
-        indexes = np.linspace(0, 0.25, 5)
-        width = 0.05
-        fig, ax = plt.subplots(figsize=(10, 8))
-        ax.set_xticks(indexes)
-        ax.set_xticklabels(['{}V{}'.format(query_map[queryName], i) for i, v in enumerate(indexes)])
-        violon_plots = {}
-        for _instance in evalInstances:
-            all_data = [data if data is not None else [0, 0, 0, 0, 0] for label, data in _instance.executionTime[queryName].items()]
-            current_plot = ax.violinplot(all_data, indexes, widths=width, showmeans=True, showmedians=True)
-            violon_plots[_instance.name] = current_plot
-        ax.set_xlabel('Query')
-        ax.set_ylabel('Execution time (ms)')
-        ax.grid(axis='both')
-        legend_elements = []
-        for label, plot in violon_plots.items():
-            color = color_map[label]
-            colorViolon(plot, color)
-            legend_elements.append(Line2D([0], [0], color=color, label=label))
-        ax.legend(handles=legend_elements)
-        return fig
-    return color_map, plotOneQueryExecutionTime
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""## Single plots""")
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""### Discover""")
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-1", color_map)
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-2", color_map)
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-3", color_map)
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-4", color_map)
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-5", color_map)
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-6", color_map)
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-7", color_map)
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""### Short""")
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-1", color_map)
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-2", color_map)
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-3", color_map)
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-4", color_map)
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-5", color_map)
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-6", color_map)
-    return
-
-
-@app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-7", color_map)
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""# Reduction by query templates""")
     return
+
+
+@app.cell
+def _(Path):
+    artefactFolder = Path("./artefact/variation_approach")
+    return (artefactFolder,)
+
+
+@app.cell
+def _():
+    color_map = {'shape index': '#1A85FF', 'ldp': '#D41159', 'type index and ldp': '#004D40'}
+    return (color_map,)
 
 
 @app.cell
@@ -314,14 +179,6 @@ def _():
     query_to_skip = ["D8", "S2", "S3", "S6", "S7" ]
     queries = list(query_map.values())
     indexes_to_skip = []
-    """
-    for query in query_to_skip:
-        index = queries.index(query)
-        indexes_to_skip.append(index)
-    for query in query_to_skip:
-        index = queries.index(query)
-        del queries[index]
-    """
     return (queries,)
 
 
@@ -374,13 +231,32 @@ def _(color_map, instances, np, plt, queries):
 
 @app.cell
 def _(generatePlot, result_object_time):
-    generatePlot(result_object_time,'ratio execution time')
+    exec_time_plot = generatePlot(result_object_time,'query execution time (ms)')
+    exec_time_plot
+    return (exec_time_plot,)
+
+
+@app.cell
+def _(artefactFolder, exec_time_plot):
+    exec_time_plot.savefig(artefactFolder/ "reduction_query_execution_time_raw.svg", format="svg")
+
+    exec_time_plot.savefig(artefactFolder/ "reduction_query_execution_time_raw.eps", format="eps")
+
     return
 
 
 @app.cell
 def _(generatePlot, result_object_http):
-    generatePlot(result_object_http,'ratio HTTP request')
+    http_req_plot = generatePlot(result_object_http,'Number HTTP request')
+    http_req_plot
+    return (http_req_plot,)
+
+
+@app.cell
+def _(artefactFolder, http_req_plot):
+    http_req_plot.savefig(artefactFolder/ "reduction_number_HTTP_requests_raw.svg", format="svg")
+
+    http_req_plot.savefig(artefactFolder/ "reduction_number_HTTP_requests_raw.eps", format="eps")
     return
 
 
