@@ -167,7 +167,7 @@ def _(
                 ratioTypeIndex = "{:.0f}".format(ratioTypeIndex*100)
 
             have_result = have_result or not (ratioShapeIndex == "-" and ratioTypeIndex=="-")
-   
+
             currentRation.append("{}/{}".format(ratioShapeIndex, ratioTypeIndex))
         currentRow = [query_label_mapping[queryTemplate]] + currentRation
         if have_result:
@@ -195,8 +195,8 @@ def _():
 
 @app.cell
 def _(head, rowsShapeIndex, tabulate):
-    markdownTable = tabulate(rowsShapeIndex, headers=head, tablefmt="html")
-    markdownTable
+    markdownTable = tabulate(rowsShapeIndex, headers=head, tablefmt="github")
+    print(markdownTable)
     return
 
 
@@ -216,14 +216,14 @@ def _(artefactFolder, os, rowsShapeIndex, statistics):
         averageSiVal = int(round(statistics.mean(siVal), 0))
         maxSiVal = int(round(max(siVal), 0))
         minSiVal = int(round(min(siVal), 0))
-    
+
         averageTlpVal = int(round(statistics.mean(TldpVal), 0))
         maxTlpVal = int(round(max(TldpVal), 0))
         minTlpVal = int(round(min(TldpVal), 0))
-    
+
         stringSi = f"{averageSiVal}^{{{maxSiVal}}}_{{{minSiVal}}}" 
         stringTLDP = f"{averageTlpVal}^{{{maxTlpVal}}}_{{{minTlpVal}}}"
-    
+
         if averageSiVal>averageTlpVal:
             summary["SI"].append(f"$\\boldsymbol{{{stringSi}}}$")
             summary["T-LDP"].append(f"${stringTLDP}$")

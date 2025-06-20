@@ -72,8 +72,11 @@ RATIO_USEFUL_RESOURCES_DIR = $(ARTEFACT_DIR)/ratio_useful_resources
 OUTPUT_RATIO_USEFUL_RESOURCES = $(RATIO_USEFUL_RESOURCES_DIR)/table_ratio_useful_resources_summary.tex
 
 SHAPE_INDEX_VARIATION_ONE_PLOT_DIR = $(ARTEFACT_DIR)/variation_shape_index_all
-OUT_SHAPE_INDEX_VARIATION_ONE_PLOT = $(SHAPE_INDEX_VARIATION_ONE_PLOT_DIR)/plot.eps \
+OUTPUT_SHAPE_INDEX_VARIATION_ONE_PLOT = $(SHAPE_INDEX_VARIATION_ONE_PLOT_DIR)/plot.eps \
 	$(SHAPE_INDEX_VARIATION_ONE_PLOT_DIR)/plot.svg
+
+STATISTICAL_SIGNIFICANCE_DIR = $(ARTEFACT_DIR)/statistical_significance
+OUTPUT_STATISTICAL_SIGNIFICANCE = $(STATISTICAL_SIGNIFICANCE_DIR)/comparaisonStateOfTheArt.tex
 
 all: 
 	$(MAKE) $(OUTPUTS_CONTINUOUS_PERFORMANCE_DIEF)
@@ -82,6 +85,8 @@ all:
 	$(MAKE) $(OUTPUTS_DETAIL_SHAPE)
 	$(MAKE) $(OUTPUT_QUERY_CONTAINMENT)
 	$(MAKE) $(OUTPUT_RATIO_USEFUL_RESOURCES)
+	$(MAKE) $(OUTPUT_SHAPE_INDEX_VARIATION_ONE_PLOT)
+	$(MAKE) $(OUTPUT_STATISTICAL_SIGNIFICANCE)
 
 $(OUTPUTS_CONTINUOUS_PERFORMANCE) &: ./notebooks/continuous_performance.py ./templates/table_continuous_performance.tex
 	poetry run python ./notebooks/continuous_performance.py
@@ -101,8 +106,11 @@ $(OUTPUT_QUERY_CONTAINMENT) &: ./notebooks/query-containment-execution-time.py
 $(OUTPUT_RATIO_USEFUL_RESOURCES) : ./notebooks/ratio_useful_sources.py ./templates/table_ratio_useful_resources_summary.tex
 	poetry run python ./notebooks/ratio_useful_sources.py
 
-$(OUT_SHAPE_INDEX_VARIATION_ONE_PLOT) &: ./notebooks/shape_index_variation_one_plot.py
+$(OUTPUT_SHAPE_INDEX_VARIATION_ONE_PLOT) &: ./notebooks/shape_index_variation_one_plot.py
 	poetry run python ./notebooks/shape_index_variation_one_plot.py
+
+$(OUTPUT_STATISTICAL_SIGNIFICANCE): ./notebooks/statistical_significance.py
+	poetry run python ./notebooks/statistical_significance.py
 
 .PHONY: notebook
 
