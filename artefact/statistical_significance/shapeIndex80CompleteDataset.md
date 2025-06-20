@@ -1,5 +1,5 @@
     
-# Comparaison shape index with 80% entries incomplete against an ideal shape index
+# Comparison shape index with 80% entries incomplete against an ideal shape index
     
 | Query template         | relation execution time   | p-value       |   avg ratio HTTP request |
 |------------------------|---------------------------|---------------|--------------------------|
@@ -13,3 +13,5 @@
 | interactive-short-1    | greater                   | 1.12E-83      |                     5.06 |
 | interactive-short-4    | lesser                    | 3.08E-13      |                     0.49 |
 | interactive-short-5    | greater                   | 3.50E-08      |                     1.65 |
+
+RH, indicate that the p-value is associated to the rejected hypothesis.

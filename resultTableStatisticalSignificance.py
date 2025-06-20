@@ -137,9 +137,11 @@ caption = "Table comparing the shape index approach to the state-of-the-art. RH,
 latex_table_state_of_the_art = latextable.draw_latex(textTable, caption=caption, label=label)
 
 table_to_save = f"""
-# Comparaison execution time shape index approach against the type index
+# Comparison execution time shape index approach against the type index
 
 {table_state_of_the_art}
+
+RH, indicate that the p-value is associated to the rejected hypothesis.
 """
 
 with open(os.path.join(artefactFolder, "comparaisonStateOfTheArt.md"), "w") as outfile:
@@ -172,10 +174,12 @@ for (instance, file_name) in instances_shape_index:
     table_state_of_the_art = tabulate(rows, headers=head, tablefmt="github")
 
     table_to_save = f"""    
-# Comparaison {instance.name} against an ideal shape index
+# Comparison {instance.name} against an ideal shape index
     
 {table_state_of_the_art}
+
+RH, indicate that the p-value is associated to the rejected hypothesis.
 """
 
-with open(os.path.join(artefactFolder, f"{file_name}.md"), "w") as outfile:
-    outfile.write(table_to_save)
+    with open(os.path.join(artefactFolder, f"{file_name}.md"), "w") as outfile:
+        outfile.write(table_to_save)

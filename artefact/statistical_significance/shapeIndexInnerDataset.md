@@ -1,5 +1,5 @@
     
-# Comparaison shape index with shapes with only information about the dataset model against an ideal shape index
+# Comparison shape index with shapes with only information about the dataset model against an ideal shape index
     
 | Query template         | relation execution time   | p-value       |   avg ratio HTTP request |
 |------------------------|---------------------------|---------------|--------------------------|
@@ -14,3 +14,5 @@
 | interactive-short-4    | lesser                    | 7.84E-07      |                     0.63 |
 | interactive-short-5    | lesser                    | 8.79E-03      |                     0.71 |
 | interactive-short-7    | lesser                    | 3.53E-18      |                     0.8  |
+
+RH, indicate that the p-value is associated to the rejected hypothesis.

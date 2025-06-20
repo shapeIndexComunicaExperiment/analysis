@@ -1,5 +1,5 @@
     
-# Comparaison shape index absent from the network against an ideal shape index
+# Comparison shape index absent from the network against an ideal shape index
     
 | Query template         | relation execution time   | p-value       |   avg ratio HTTP request |
 |------------------------|---------------------------|---------------|--------------------------|
@@ -13,3 +13,5 @@
 | interactive-short-1    | greater                   | 1.44E-83      |                     6.02 |
 | interactive-short-4    | lesser                    | 5.38E-18      |                     0.15 |
 | interactive-short-5    | greater                   | 8.88E-14      |                     2.59 |
+
+RH, indicate that the p-value is associated to the rejected hypothesis.

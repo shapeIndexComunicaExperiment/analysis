@@ -1,5 +1,5 @@
 
-# Comparaison execution time shape index approach against the type index
+# Comparison execution time shape index approach against the type index
 
 | Query template         | relation execution time   | p-value       |   avg ratio HTTP request |
 |------------------------|---------------------------|---------------|--------------------------|
@@ -13,3 +13,5 @@
 | interactive-short-1    | lesser                    | 1.12E-83      |                     0.33 |
 | interactive-short-4    | greater                   | 3.76E-22      |                    13    |
 | interactive-short-5    | lesser                    | 3.12E-17      |                     0.44 |
+
+RH, indicate that the p-value is associated to the rejected hypothesis.
