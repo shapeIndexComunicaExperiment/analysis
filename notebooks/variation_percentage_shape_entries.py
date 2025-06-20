@@ -1,0 +1,321 @@
+import marimo
+
+__generated_with = "0.13.15"
+app = marimo.App(width="medium")
+
+
+@app.cell
+def _():
+    import marimo as mo
+    import json
+    from texttable import Texttable
+    import latextable
+    from tabulate import tabulate
+    import sys
+    file_directory = "./"
+    sys.path.append(file_directory)
+    from generateDataset import generateDatasetFromResults
+    from metric import internalResultConsistency, calculatePercentageReductionSeries
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from matplotlib.ticker import MultipleLocator
+    from scipy.optimize import curve_fit
+    from scipy.stats import pearsonr
+    from matplotlib import rcParams
+    from matplotlib.ticker import FormatStrFormatter
+    from matplotlib.lines import Line2D
+    from plotsVariation import generate_stats, generatePlot
+    import statistics
+    from pathlib import Path
+    return (
+        Line2D,
+        Path,
+        generateDatasetFromResults,
+        generatePlot,
+        generate_stats,
+        mo,
+        np,
+        plt,
+    )
+
+
+@app.cell
+def _(generateDatasetFromResults):
+    shapeIndexPathResult = "./results/standard/shape_index_result.json"
+    shapeIndexPathSummary = "./results/standard/summary_shape_index_result.json"
+    shapeIndexDataset = generateDatasetFromResults(shapeIndexPathResult, shapeIndexPathSummary, "shape index entries 100%")
+    return (shapeIndexDataset,)
+
+
+@app.cell
+def _(generateDatasetFromResults):
+    shapeIndex20PathResult = "./results/shape-entry-20-percent/shape_index_result.json"
+    shapeIndex20PathSummary = "./results/shape-entry-20-percent/summary_shape_index_result.json"
+    shapeIndex20Dataset = generateDatasetFromResults(shapeIndex20PathResult, shapeIndex20PathSummary, "shape index entries 20%")
+    return (shapeIndex20Dataset,)
+
+
+@app.cell
+def _(generateDatasetFromResults):
+    shapeIndex50PathResult = "./results/shape-entry-50-percent/shape_index_result.json"
+    shapeIndex50PathSummary = "./results/shape-entry-50-percent/summary_shape_index_result.json"
+    shapeIndex50Dataset = generateDatasetFromResults(shapeIndex50PathResult, shapeIndex50PathSummary, "shape index entries 50%")
+    return (shapeIndex50Dataset,)
+
+
+@app.cell
+def _(generateDatasetFromResults):
+    shapeIndex80PathResult = "./results/shape-entry-80-percent/shape_index_result.json"
+    shapeIndex80PathSummary = "./results/shape-entry-80-percent/summary_shape_index_result.json"
+    shapeIndex80Dataset = generateDatasetFromResults(shapeIndex80PathResult, shapeIndex80PathSummary, "shape index entries 80%")
+    return (shapeIndex80Dataset,)
+
+
+@app.cell
+def _(
+    shapeIndex20Dataset,
+    shapeIndex50Dataset,
+    shapeIndex80Dataset,
+    shapeIndexDataset,
+):
+    evalInstances = [shapeIndexDataset, shapeIndex20Dataset, shapeIndex50Dataset, shapeIndex80Dataset]
+    return (evalInstances,)
+
+
+@app.cell
+def _():
+    color_map = {'shape index entries 100%': '#1A85FF', 'shape index entries 0%': '#D41159', 'shape index entries 20%': '#004D40', 'shape index entries 50%': '#FFC107', 'shape index entries 80%': '#994F00'}
+    return (color_map,)
+
+
+@app.cell
+def _(Line2D, evalInstances, np, plt):
+    def colorViolon(part, color):
+        for pc in part['bodies']:
+            pc.set_color(color)
+            pc.set_edgecolor(color)
+            pc.set_edgecolor(color)
+            pc.set_alpha(0.75)
+        part['cmeans'].set_color('black')
+        part['cmins'].set_color('black')
+        part['cmaxes'].set_color('black')
+        part['cbars'].set_color('black')
+        part['cmedians'].set_color('black')
+
+
+    def plotOneQueryExecutionTime(instances, queryName, color_map):
+        query_map = {'interactive-discover-1': 'D1', 'interactive-discover-2': 'D2', 'interactive-discover-3': 'D3', 'interactive-discover-4': 'D4', 'interactive-discover-5': 'D5', 'interactive-discover-6': 'D6', 'interactive-discover-7': 'D7', 'interactive-discover-8': 'D8', 'interactive-short-1': 'S1', 'interactive-short-2': 'S2', 'interactive-short-3': 'S3', 'interactive-short-4': 'S4', 'interactive-short-5': 'S5', 'interactive-short-6': 'S6', 'interactive-short-7': 'S7'}
+        indexes = np.linspace(0, 0.25, 5)
+        width = 0.05
+        fig, ax = plt.subplots(figsize=(10, 8))
+        ax.set_xticks(indexes)
+        ax.set_xticklabels(['{}V{}'.format(query_map[queryName], i) for i, v in enumerate(indexes)])
+        violon_plots = {}
+        for _instance in evalInstances:
+            all_data = [data if data is not None else [0, 0, 0, 0, 0] for label, data in _instance.executionTime[queryName].items()]
+            current_plot = ax.violinplot(all_data, indexes, widths=width, showmeans=True, showmedians=True)
+            violon_plots[_instance.name] = current_plot
+        ax.set_xlabel('Query')
+        ax.set_ylabel('Execution time (ms)')
+        ax.grid(axis='both')
+        legend_elements = []
+        for label, plot in violon_plots.items():
+            color = color_map[label]
+            colorViolon(plot, color)
+            legend_elements.append(Line2D([0], [0], color=color, label=label))
+        ax.legend(handles=legend_elements)
+        return fig
+    return (plotOneQueryExecutionTime,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""## Single plots""")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""### Discover""")
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-discover-1", color_map)
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-discover-2", color_map)
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-discover-3", color_map)
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-discover-4", color_map)
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-discover-5", color_map)
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-discover-6", color_map)
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-discover-7", color_map)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""### Short""")
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-short-1", color_map)
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-short-2", color_map)
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-short-3", color_map)
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-short-4", color_map)
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-short-5", color_map)
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-short-6", color_map)
+    return
+
+
+@app.cell
+def _(color_map, evalInstances, plotOneQueryExecutionTime):
+    plotOneQueryExecutionTime(evalInstances,"interactive-short-7", color_map)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""# Reduction by query templates""")
+    return
+
+
+@app.cell
+def _(shapeIndex20Dataset, shapeIndex50Dataset, shapeIndex80Dataset):
+    instances = [shapeIndex20Dataset, shapeIndex50Dataset, shapeIndex80Dataset]
+    return (instances,)
+
+
+@app.cell
+def _(generate_stats, instances, shapeIndexDataset):
+    (result_object_means_http, result_object_http, result_object_means_time, result_object_time) = generate_stats(instances, shapeIndexDataset)
+    return result_object_http, result_object_time
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""# Reduction by query templates figure""")
+    return
+
+
+@app.cell
+def _(Path):
+    artefactFolder = Path("./artefact/variation_percentage_entry_shape_index")
+    return (artefactFolder,)
+
+
+@app.cell
+def _():
+    query_to_skip = ["D8", "S2", "S3", "S6", "S7" ]
+    return (query_to_skip,)
+
+
+@app.cell
+def _(color_map, generatePlot, instances, query_to_skip, result_object_time):
+    exec_time_plot = generatePlot(
+        result_object_time,
+        'ratio execution time',
+        len(instances),
+        color_map=color_map,
+        ylim=None,
+        query_to_skip=query_to_skip,
+
+    )
+    exec_time_plot
+    return (exec_time_plot,)
+
+
+@app.cell
+def _(artefactFolder, exec_time_plot):
+    exec_time_plot.savefig(artefactFolder/ "reduction_query_execution_time.svg", format="svg")
+
+    exec_time_plot.savefig(artefactFolder/ "reduction_query_execution_time.eps", format="eps")
+    return
+
+
+@app.cell
+def _(color_map, generatePlot, instances, query_to_skip, result_object_http):
+    http_req_plot = generatePlot(
+        result_object_http,
+        'ratio HTTP request',
+        len(instances),
+        color_map=color_map,
+        query_to_skip=query_to_skip,
+        ylim=None,
+        formatYAxis = '{:.2f}'
+    )
+    http_req_plot
+    return (http_req_plot,)
+
+
+@app.cell
+def _(artefactFolder, http_req_plot):
+    http_req_plot.savefig(artefactFolder/ "reduction_number_HTTP_requests.svg", format="svg")
+
+    http_req_plot.savefig(artefactFolder/ "reduction_number_HTTP_requests.eps", format="eps")
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+if __name__ == "__main__":
+    app.run()
