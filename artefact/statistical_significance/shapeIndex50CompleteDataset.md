@@ -1,5 +1,5 @@
     
-# Comparison shape index with 50% entries incomplete against an ideal shape index
+# Comparison of shape index with 50% entries incomplete against an ideal shape index
     
 | Query template         | relation execution time   | p-value       |   avg ratio HTTP request |
 |------------------------|---------------------------|---------------|--------------------------|

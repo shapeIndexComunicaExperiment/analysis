@@ -1,5 +1,5 @@
     
-# Comparison shape index absent in 50% of the network against an ideal shape index
+# Comparison of shape index absent in 50% of the network against an ideal shape index
     
 | Query template         | relation execution time   | p-value       |   avg ratio HTTP request |
 |------------------------|---------------------------|---------------|--------------------------|

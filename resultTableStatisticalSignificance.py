@@ -137,7 +137,7 @@ caption = "Table comparing the shape index approach to the state-of-the-art. RH,
 latex_table_state_of_the_art = latextable.draw_latex(textTable, caption=caption, label=label)
 
 table_to_save = f"""
-# Comparison execution time shape index approach against the type index
+# Comparison of execution time shape index approach against the type index
 
 {table_state_of_the_art}
 
@@ -174,7 +174,7 @@ for (instance, file_name) in instances_shape_index:
     table_state_of_the_art = tabulate(rows, headers=head, tablefmt="github")
 
     table_to_save = f"""    
-# Comparison {instance.name} against an ideal shape index
+# Comparison of {instance.name} against an ideal shape index
     
 {table_state_of_the_art}
 

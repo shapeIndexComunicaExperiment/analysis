@@ -1,5 +1,5 @@
 
-# Comparison execution time shape index approach against the type index
+# Comparison of execution time shape index approach against the type index
 
 | Query template         | relation execution time   | p-value       |   avg ratio HTTP request |
 |------------------------|---------------------------|---------------|--------------------------|
