@@ -18,6 +18,7 @@ def _():
     import numpy as np
     from typing import List, Optional
     from pathlib import Path
+    import numpy as np
     import diefpy
     return Path, diefpy, generateDatasetFromResults, json, mo, np, sys
 
@@ -137,7 +138,6 @@ def _(diefpy, np, stats, version_dict):
                         data.append(current)
 
                     arr = np.array(data, dtype=dtype)
-
 
                     diefficiency_val_0_1s = diefpy.dieft(arr, q, 0.1*1_000)
                     diefficiency_val_1s = diefpy.dieft(arr, q, 1_000)
@@ -435,7 +435,7 @@ def _(mo):
 
 @app.cell
 def _():
-    y_label = "result-time (n x ms)"
+    y_label = "result-time (n x s)"
     return (y_label,)
 
 
