@@ -18,7 +18,8 @@ def _():
     import numpy as np
     from typing import List, Optional
     from pathlib import Path
-    return Path, diefficiency, generateDatasetFromResults, json, mo, sys
+    import diefpy
+    return Path, diefpy, generateDatasetFromResults, json, mo, np, sys
 
 
 @app.cell
@@ -98,15 +99,15 @@ def _(queries):
 
 
 @app.cell
-def _(diefficiency, stats, version_dict):
+def _(diefpy, np, stats, version_dict):
     def populate_diefficiency(resp, dataset):
         for q, value in dataset.arrivalTimes.items():
             for v, arrival_time_rep in value.items():
 
                 if arrival_time_rep == None and dataset.executionTime[q][v] != None:
-                    resp[q][version_dict[v]]["dief@0.1s"] = 0
-                    resp[q][version_dict[v]]["dief@1s"] = 0
-                    resp[q][version_dict[v]]["dief@10s"] = 0
+                    resp[q][version_dict[v]]["dief@0.1s"] = {"avg": 0, "min": 0, "max": 0, "std": 0, "raw": [0]}
+                    resp[q][version_dict[v]]["dief@1s"] = {"avg": 0, "min": 0, "max": 0, "std": 0, "raw": [0]}
+                    resp[q][version_dict[v]]["dief@10s"] = {"avg": 0, "min": 0, "max": 0, "std": 0, "raw": [0]}
                     continue
 
                 elif arrival_time_rep == None:
@@ -120,14 +121,32 @@ def _(diefficiency, stats, version_dict):
                 diefficiencies_1s = []
                 diefficiencies_10s = []
 
-                for arrival_time in arrival_time_rep:
-                    diefficiency_val_0_1s = diefficiency(arrival_time, 0.1*1_000)
-                    diefficiency_val_1s = diefficiency(arrival_time, 1_000)
-                    diefficiency_val_10s = diefficiency(arrival_time, 10*1_000)
+                dtype  = [('test', 'U100'), ('approach', 'U100'), ('answer', 'i8'), ('time', 'f8')]
 
-                    diefficiencies_0_1s.append(diefficiency_val_0_1s)
-                    diefficiencies_1s.append(diefficiency_val_1s)
-                    diefficiencies_10s.append(diefficiency_val_10s)
+                for arrival_time in arrival_time_rep:
+
+                    if len(arrival_time) == 0:
+                        diefficiencies_0_1s.append(0)
+                        diefficiencies_1s.append(0)
+                        diefficiencies_10s.append(0)
+                        continue
+
+                    data = []
+                    for i, t in enumerate(arrival_time):
+                        current = (q, dataset.name, i+1, t)
+                        data.append(current)
+
+                    arr = np.array(data, dtype=dtype)
+
+
+                    diefficiency_val_0_1s = diefpy.dieft(arr, q, 0.1*1_000)
+                    diefficiency_val_1s = diefpy.dieft(arr, q, 1_000)
+                    diefficiency_val_10s = diefpy.dieft(arr, q, 10*1_000)
+
+                    diefficiencies_0_1s.append(diefficiency_val_0_1s[0][2])
+                    diefficiencies_1s.append(diefficiency_val_1s[0][2])
+                    diefficiencies_10s.append(diefficiency_val_10s[0][2])
+
 
                 stat_0_1s = stats(diefficiencies_0_1s)
                 stat_1s = stats(diefficiencies_1s)
@@ -138,6 +157,42 @@ def _(diefficiency, stats, version_dict):
                 resp[q][version_dict[v]]["dief@10s"] = stat_10s
         return
     return (populate_diefficiency,)
+
+
+@app.cell
+def _(diefpy, np):
+    def plot_distribution(dataset):
+        plts = []
+        for q, value in dataset.arrivalTimes.items():
+            for v, arrival_time_rep in value.items():
+
+                if arrival_time_rep == None and dataset.executionTime[q][v] != None:
+                    continue
+
+                elif arrival_time_rep == None:
+                    continue
+
+                dtype  = [('test', 'U100'), ('approach', 'U100'), ('answer', 'i4'), ('time', 'f8')]
+                for arrival_time in arrival_time_rep:
+
+                    if len(arrival_time) == 0:
+                        continue
+
+                    data = []
+                    for i, t in enumerate(arrival_time):
+                        current = (q, dataset.name, i+1, t)
+                        data.append(current)
+
+                    arr = np.array(data, dtype=dtype)
+
+                    plt = diefpy.plot_answer_trace(arr, q)
+                    plt.show(warn=False)
+                    plts.append(plt)
+                    break
+
+        return plts
+
+    return
 
 
 @app.cell
@@ -195,7 +250,6 @@ def _(
     (resp_si, resp_by_template_si) = generate_continuous_performances(shapeIndexDataset)
     (resp_ldp, resp_by_template_ldp) = generate_continuous_performances(ldpDataset)
     (resp_ti, resp_by_template_ti) = generate_continuous_performances(typeIndexLdpDataset)
-
     return (
         resp_by_template_ldp,
         resp_by_template_si,
@@ -321,16 +375,16 @@ def _(
         best_d_0_1 = None
         best_d_1 = None
         best_d_10 = None
-    
+
         all_zero_d_0_1 = True
         all_zero_d_1 = True
         all_zero_d_10 = True
-    
+
         for summary in summaries:
             all_zero_d_0_1 = all_zero_d_0_1 and is_zero(summary["dief@0.1s"])
             all_zero_d_1 = all_zero_d_1 and is_zero(summary["dief@1s"])
             all_zero_d_10 = all_zero_d_10 and is_zero(summary["dief@10s"])
-        
+
             if best_result(summary, "dief@0.1s", best_d_0_1):
                 best_d_0_1 = summary
 
@@ -339,7 +393,7 @@ def _(
 
             if best_result(summary,"dief@10s", best_d_10):
                 best_d_10 = summary
-            
+
         for summary in summaries:
             ft = None
             tt = None 
@@ -381,7 +435,7 @@ def _(mo):
 
 @app.cell
 def _():
-    y_label = "result-time (n x s)"
+    y_label = "result-time (n x ms)"
     return (y_label,)
 
 
@@ -442,6 +496,11 @@ def _(
     fig_dief_10.savefig(artefact_path / "dief_10.eps", format="eps")
 
     fig_dief_10
+    return
+
+
+@app.cell
+def _():
     return
 
 

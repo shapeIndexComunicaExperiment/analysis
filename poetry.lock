@@ -144,6 +144,22 @@ docs = ["ipython", "matplotlib", "numpydoc", "sphinx"]
 tests = ["pytest", "pytest-cov", "pytest-xdist"]
 
 [[package]]
+name = "diefpy"
+version = "1.2.1"
+description = "Python package for computing diefficiency metrics dief@t and dief@k."
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "diefpy-1.2.1-py3-none-any.whl", hash = "sha256:1a6879171366733c1b23d9adf19e0f7ebe9b7a07417e1a37cdb5210614c3bd8a"},
+    {file = "diefpy-1.2.1.tar.gz", hash = "sha256:667e977d964cfb46eaada7121b32cb82b51f53cb4139917dea26eb94f07c2d17"},
+]
+
+[package.dependencies]
+matplotlib = ">=3.2.2"
+numpy = ">=1.8.0"
+
+[[package]]
 name = "docutils"
 version = "0.21.2"
 description = "Docutils -- Python Documentation Utilities"
@@ -1435,4 +1451,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "98168d0693b8af2467d7088f5d60fbb003726b3fc5eecd3443d52656977cc11e"
+content-hash = "bc00b8896c069aeebfd6bb700f96477183a8baddde0e270601e5e3636a0ef157"

@@ -23,6 +23,8 @@ const time = parsed.options["t"]
 const granularity = 500;
 const output = DiEfficiencyMetric.answerDistributionFunction(execTimes, granularity);
 
+console.log(JSON.stringify({output}));
+
 const diefft = DiEfficiencyMetric.defAtT(time, output.answerDist, output.linSpace);
 
 console.log(JSON.stringify({diefft}));
