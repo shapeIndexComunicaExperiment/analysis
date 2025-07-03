@@ -64,7 +64,7 @@ def generatePlot(results,
                  query_to_skip=[],
                  formatYAxis = '{:.1f}'
                  ):
-    rcParams.update({'font.size': fontSize})
+    #rcParams.update({'font.size': fontSize})
 
     indexes_to_skip = []
     queries = copy.deepcopy(QUERIES)

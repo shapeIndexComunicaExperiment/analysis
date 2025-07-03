@@ -191,13 +191,17 @@ def _(result_object_time):
 @app.cell
 def _(color_map, instances, np, plt, queries):
     def generatePlot(results, yaxisLabel):
-
+        fontSize=20
         x = np.arange(len(queries))
         width = 1/len(instances) -0.1 # the width of the bars
         multiplier = 0
-
+    
         fig, ax = plt.subplots(figsize=(10, 8))
 
+    
+        for text in fig.findobj(match=plt.Text):
+            text.set_fontsize(fontSize)
+        
         for dataset, measurements in results.items():
             offset = width * multiplier + width/len(results)
             data = list(range(len(queries)))
@@ -224,6 +228,7 @@ def _(color_map, instances, np, plt, queries):
         ax.set_ylabel(yaxisLabel)
         ax.set_xticks(x + width, queries)
         ax.grid(axis="both")
+        ax.set_xlabel("query template")
         ax.legend()
         return fig
     return (generatePlot,)

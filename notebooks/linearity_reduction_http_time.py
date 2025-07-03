@@ -88,7 +88,12 @@ def _(FormatStrFormatter, MultipleLocator, mpatches, np, plt):
                      slope:float,
                      r2Lin:float,
                      r2Expo:float) -> None:
+        fontSize = 20
         fig, ax = plt.subplots(figsize=(10,10))
+
+    
+        for text in fig.findobj(match=plt.Text):
+                text.set_fontsize(fontSize)
 
         ax.grid(axis="both")
 
