@@ -196,7 +196,7 @@ def _(color_map, instances, np, plt, queries):
         width = 1/len(instances) -0.1 # the width of the bars
         multiplier = 0
     
-        fig, ax = plt.subplots(figsize=(10, 8))
+        fig, ax = plt.subplots(figsize=(10, 10))
 
     
         for text in fig.findobj(match=plt.Text):

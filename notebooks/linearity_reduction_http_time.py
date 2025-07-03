@@ -88,7 +88,7 @@ def _(FormatStrFormatter, MultipleLocator, mpatches, np, plt):
                      slope:float,
                      r2Lin:float,
                      r2Expo:float) -> None:
-        fontSize = 20
+        fontSize = 22
         fig, ax = plt.subplots(figsize=(10,10))
 
     
@@ -107,7 +107,9 @@ def _(FormatStrFormatter, MultipleLocator, mpatches, np, plt):
         ax.xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
         statPath = mpatches.Patch(color="None", label=f'PCC = {pcc:.2f}, p-value ={pvalue:.2E}')
         r2Path = mpatches.Patch(color="None", label=f'R2 lin = {r2Lin:.2}, R2 exp = {r2Expo:.2f}')
-        ax.legend(handles=[statPath, r2Path],handlelength=0, handleheight=0)
+        ax.legend(handles=[statPath, r2Path],handlelength=0, handleheight=0, 
+    prop={'size': 20}
+    )
         ax.set_xlabel('ratio of HTTP request')
         ax.set_ylabel('ratio of execution time')
 
@@ -514,11 +516,10 @@ def _(
 
 @app.cell
 def _(
-    PCC_better_performance,
-    better_dataset,
+    PCC_worse_performance,
     generatePlot,
-    r2ExpBetter,
-    r2LinBetter,
+    r2ExpWorse,
+    r2LinWorse,
     slopeLinearRegression,
     worse_dataset,
 ):
@@ -527,11 +528,11 @@ def _(
         worse_dataset[1],
         1,
         0.1,
-        PCC_better_performance[0].item(),
-        PCC_better_performance[1].item(),
-        slopeLinearRegression(better_dataset[0], better_dataset[1]),
-        r2LinBetter, 
-        r2ExpBetter
+        PCC_worse_performance[0].item(),
+        PCC_worse_performance[1].item(),
+        slopeLinearRegression(worse_dataset[0], worse_dataset[1]),
+        r2LinWorse, 
+        r2ExpWorse
     )
     deteriotation_plot
     return (deteriotation_plot,)
@@ -539,13 +540,12 @@ def _(
 
 @app.cell
 def _(
-    PCC_better_performance,
-    better_dataset,
+    PCC_overall,
     generatePlot,
     np_x_general_reduction_http_req,
     np_y_general_reduction_exec,
-    r2ExpBetter,
-    r2LinBetter,
+    r2ExpOverall,
+    r2LinOverall,
     slopeLinearRegression,
 ):
     general_tendency_plot = generatePlot(
@@ -553,11 +553,11 @@ def _(
         np_y_general_reduction_exec,
         1,
         0.1,
-        PCC_better_performance[0].item(),
-        PCC_better_performance[1].item(),
-        slopeLinearRegression(better_dataset[0], better_dataset[1]),
-        r2LinBetter, 
-        r2ExpBetter
+        PCC_overall[0].item(),
+        PCC_overall[1].item(),
+        slopeLinearRegression(np_x_general_reduction_http_req, np_y_general_reduction_exec),
+        r2LinOverall, 
+        r2ExpOverall
     )
     general_tendency_plot
     return (general_tendency_plot,)
