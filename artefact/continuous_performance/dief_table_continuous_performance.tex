@@ -9,9 +9,9 @@
         & \multicolumn{3}{c||}{\textbf{Type Index}} 
         & \multicolumn{3}{c|}{\textbf{LDP}} \\
         \hline
-        & \textbf{Dief@100ms ($n \times ms$)} & \textbf{Dief@1000ms ($n \times ms$)} & \textbf{Dief@1000ms ($n \times ms$)} 
-        & \textbf{Dief@100ms ($n \times ms$)} & \textbf{Dief@1000ms ($n \times ms$)} & \textbf{Dief@1000ms ($n \times ms$)} 
-        & \textbf{Dief@100ms ($n \times ms$)} & \textbf{Dief@1000ms ($n \times ms$)} & \textbf{Dief@1000ms ($n \times ms$)} \\
+        & \textbf{IT ($n \times ms$)} & \textbf{SFT ($n \times ms$)} & \textbf{ADT ($n \times ms$)} 
+        & \textbf{IT ($n \times ms$)} & \textbf{SFT ($n \times ms$)} & \textbf{ADT ($n \times ms$)} 
+        & \textbf{IT ($n \times ms$)} & \textbf{SFT ($n \times ms$)} & \textbf{ADT ($n \times ms$)} \\
         \hline
         D1 & $0.00$ & $\boldsymbol{1.70}$ & $\boldsymbol{55.64}$ & $0.00$ & $0.22$ & $49.90$ & $0.00$ & $0.21$ & $49.26$ \\
         \hline
@@ -29,7 +29,7 @@
         \hline
         S1 & $0.00$ & $\boldsymbol{0.68}$ & $\boldsymbol{9.68}$ & $0.00$ & $0.18$ & $8.70$ & $0.00$ & $0.18$ & $8.69$ \\
         \hline
-        S4 & $0.00$ & $0.49$ & $9.49$ & $0.01$ & $\boldsymbol{0.66}$ & $\boldsymbol{9.66}$ & $0.01$ & $0.66$ & $9.66$ \\
+        S4 & $0.00$ & $0.49$ & $9.49$ & $\boldsymbol{0.01}$ & $\boldsymbol{0.66}$ & $\boldsymbol{9.66}$ & $0.01$ & $0.66$ & $9.66$ \\
         \hline
         S5 & $0.00$ & $0.25$ & $9.09$ & $0.00$ & $0.34$ & $9.22$ & $0.00$ & $\boldsymbol{0.37}$ & $\boldsymbol{9.25}$ \\
         \hline
@@ -37,5 +37,8 @@
         \hline
     \end{tabular}
     }
+    \caption{Table showing the average diefficiency metric for different approaches across query templates, measured at three time thresholds: instantaneous time (IT, 0.1s), seamless flow time (SFT, 1s), and attention drift time (ADT, 10s).
+    The diefficiency is expressed as the number of results (n) per millisecond (ms). For most queries, diefficiency at IT is 0, as no results are produced quickly enough. At SFT, the shape index approach generally yields better performance, while at ADT, results tend to converge across approaches.}
+	\label{tab:dief}
 \end{table}
     

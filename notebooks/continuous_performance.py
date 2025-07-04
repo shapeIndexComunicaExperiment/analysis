@@ -474,7 +474,7 @@ def best_result(value, field, best_value):
 @app.function
 def is_zero(value):
     if value != None:
-        return round(value["avg"]/1000, 3) <= 0.01
+        return round(value["avg"]/1000, 4) <= 0
     return False
 
 
@@ -494,16 +494,16 @@ def _(
         best_ft = None
         best_tt = None
         best_wt = None
-    
+
         all_zero_ft = True
         all_zero_tt = True
         all_zero_wt = True
-    
+
         for summary in summaries:
             all_zero_ft = all_zero_ft and is_zero(summary["firstResult"])
             all_zero_tt = all_zero_tt and is_zero(summary["terminationTime"])
             all_zero_wt = all_zero_wt and is_zero(summary["waitingTime"])
-        
+
             if best_result(summary, "firstResult", best_ft):
                 best_ft = summary
 
@@ -512,7 +512,7 @@ def _(
 
             if best_result(summary,"waitingTime", best_wt):
                 best_wt = summary
-            
+
         for summary in summaries:
             ft = None
             tt = None 
@@ -619,7 +619,7 @@ def plot(metric, resp_by_template_si, resp_by_template_ti, shapeIndexDataset, ty
     ax.legend(handles=legend_elements)
     ax.grid(axis='both')
 
-    ax.set_xlabel('Query')
+    ax.set_xlabel('query template')
     ax.set_ylabel(y_label)
 
     mo.mpl.interactive(ax)

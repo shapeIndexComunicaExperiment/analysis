@@ -370,7 +370,7 @@ def _(
         ax.grid(axis="both")
         ax.legend(fontsize="18")
 
-    fig.text(0.5, 0.03, "Query Template", ha='center', va='center', fontsize=fontSize)
+    fig.text(0.5, 0.03, "query template", ha='center', va='center', fontsize=fontSize)
     fig.text(0.02, 0.5, yaxisLabel, ha='center', va='center', rotation='vertical', fontsize=fontSize)
     plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.1, wspace=0, hspace=0)
     return (fig,)

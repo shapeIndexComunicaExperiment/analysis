@@ -9,9 +9,9 @@
         & \multicolumn{3}{c||}{\textbf{Type Index}} 
         & \multicolumn{3}{c|}{\textbf{LDP}} \\
         \hline
-        & \textbf{Dief@100ms ($n \times ms$)} & \textbf{Dief@1000ms ($n \times ms$)} & \textbf{Dief@1000ms ($n \times ms$)} 
-        & \textbf{Dief@100ms ($n \times ms$)} & \textbf{Dief@1000ms ($n \times ms$)} & \textbf{Dief@1000ms ($n \times ms$)} 
-        & \textbf{Dief@100ms ($n \times ms$)} & \textbf{Dief@1000ms ($n \times ms$)} & \textbf{Dief@1000ms ($n \times ms$)} \\
+        & \textbf{IT ($n \times ms$)} & \textbf{SFT ($n \times ms$)} & \textbf{ADT ($n \times ms$)} 
+        & \textbf{IT ($n \times ms$)} & \textbf{SFT ($n \times ms$)} & \textbf{ADT ($n \times ms$)} 
+        & \textbf{IT ($n \times ms$)} & \textbf{SFT ($n \times ms$)} & \textbf{ADT ($n \times ms$)} \\
         \hline
         D1 & {} & {} & {} & {} & {} & {} & {} & {} & {} \\
         \hline
@@ -37,5 +37,8 @@
         \hline
     \end{tabular}
     }
+    \caption{Table showing the average diefficiency metric for different approaches across query templates, measured at three time thresholds: instantaneous time (IT, 0.1s), seamless flow time (SFT, 1s), and attention drift time (ADT, 10s).
+    The diefficiency is expressed as the number of results (n) per millisecond (ms). For most queries, diefficiency at IT is 0, as no results are produced quickly enough. At SFT, the shape index approach generally yields better performance, while at ADT, results tend to converge across approaches.}
+	\label{tab:dief}
 \end{table}
     
