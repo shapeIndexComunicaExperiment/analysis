@@ -92,6 +92,7 @@ def _(queries):
                     "dief@0.1s":None,
                     "dief@1s":None,
                     "dief@10s":None,
+                    "dief@lr":None,
                 }
                 resp[query].append(metrics)
         return resp
@@ -101,7 +102,7 @@ def _(queries):
 
 @app.cell
 def _(diefpy, np, stats, version_dict):
-    def populate_diefficiency(resp, dataset):
+    def populate_diefficiency(resp, dataset, highest_last_result_map):
         for q, value in dataset.arrivalTimes.items():
             for v, arrival_time_rep in value.items():
 
@@ -109,18 +110,21 @@ def _(diefpy, np, stats, version_dict):
                     resp[q][version_dict[v]]["dief@0.1s"] = {"avg": 0, "min": 0, "max": 0, "std": 0, "raw": [0]}
                     resp[q][version_dict[v]]["dief@1s"] = {"avg": 0, "min": 0, "max": 0, "std": 0, "raw": [0]}
                     resp[q][version_dict[v]]["dief@10s"] = {"avg": 0, "min": 0, "max": 0, "std": 0, "raw": [0]}
+                    resp[q][version_dict[v]]["dief@lr"] = {"avg": 0, "min": 0, "max": 0, "std": 0, "raw": [0]}
                     continue
 
                 elif arrival_time_rep == None:
                     resp[q][version_dict[v]]["dief@0.1s"] = None
                     resp[q][version_dict[v]]["dief@1s"] = None
                     resp[q][version_dict[v]]["dief@10s"] = None
+                    resp[q][version_dict[v]]["dief@lr"] = None
                     continue
 
 
                 diefficiencies_0_1s = []
                 diefficiencies_1s = []
                 diefficiencies_10s = []
+                diefficiencies_lr = []
 
                 dtype  = [('test', 'U100'), ('approach', 'U100'), ('answer', 'i8'), ('time', 'f8')]
 
@@ -130,6 +134,7 @@ def _(diefpy, np, stats, version_dict):
                         diefficiencies_0_1s.append(0)
                         diefficiencies_1s.append(0)
                         diefficiencies_10s.append(0)
+                        diefficiencies_lr.append(0)
                         continue
 
                     data = []
@@ -142,21 +147,46 @@ def _(diefpy, np, stats, version_dict):
                     diefficiency_val_0_1s = diefpy.dieft(arr, q, 0.1*1_000)
                     diefficiency_val_1s = diefpy.dieft(arr, q, 1_000)
                     diefficiency_val_10s = diefpy.dieft(arr, q, 10*1_000)
+                    diefficiency_val_lr = diefpy.dieft(arr, q, highest_last_result_map[q][v])
 
                     diefficiencies_0_1s.append(diefficiency_val_0_1s[0][2])
                     diefficiencies_1s.append(diefficiency_val_1s[0][2])
                     diefficiencies_10s.append(diefficiency_val_10s[0][2])
+                    diefficiencies_lr.append(diefficiency_val_lr[0][2])
 
 
                 stat_0_1s = stats(diefficiencies_0_1s)
                 stat_1s = stats(diefficiencies_1s)
                 stat_10s = stats(diefficiencies_10s)
+                stat_lr = stats(diefficiencies_lr)
 
                 resp[q][version_dict[v]]["dief@0.1s"] = stat_0_1s
                 resp[q][version_dict[v]]["dief@1s"] = stat_1s
                 resp[q][version_dict[v]]["dief@10s"] = stat_10s
+                resp[q][version_dict[v]]["dief@lr"] = stat_lr
         return
     return (populate_diefficiency,)
+
+
+@app.cell
+def _(queries):
+    def highest_execution_times(datasets):
+        resp = {}
+        versions = ["v0", "v1", "v2", "v3", "v4"]
+        for q in queries:
+            resp[q] = {}
+            for v in versions:
+                resp[q][v] = None
+        for dataset in datasets:
+            for q in queries:
+                for v in versions:
+                    last_results = dataset.lastResultsTime(q, v)
+                    if last_results != None:
+                        if len(last_results) != 0:
+                            val = max(last_results)
+                            resp[q][v] = val
+        return resp
+    return (highest_execution_times,)
 
 
 @app.cell
@@ -197,9 +227,9 @@ def _(diefpy, np):
 
 @app.cell
 def _(create_resp_by_template, populate_diefficiency, produce_initial_resp):
-    def generate_continuous_performances(dataset):
+    def generate_continuous_performances(dataset, highest_last_result_map):
         resp = produce_initial_resp()
-        populate_diefficiency(resp, dataset)
+        populate_diefficiency(resp, dataset, highest_last_result_map)
         resp_by_template = create_resp_by_template(resp)
 
         return (resp, resp_by_template)
@@ -242,14 +272,26 @@ def _(mo):
 
 @app.cell
 def _(
-    generate_continuous_performances,
+    highest_execution_times,
     ldpDataset,
     shapeIndexDataset,
     typeIndexLdpDataset,
 ):
-    (resp_si, resp_by_template_si) = generate_continuous_performances(shapeIndexDataset)
-    (resp_ldp, resp_by_template_ldp) = generate_continuous_performances(ldpDataset)
-    (resp_ti, resp_by_template_ti) = generate_continuous_performances(typeIndexLdpDataset)
+    highest_last_result_map = highest_execution_times([shapeIndexDataset, ldpDataset, typeIndexLdpDataset])
+    return (highest_last_result_map,)
+
+
+@app.cell
+def _(
+    generate_continuous_performances,
+    highest_last_result_map,
+    ldpDataset,
+    shapeIndexDataset,
+    typeIndexLdpDataset,
+):
+    (resp_si, resp_by_template_si) = generate_continuous_performances(shapeIndexDataset, highest_last_result_map)
+    (resp_ldp, resp_by_template_ldp) = generate_continuous_performances(ldpDataset, highest_last_result_map)
+    (resp_ti, resp_by_template_ti) = generate_continuous_performances(typeIndexLdpDataset, highest_last_result_map)
     return (
         resp_by_template_ldp,
         resp_by_template_si,
@@ -453,7 +495,6 @@ def _(
     fig_dief_01 = plot("dief@0.1s", resp_by_template_si, resp_by_template_ti, shapeIndexDataset, typeIndexLdpDataset, reported_templates, y_label=y_label)
 
     fig_dief_01.savefig(artefact_path / "dief_01.svg", format="svg")
-    fig_dief_01.savefig(artefact_path / "dief_01.eps", format="eps")
 
     fig_dief_01
     return
@@ -473,7 +514,6 @@ def _(
     fig_dief_1 = plot("dief@1s", resp_by_template_si, resp_by_template_ti, shapeIndexDataset, typeIndexLdpDataset, reported_templates, y_label=y_label)
 
     fig_dief_1.savefig(artefact_path / "dief_1.svg", format="svg")
-    fig_dief_1.savefig(artefact_path / "dief_1.eps", format="eps")
 
     fig_dief_1
     return
@@ -493,9 +533,27 @@ def _(
     fig_dief_10 = plot("dief@10s", resp_by_template_si, resp_by_template_ti, shapeIndexDataset, typeIndexLdpDataset, reported_templates, y_label=y_label)
 
     fig_dief_10.savefig(artefact_path / "dief_10.svg", format="svg")
-    fig_dief_10.savefig(artefact_path / "dief_10.eps", format="eps")
 
     fig_dief_10
+    return
+
+
+@app.cell
+def _(
+    artefact_path,
+    plot,
+    reported_templates,
+    resp_by_template_si,
+    resp_by_template_ti,
+    shapeIndexDataset,
+    typeIndexLdpDataset,
+    y_label,
+):
+    fig_dief_lr = plot("dief@lr", resp_by_template_si, resp_by_template_ti, shapeIndexDataset, typeIndexLdpDataset, reported_templates, y_label=y_label)
+
+    fig_dief_lr.savefig(artefact_path / "dief_lr.svg", format="svg")
+
+    fig_dief_lr
     return
 
 

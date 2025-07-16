@@ -638,7 +638,6 @@ def _(
     fig_first_results = plot("firstResult", resp_by_template_si, resp_by_template_ti, shapeIndexDataset, typeIndexLdpDataset, reported_templates)
 
     fig_first_results.savefig(artefact_path / "first_result.svg", format="svg")
-    fig_first_results.savefig(artefact_path / "first_result.eps", format="eps")
 
     fig_first_results
     return
@@ -656,7 +655,6 @@ def _(
     fig_termination_time = plot("terminationTime", resp_by_template_si, resp_by_template_ti, shapeIndexDataset, typeIndexLdpDataset, reported_templates)
 
     fig_termination_time.savefig(artefact_path / "termination_time.svg", format="svg")
-    fig_termination_time.savefig(artefact_path / "termination_time.eps", format="eps")
 
     fig_termination_time
     return
@@ -674,7 +672,6 @@ def _(
     fig_waiting_time = plot("waitingTime", resp_by_template_si, resp_by_template_ti, shapeIndexDataset, typeIndexLdpDataset, reported_templates)
 
     fig_waiting_time.savefig(artefact_path / "waiting_time.svg", format="svg")
-    fig_waiting_time.savefig(artefact_path / "waiting_time.eps", format="eps")
 
     fig_waiting_time
     return

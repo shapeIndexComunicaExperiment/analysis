@@ -19,9 +19,8 @@ OUTPUTS_CONTINUOUS_PERFORMANCE = \
 	$(CONTINUOUS_PERFORMANCE_DIR)/summary_shape_index_by_template.json \
 	$(CONTINUOUS_PERFORMANCE_DIR)/summary_ldp_by_template.json \
 	$(CONTINUOUS_PERFORMANCE_DIR)/summary_type_index_by_template.json \
-	$(CONTINUOUS_PERFORMANCE_DIR)/termination_time.eps \
 	$(CONTINUOUS_PERFORMANCE_DIR)/termination_time.svg \
-	$(CONTINUOUS_PERFORMANCE_DIR)/first_result.eps \
+	$(CONTINUOUS_PERFORMANCE_DIR)/waiting_time.svg \
 	$(CONTINUOUS_PERFORMANCE_DIR)/first_result.svg \
 	$(CONTINUOUS_PERFORMANCE_DIR)/table_continuous_performance.tex 
 
@@ -38,10 +37,10 @@ OUTPUTS_CONTINUOUS_PERFORMANCE_DIEF = \
 	$(CONTINUOUS_PERFORMANCE_DIR)/dief_summary_shape_index_by_template.json \
 	$(CONTINUOUS_PERFORMANCE_DIR)/dief_summary_ldp_by_template.json \
 	$(CONTINUOUS_PERFORMANCE_DIR)/dief_summary_type_index_by_template.json \
-	$(CONTINUOUS_PERFORMANCE_DIR)/dief_1.eps \
+	$(CONTINUOUS_PERFORMANCE_DIR)/dief_01.svg \
 	$(CONTINUOUS_PERFORMANCE_DIR)/dief_1.svg \
-	$(CONTINUOUS_PERFORMANCE_DIR)/dief_10.eps \
 	$(CONTINUOUS_PERFORMANCE_DIR)/dief_10.svg \
+	$(CONTINUOUS_PERFORMANCE_DIR)/dief_lr.svg \
 	$(CONTINUOUS_PERFORMANCE_DIR)/dief_table_continuous_performance.tex 
 
 HTTP_REQ_EXEC_TIME_RELATION_DIR = $(ARTEFACT_DIR)/http_req_exec_time_relation
