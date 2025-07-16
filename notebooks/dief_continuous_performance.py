@@ -425,7 +425,7 @@ def _(
         for summary in summaries:
             all_zero_d_0_1 = all_zero_d_0_1 and is_zero(summary["dief@0.1s"])
             all_zero_d_1 = all_zero_d_1 and is_zero(summary["dief@1s"])
-            all_zero_d_10 = all_zero_d_10 and is_zero(summary["dief@10s"])
+            all_zero_d_10 = all_zero_d_10 and is_zero(summary["dief@lr"])
 
             if best_result(summary, "dief@0.1s", best_d_0_1):
                 best_d_0_1 = summary
@@ -433,7 +433,7 @@ def _(
             if best_result(summary, "dief@1s", best_d_1):
                 best_d_1 = summary 
 
-            if best_result(summary,"dief@10s", best_d_10):
+            if best_result(summary,"dief@lr", best_d_10):
                 best_d_10 = summary
 
         for summary in summaries:
@@ -452,9 +452,9 @@ def _(
                 tt = displayed_stat(summary["dief@1s"], False)
 
             if best_d_10 == summary and not all_zero_d_10:    
-                wt = displayed_stat(summary["dief@10s"], True)
+                wt = displayed_stat(summary["dief@lr"], True)
             else:
-                wt = displayed_stat(summary["dief@10s"], False)
+                wt = displayed_stat(summary["dief@lr"], False)
 
             template = template.replace("{}", ft, 1)
             template = template.replace("{}", tt, 1)
