@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.13.15"
+__generated_with = "0.14.11"
 app = marimo.App(width="medium")
 
 with app.setup:
@@ -13,13 +13,13 @@ with app.setup:
     file_directory = "./"
     sys.path.append(file_directory)
     from generateDataset import generateDatasetFromResults
-    from metric import diefficiency
     import numpy as np
     from typing import List, Optional
     from pathlib import Path
     import matplotlib.pyplot as plt
     from matplotlib.ticker import FormatStrFormatter
     from matplotlib.lines import Line2D
+    import scipy.stats as scipy_stats
 
 
 @app.cell
@@ -674,6 +674,83 @@ def _(
     fig_waiting_time.savefig(artefact_path / "waiting_time.svg", format="svg")
 
     fig_waiting_time
+    return
+
+
+@app.cell
+def _(firstResults_si):
+    firstResults_si
+    return
+
+
+@app.function
+def rawMetrics(resp):
+    firstResults = {}
+    terminationTimes = {}
+    waitingTimes = {}
+    
+    for query_template, metrics in resp.items():
+        if metrics["waitingTime"] is not None:
+            waitingTimes[query_template] = metrics["waitingTime"]["raw"]
+        else:
+            waitingTimes[query_template] = None
+            
+        if metrics["terminationTime"] is not None:
+            terminationTimes[query_template] = metrics["terminationTime"]["raw"]
+        else:
+            terminationTimes[query_template] = None
+            
+        if metrics["firstResult"] is not None:
+            firstResults[query_template] = metrics["firstResult"]["raw"]
+        else:
+            firstResults[query_template] = None
+    return (firstResults, terminationTimes, waitingTimes)
+
+
+@app.function
+def statisticalSignificanceByTemplate(instance_template_results: Optional[List[float]], baseline_template_results: Optional[List[float]]):
+    
+    if instance_template_results is None or baseline_template_results is None:
+        return (None, None, None)
+        
+    if len(baseline_template_results) == 0:
+        return (None, None, None)
+    pValueGreater = scipy_stats.mannwhitneyu(x=np.array(instance_template_results),
+                           y=np.array(baseline_template_results),
+                           method="auto",
+                           alternative = 'greater').pvalue
+    
+    pValueLess = scipy_stats.mannwhitneyu(x=np.array(instance_template_results),
+                           y=np.array(baseline_template_results),
+                           method="auto",
+                           alternative = 'less').pvalue
+        
+    pValueEqual = scipy_stats.mannwhitneyu(x=instance_template_results,
+                           y=baseline_template_results,
+                           method="auto",
+                           alternative = 'two-sided').pvalue
+    
+
+    return (pValueGreater.item(), pValueEqual.item(), pValueLess.item())
+
+
+@app.cell
+def _(resp_by_template_si, resp_by_template_ti):
+    (firstResults_si, terminationTimes_si, waitingTimes_si) = rawMetrics(resp_by_template_si)
+    (firstResults_ti, terminationTimes_ti, waitingTimes_ti) = rawMetrics(resp_by_template_ti)
+    return firstResults_si, firstResults_ti
+
+
+@app.cell
+def _(firstResults_si, firstResults_ti):
+    for key, val in firstResults_si.items():
+        print(statisticalSignificanceByTemplate(val, firstResults_ti[key]))
+    return
+
+
+@app.cell
+def _(firstResults_si):
+    firstResults_si
     return
 
 
