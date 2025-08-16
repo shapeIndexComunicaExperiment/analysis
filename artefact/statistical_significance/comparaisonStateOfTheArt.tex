@@ -2,30 +2,35 @@
 	\begin{center}
 		\begin{tabular}{|l|l|l|l|}
 			\hline
-			Query template & relation execution time & p-value & avg ratio HTTP request \\
+			query template & relation execution time & p-value & average ratio HTTP request \\
 			\hline
-			interactive-discover-1 & lesser & 1.14E-36 & 0.57 \\
+			D1 & lesser & 1.14E-36 & 0.57 \\
 			\hline
-			interactive-discover-2 & lesser & 4.42E-04 & 0.88 \\
+			D2 & lesser & 4.42E-04 & 0.88 \\
 			\hline
-			interactive-discover-3 & similar & 7.47E-01 (RH) & 0.97 \\
+			D3 & similar & 7.47E-01 (RH) & 0.97 \\
 			\hline
-			interactive-discover-4 & lesser & 2.07E-17 & 0.65 \\
+			D4 & lesser & 2.07E-17 & 0.65 \\
 			\hline
-			interactive-discover-5 & lesser & 5.58E-03 & 0.88 \\
+			D5 & lesser & 5.58E-03 & 0.88 \\
 			\hline
-			interactive-discover-6 & similar & 2.56E-01 (RH) & 1.12 \\
+			D6 & similar & 2.56E-01 (RH) & 1.12 \\
 			\hline
-			interactive-discover-7 & similar & 7.83E-01 (RH) & 1.12 \\
+			D7 & similar & 7.83E-01 (RH) & 1.12 \\
 			\hline
-			interactive-short-1 & lesser & 1.12E-83 & 0.33 \\
+			S1 & lesser & 1.12E-83 & 0.33 \\
 			\hline
-			interactive-short-4 & greater & 3.76E-22 & 13.00 \\
+			S4 & greater & 3.76E-22 & 13.00 \\
 			\hline
-			interactive-short-5 & lesser & 3.12E-17 & 0.44 \\
+			S5 & lesser & 3.12E-17 & 0.44 \\
 			\hline
 		\end{tabular}
 	\end{center}
-	\caption{Table comparing the shape index approach to the state-of-the-art. RH, indicate that the p-value is associated to the rejected hypothesis. Every query performs better or similarly to the state-of-the-art with the shape index approach except for interactive-short-4.}
+	\caption{Table comparing the shape index approach to the state-of-the-art. RH, indicate that the p-value is associated to the rejected hypothesis. Every query performs better or similarly to the state-of-the-art with the shape index approach except for interactive-short-4. One might expect the average ratio of HTTP requests for D6 and D7 to be one. 
+In our implementation, however, the query subsumption algorithm naively retrieved nested shapes, 
+leading to some shapes being dereferenced multiple times. 
+This is an implementation artifact rather than an inherent property of the method. 
+Even in this worst case, the impact on the number of HTTP requests is small and does not affect the overall conclusions, 
+especially given that requests are sent in parallel.}
 	\label{tab:statSignificanceStateOfTheArt}
 \end{table}

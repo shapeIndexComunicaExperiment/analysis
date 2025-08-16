@@ -57,7 +57,6 @@ def generatePlot(results,
                  yaxisLabel,
                  len_instance,
                  color_map,
-                 savePathNoExtension,
                  deactivate_y_axis=False,
                  deactivate_x_axis_title=False,
                  fontSize=25,
@@ -65,7 +64,7 @@ def generatePlot(results,
                  query_to_skip=[],
                  formatYAxis = '{:.1f}'
                  ):
-    rcParams.update({'font.size': fontSize})
+    #rcParams.update({'font.size': fontSize})
 
     indexes_to_skip = []
     queries = copy.deepcopy(QUERIES)
@@ -82,7 +81,10 @@ def generatePlot(results,
     multiplier = 0
     
     fig, ax = plt.subplots(figsize=(10, 10))
-
+    
+    for text in fig.findobj(match=plt.Text):
+        text.set_fontsize(fontSize)
+        
     for dataset, measurements in results.items():
         offset = width * multiplier + width/len(results)
         data = list(range(len(queries)))
@@ -122,8 +124,9 @@ def generatePlot(results,
     
     fig.tight_layout()
     
-    fig.savefig("{}.svg".format(savePathNoExtension), format="svg")
-    fig.savefig("{}.eps".format(savePathNoExtension), format="eps")
+    return fig
+    
+    
 
 def generate_stats(instances:List[Dataset], comparatorInstance:Dataset)->Tuple[dict,dict,dict,dict]:
     result_object = {}

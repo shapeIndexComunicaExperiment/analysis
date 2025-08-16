@@ -1,0 +1,30 @@
+import { cac } from 'cac';
+import { DiEfficiencyMetric } from 'diefficiency';
+
+const cli = cac('diefficiency');
+
+cli
+    .option('--exec-times <string>', 'the execution times')
+    .option('-t <number>', 'the time where to evaluate the diefficiency')
+
+cli.help();
+
+const parsed = cli.parse();
+
+let execTimes: number[] = [];
+
+if(typeof parsed.options["execTimes"] === "number"){
+    execTimes = [parsed.options["execTimes"]]
+}else{
+    execTimes = parsed.options["execTimes"].split(",").map(Number);
+}
+const time = parsed.options["t"]
+
+const granularity = 500;
+const output = DiEfficiencyMetric.answerDistributionFunction(execTimes, granularity);
+
+console.log(JSON.stringify({output}));
+
+const diefft = DiEfficiencyMetric.defAtT(time, output.answerDist, output.linSpace);
+
+console.log(JSON.stringify({diefft}));

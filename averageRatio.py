@@ -1,21 +1,6 @@
-import json
-from texttable import Texttable
-import latextable
-from tabulate import tabulate
-import sys
 from generateDataset import generateDatasetFromResults
-from metric import statisticalSignificanceByTemplate
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.ticker import MultipleLocator
-from scipy.optimize import curve_fit
-from scipy.stats import pearsonr
-from matplotlib.ticker import FormatStrFormatter
-from matplotlib.lines import Line2D
 import statistics
 from plotsVariation import generate_stats
-from plotsVariation import calculatePercentageReductionSeries, statisticTemplateMetric
-import os
 
 shapeIndexPathResult = "./results/standard/shape_index_result.json"
 shapeIndexPathSummary = "./results/standard/summary_shape_index_result.json"

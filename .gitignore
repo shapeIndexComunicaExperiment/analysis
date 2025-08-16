@@ -1,7 +1,9 @@
 **/*.ipynb_checkpoints
+**/*/__marimo__
 /venv/*
 /plots/query-discovery/*
 /plots/query-short/*
 !plots/query-discovery/.gitkeep
 !plots/query-short/.gitkeep
 __pycache__
+__marimo__

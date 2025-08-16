@@ -2,6 +2,8 @@ from typing import List, Optional, Dict,Set
 import scipy.stats as stats
 import numpy as np
 from scipy.stats import ks_2samp
+import subprocess
+import json
 
 def statisticalSignificanceByTemplate(instance: Dict[str, Optional[List[float]]], baseline: Dict[str, Optional[List[float]]]):
     baseline_template_results = []
@@ -76,3 +78,24 @@ def calculatePercentageReductionSeries(
                     resp[query][i] = calculatePercentageReduction(val, currentBaseline[i])
                     
     return resp
+
+def diefficiency(times: List[float], t: float) -> float:
+    try:
+        if len(times) < 1:
+            return 0
+        if  t >= max(times):
+            t = max(times) - 0.0001
+        arrival_times = ",".join(str(val) for val in times)
+        result = subprocess.run(
+            ['bun', 'run', './scripts/diefficiency/index.ts', '--exec-times', arrival_times, '-t', str(t)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True
+        )
+        return json.loads(result.stdout)["diefft"]
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError) as e:
+        print(e)
+        return None
+    
+    

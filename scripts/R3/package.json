@@ -1,0 +1,16 @@
+{
+  "name": "r3",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "cac": "^6.7.14",
+    "relevant-retrieval-ratio": "^1.0.3"
+  }
+}
