@@ -738,7 +738,14 @@ def statisticalSignificanceByTemplate(instance_template_results: Optional[List[f
 def _(resp_by_template_si, resp_by_template_ti):
     (firstResults_si, terminationTimes_si, waitingTimes_si) = rawMetrics(resp_by_template_si)
     (firstResults_ti, terminationTimes_ti, waitingTimes_ti) = rawMetrics(resp_by_template_ti)
-    return firstResults_si, firstResults_ti
+    return (
+        firstResults_si,
+        firstResults_ti,
+        terminationTimes_si,
+        terminationTimes_ti,
+        waitingTimes_si,
+        waitingTimes_ti,
+    )
 
 
 @app.cell
@@ -749,8 +756,16 @@ def _(firstResults_si, firstResults_ti):
 
 
 @app.cell
-def _(firstResults_si):
-    firstResults_si
+def _(terminationTimes_si, terminationTimes_ti):
+    for _key, _val in terminationTimes_si.items():
+        print(statisticalSignificanceByTemplate(_val, terminationTimes_ti[_key]))
+    return
+
+
+@app.cell
+def _(waitingTimes_si, waitingTimes_ti):
+    for __key, __val in waitingTimes_si.items():
+        print(statisticalSignificanceByTemplate(__val, waitingTimes_ti[__key]))
     return
 
 

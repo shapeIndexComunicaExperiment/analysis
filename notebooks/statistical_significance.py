@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.13.15"
+__generated_with = "0.14.11"
 app = marimo.App()
 
 
@@ -261,7 +261,12 @@ def _(Texttable, head, latextable, rows):
     textTable.set_cols_dtype(['t', 't', 't', 't'])
     textTable.add_rows([head]+ rows)
     label = "tab:statSignificanceStateOfTheArt"
-    caption = "Table comparing the shape index approach to the state-of-the-art. RH, indicate that the p-value is associated to the rejected hypothesis. Every query performs better or similarly to the state-of-the-art with the shape index approach except for interactive-short-4."
+    caption = """Table comparing the shape index approach to the state-of-the-art. RH, indicate that the p-value is associated to the rejected hypothesis. Every query performs better or similarly to the state-of-the-art with the shape index approach except for interactive-short-4. One might expect the average ratio of HTTP requests for D6 and D7 to be one. 
+    In our implementation, however, the query subsumption algorithm naively retrieved nested shapes, 
+    leading to some shapes being dereferenced multiple times. 
+    This is an implementation artifact rather than an inherent property of the method. 
+    Even in this worst case, the impact on the number of HTTP requests is small and does not affect the overall conclusions, 
+    especially given that requests are sent in parallel."""
 
     latex_table_state_of_the_art = latextable.draw_latex(textTable, caption=caption, label=label)
 
