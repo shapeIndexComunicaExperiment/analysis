@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.13.15"
+__generated_with = "0.14.11"
 app = marimo.App(width="medium")
 
 
@@ -554,11 +554,6 @@ def _(
     fig_dief_lr.savefig(artefact_path / "dief_lr.svg", format="svg")
 
     fig_dief_lr
-    return
-
-
-@app.cell
-def _():
     return
 
 
