@@ -209,25 +209,55 @@ def _(color_map, instances, np, plt, queries):
         
         for dataset, measurements in results.items():
             offset = width * multiplier + width/len(results)
-            data = list(range(len(queries)))
-            rewind = 0
-            for i, measurement in enumerate(measurements): 
-                """
-                all_nan = all(np.isnan(el) for el in measurement)
-                if all_nan:
-                    rewind+=1
+
+            means = []
+            lower_err = []
+            upper_err = []
+
+            for measurement in measurements:
+                arr = np.asarray(measurement, dtype=float)
+                arr = arr[~np.isnan(arr)]
+                if arr.size == 0:
+                    means.append(np.nan)
+                    lower_err.append(0.0)
+                    upper_err.append(0.0)
                     continue
-                """
-                #print(f"len {len(data)}, i {i-rewind}")
-                data[i-rewind] = list(filter(lambda x: not np.isnan(x), measurement))
+
+                m = np.mean(arr)
+                q10, q90 = np.percentile(arr, [10, 90])
+
+                # Asymmetric distances from the mean
+                lo = max(0.0, m - q10)            # distance down to 10th percentile
+                hi = max(0.0, q90 - m)            # distance up to 90th percentile
+
+                means.append(m)
+                # Clip lower err so whisker never dips below 0 on the axis
+                lower_err.append(min(lo, m))
+                upper_err.append(hi)
+
+            means = np.array(means, float)
+            lower_err = np.array(lower_err, float)
+            upper_err = np.array(upper_err, float)
+            yerr = np.vstack([lower_err, upper_err])
+
+            ax.bar(
+                x + offset,
+                means,
+                width=width,
+                yerr=yerr,
+                capsize=4,
+                label=dataset,
+                color=color_map[dataset],
+                edgecolor="none",
+                error_kw=dict(
+                    ecolor="black",       # whisker color
+                    elinewidth=1,         # thinner lines
+                    alpha=0.3             # softer / faded
+                ),
+            )
+
             multiplier += 1
-            ax.boxplot(data,
-                       positions=x+offset,
-                       widths=width,
-                       patch_artist=True,
-                       label=dataset,
-                       boxprops=dict(color="none",facecolor=color_map[dataset]),
-                      )
+
         #ax.set_yscale('log', base=2)
         #ax.axhline(1, color='gray', linestyle='--', label='No performance change')
         ax.set_ylabel(yaxisLabel)
