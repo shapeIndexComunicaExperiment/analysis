@@ -21,6 +21,7 @@ def _():
     from matplotlib.ticker import MultipleLocator
     from scipy.optimize import curve_fit
     from scipy.stats import pearsonr
+    import matplotlib.ticker as mticker
     from matplotlib.ticker import FormatStrFormatter
     from matplotlib.lines import Line2D
     import statistics
@@ -191,12 +192,16 @@ def _(result_object_time):
 @app.cell
 def _(color_map, instances, np, plt, queries):
     def generatePlot(results, yaxisLabel):
-        fontSize=20
+        fontSize=16
         x = np.arange(len(queries))
         width = 1/len(instances) -0.1 # the width of the bars
         multiplier = 0
     
-        fig, ax = plt.subplots(figsize=(10, 10))
+        fig, ax = plt.subplots(figsize=(20, 10))
+        ax.tick_params(axis="both", which="both", length=0)
+        ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"{int(x):,}"))
+        for spine in ax.spines.values():
+            spine.set_visible(False)
 
     
         for text in fig.findobj(match=plt.Text):
@@ -221,15 +226,14 @@ def _(color_map, instances, np, plt, queries):
                        widths=width,
                        patch_artist=True,
                        label=dataset,
-                       boxprops=dict(facecolor=color_map[dataset]),
+                       boxprops=dict(color="none",facecolor=color_map[dataset]),
                       )
         #ax.set_yscale('log', base=2)
         #ax.axhline(1, color='gray', linestyle='--', label='No performance change')
         ax.set_ylabel(yaxisLabel)
         ax.set_xticks(x + width, queries)
-        ax.grid(axis="both")
         ax.set_xlabel("query template")
-        ax.legend()
+        ax.legend(frameon=False, fontsize=fontSize)
         return fig
     return (generatePlot,)
 
