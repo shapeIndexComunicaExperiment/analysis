@@ -80,20 +80,22 @@ def _(Path):
     return (artefactFolder,)
 
 
+@app.function
+def colorViolon(part, color):
+    for pc in part['bodies']:
+        pc.set_color(color)
+        pc.set_edgecolor(color)
+        pc.set_edgecolor(color)
+        pc.set_alpha(0.75)
+    part['cmeans'].set_color('black')
+    part['cmins'].set_color('black')
+    part['cmaxes'].set_color('black')
+    part['cbars'].set_color('black')
+    part['cmedians'].set_color('black')
+
+
 @app.cell
 def _(Line2D, evalInstances, np, plt):
-    def colorViolon(part, color):
-        for pc in part['bodies']:
-            pc.set_color(color)
-            pc.set_edgecolor(color)
-            pc.set_edgecolor(color)
-            pc.set_alpha(0.75)
-        part['cmeans'].set_color('black')
-        part['cmins'].set_color('black')
-        part['cmaxes'].set_color('black')
-        part['cbars'].set_color('black')
-        part['cmedians'].set_color('black')
-
     def plotOneQueryExecutionTime(instances, queryName, color_map):
         query_map = {'interactive-discover-1': 'D1', 'interactive-discover-2': 'D2', 'interactive-discover-3': 'D3', 'interactive-discover-4': 'D4', 'interactive-discover-5': 'D5', 'interactive-discover-6': 'D6', 'interactive-discover-7': 'D7', 'interactive-discover-8': 'D8', 'interactive-short-1': 'S1', 'interactive-short-2': 'S2', 'interactive-short-3': 'S3', 'interactive-short-4': 'S4', 'interactive-short-5': 'S5', 'interactive-short-6': 'S6', 'interactive-short-7': 'S7'}
         indexes = np.linspace(0, 0.25, 5)
@@ -102,10 +104,29 @@ def _(Line2D, evalInstances, np, plt):
         ax.set_xticks(indexes)
         ax.set_xticklabels(['{}V{}'.format(query_map[queryName], i+1) for i, v in enumerate(indexes)])
         violon_plots = {}
+    
         for _instance in evalInstances:
-            all_data = [data if data is not None else [0, 0, 0, 0, 0] for label, data in _instance.executionTime[queryName].items()]
-            current_plot = ax.violinplot(all_data, indexes, widths=width, showmeans=True, showmedians=True)
-            violon_plots[_instance.name] = current_plot
+            # Filter out None data and keep track of positions
+            plot_data = []
+            plot_positions = []
+            timeout_positions = []
+        
+            for i, (label, data) in enumerate(_instance.executionTime[queryName].items()):
+                if data is not None:
+                    plot_data.append(data)
+                    plot_positions.append(indexes[i])
+                else:
+                    timeout_positions.append(indexes[i])
+        
+            # Only create violin plot if we have data
+            if plot_data:
+                current_plot = ax.violinplot(plot_data, plot_positions, widths=width, showmeans=True, showmedians=True)
+                violon_plots[_instance.name] = current_plot
+        
+            # Add timeout markers at y=0
+            for pos in timeout_positions:
+                ax.scatter(pos, 0, color=color_map[_instance.name], marker='X', s=150, alpha=0.8, edgecolors='black', linewidths=2)
+    
         ax.set_xlabel('Query')
         ax.set_ylabel('Execution time (ms)')
         ax.grid(axis='y')
@@ -115,6 +136,8 @@ def _(Line2D, evalInstances, np, plt):
             colorViolon(plot, color)
             legend_elements.append(Line2D([0], [0], color=color, label=label))
     
+        # Add timeout legend
+        legend_elements.append(Line2D([0], [0], marker='X', color='black', linestyle='None', markersize=10, label='Timeout'))
     
         for text in fig.findobj(match=plt.Text):
             text.set_fontsize(25)
