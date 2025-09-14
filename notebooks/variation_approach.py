@@ -114,7 +114,12 @@ def _(Line2D, evalInstances, np, plt):
             color = color_map[label]
             colorViolon(plot, color)
             legend_elements.append(Line2D([0], [0], color=color, label=label))
-        ax.legend(handles=legend_elements)
+    
+    
+        for text in fig.findobj(match=plt.Text):
+            text.set_fontsize(25)
+        
+        ax.legend(handles=legend_elements, fontsize="18")
         return fig
     return (plotOneQueryExecutionTime,)
 
