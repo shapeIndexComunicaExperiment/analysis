@@ -10,6 +10,11 @@ The `./results` folder contains the raw data of the experiment.
 `./artefact/http_req_exec_time_relation` contains plots of the relation between HTTP request and the query execution time compared to the state-of-the-art approach, type index with LDP.
 The file `./stats.json` presents some statistics about the curve of the plot.
 
+### `./artefact/continuous_performance`
+`./artefact/continuous_performance` contains plot of the continuous performance of the results.
+We measure the `dief@t` at various time, the time of to get the first results, the termination time,
+and the waiting time between results.
+
 ### `./artefact/query_containment_execution_time`
 `./artefact/query_containment_execution_time` contains tables of the execution time of the query-shape containment algorithm in relation to different sets of shapes.
 
@@ -40,18 +45,17 @@ The file `./stats.json` presents some statistics about the curve of the plot.
 ## Installation
 
 ```sh
-./create_python_env.sh
-source ./venv/bin/activate
+poetry install
 ```
 
 ## Usage
 
-## Jupyter notebook
+## Marimo notebook
 
-To launch the jupyter notebook with the dependencies required to execute the analysis
+To launch the 
 
 ```sh
-./execute_jupyter.sh
+make notebook
 ```
 
 The notebooks are located in `./notebooks`
@@ -60,5 +64,5 @@ The notebooks are located in `./notebooks`
 To generate all the artifacts run
 
 ```sh
-./generate_artefact.sh
+make all -j
 ```

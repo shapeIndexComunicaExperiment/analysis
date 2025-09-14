@@ -93,7 +93,22 @@ OUTPUT_VARIATION_APPROACH = $(VARIATION_APPROACH_DIR)/reduction_number_HTTP_requ
 OUTPUT_VARIATION_APPROACH_NET = $(VARIATION_APPROACH_DIR)/reduction_number_HTTP_requests_raw.eps \
 	$(VARIATION_APPROACH_DIR)/reduction_number_HTTP_requests_raw.svg \
 	$(VARIATION_APPROACH_DIR)/reduction_query_execution_time_raw.svg \
-	$(VARIATION_APPROACH_DIR)/reduction_query_execution_time_raw.eps
+	$(VARIATION_APPROACH_DIR)/reduction_query_execution_time_raw.eps \
+	$(VARIATION_APPROACH_DIR)/d1_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/d2_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/d3_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/d4_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/d5_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/d6_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/d7_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/d8_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/s1_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/s2_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/s3_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/s4_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/s5_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/s6_violon_plots.svg \
+	$(VARIATION_APPROACH_DIR)/s7_violon_plots.svg 
 
 VARIATION_PERCENTAGE_SI_ENTRY_DIR = $(ARTEFACT_DIR)/variation_percentage_entry_shape_index
 OUTPUT_VARIATION_PERCENTAGE_ENTRY_SI = $(VARIATION_PERCENTAGE_SI_ENTRY_DIR)/reduction_number_HTTP_requests.eps \

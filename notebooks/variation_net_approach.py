@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.13.15"
+__generated_with = "0.14.11"
 app = marimo.App(width="full")
 
 
@@ -26,7 +26,7 @@ def _():
     from matplotlib.lines import Line2D
     import statistics
     from pathlib import Path
-    return Path, generateDatasetFromResults, mo, np, plt, statistics
+    return Path, generateDatasetFromResults, mo, mticker, np, plt, statistics
 
 
 @app.cell
@@ -190,23 +190,23 @@ def _(result_object_time):
 
 
 @app.cell
-def _(color_map, instances, np, plt, queries):
+def _(color_map, instances, mticker, np, plt, queries):
     def generatePlot(results, yaxisLabel):
         fontSize=16
         x = np.arange(len(queries))
         width = 1/len(instances) -0.1 # the width of the bars
         multiplier = 0
-    
+
         fig, ax = plt.subplots(figsize=(20, 10))
         ax.tick_params(axis="both", which="both", length=0)
         ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"{int(x):,}"))
         for spine in ax.spines.values():
             spine.set_visible(False)
 
-    
+
         for text in fig.findobj(match=plt.Text):
             text.set_fontsize(fontSize)
-        
+
         for dataset, measurements in results.items():
             offset = width * multiplier + width/len(results)
 

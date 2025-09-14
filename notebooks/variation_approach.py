@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.13.15"
+__generated_with = "0.14.11"
 app = marimo.App(width="full")
 
 
@@ -75,6 +75,12 @@ def _():
 
 
 @app.cell
+def _(Path):
+    artefactFolder = Path("./artefact/variation_approach")
+    return (artefactFolder,)
+
+
+@app.cell
 def _(Line2D, evalInstances, np, plt):
     def colorViolon(part, color):
         for pc in part['bodies']:
@@ -94,7 +100,7 @@ def _(Line2D, evalInstances, np, plt):
         width = 0.05
         fig, ax = plt.subplots(figsize=(10, 8))
         ax.set_xticks(indexes)
-        ax.set_xticklabels(['{}V{}'.format(query_map[queryName], i) for i, v in enumerate(indexes)])
+        ax.set_xticklabels(['{}V{}'.format(query_map[queryName], i+1) for i, v in enumerate(indexes)])
         violon_plots = {}
         for _instance in evalInstances:
             all_data = [data if data is not None else [0, 0, 0, 0, 0] for label, data in _instance.executionTime[queryName].items()]
@@ -102,7 +108,7 @@ def _(Line2D, evalInstances, np, plt):
             violon_plots[_instance.name] = current_plot
         ax.set_xlabel('Query')
         ax.set_ylabel('Execution time (ms)')
-        ax.grid(axis='both')
+        ax.grid(axis='y')
         legend_elements = []
         for label, plot in violon_plots.items():
             color = color_map[label]
@@ -126,44 +132,74 @@ def _(mo):
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-1", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    d1_Plot = plotOneQueryExecutionTime(evalInstances,"interactive-discover-1", color_map)
+
+    d1_Plot.savefig(artefactFolder/ "d1_violon_plots.svg", format="svg")
+    d1_Plot
     return
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-2", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    d2_Plot = plotOneQueryExecutionTime(evalInstances,"interactive-discover-2", color_map)
+
+    d2_Plot.savefig(artefactFolder/ "d2_violon_plots.svg", format="svg")
+    d2_Plot
     return
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-3", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    d3_Plot = plotOneQueryExecutionTime(evalInstances,"interactive-discover-3", color_map)
+
+    d3_Plot.savefig(artefactFolder/ "d3_violon_plots.svg", format="svg")
+    d3_Plot
     return
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-4", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    d4_Plot = plotOneQueryExecutionTime(evalInstances,"interactive-discover-4", color_map)
+
+    d4_Plot.savefig(artefactFolder/ "d4_violon_plots.svg", format="svg")
+    d4_Plot
     return
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-5", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    d5_Plot = plotOneQueryExecutionTime(evalInstances,"interactive-discover-5", color_map)
+
+    d5_Plot.savefig(artefactFolder/ "d5_violon_plots.svg", format="svg")
+    d5_Plot
     return
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-6", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    d6_Plot = plotOneQueryExecutionTime(evalInstances,"interactive-discover-6", color_map)
+
+    d6_Plot.savefig(artefactFolder/ "d6_violon_plots.svg", format="svg")
+    d6_Plot
     return
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-discover-7", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    d7_Plot = plotOneQueryExecutionTime(evalInstances,"interactive-discover-7", color_map)
+
+    d7_Plot.savefig(artefactFolder/ "d7_violon_plots.svg", format="svg")
+    d7_Plot
+    return
+
+
+@app.cell
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    d8_Plot = plotOneQueryExecutionTime(evalInstances,"interactive-discover-8", color_map)
+
+    d8_Plot.savefig(artefactFolder/ "d8_violon_plots.svg", format="svg")
+    d8_Plot
     return
 
 
@@ -174,44 +210,65 @@ def _(mo):
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-1", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    s1_plot = plotOneQueryExecutionTime(evalInstances,"interactive-short-1", color_map)
+
+    s1_plot.savefig(artefactFolder/ "s1_violon_plots.svg", format="svg")
+    s1_plot
     return
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-2", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    s2_plot = plotOneQueryExecutionTime(evalInstances,"interactive-short-2", color_map)
+
+    s2_plot.savefig(artefactFolder/ "s2_violon_plots.svg", format="svg")
+    s2_plot
     return
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-3", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    s3_plot = plotOneQueryExecutionTime(evalInstances,"interactive-short-3", color_map)
+
+    s3_plot.savefig(artefactFolder/ "s3_violon_plots.svg", format="svg")
+    s3_plot
     return
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-4", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    s4_plot = plotOneQueryExecutionTime(evalInstances,"interactive-short-4", color_map)
+
+    s4_plot.savefig(artefactFolder/ "s4_violon_plots.svg", format="svg")
+    s4_plot
     return
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-5", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    s5_plot = plotOneQueryExecutionTime(evalInstances,"interactive-short-5", color_map)
+
+    s5_plot.savefig(artefactFolder/ "s5_violon_plots.svg", format="svg")
+    s5_plot
     return
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-6", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    s6_plot = plotOneQueryExecutionTime(evalInstances,"interactive-short-6", color_map)
+
+    s6_plot.savefig(artefactFolder/ "s6_violon_plots.svg", format="svg")
+    s6_plot
     return
 
 
 @app.cell
-def _(color_map, evalInstances, plotOneQueryExecutionTime):
-    plotOneQueryExecutionTime(evalInstances,"interactive-short-7", color_map)
+def _(artefactFolder, color_map, evalInstances, plotOneQueryExecutionTime):
+    s7_plot = plotOneQueryExecutionTime(evalInstances,"interactive-short-7", color_map)
+
+    s7_plot.savefig(artefactFolder/ "s7_violon_plots.svg", format="svg")
+    s7_plot
     return
 
 
@@ -237,12 +294,6 @@ def _(generate_stats, instances, typeIndexLdpDataset):
 def _(mo):
     mo.md(r"""# Reduction by query templates figure""")
     return
-
-
-@app.cell
-def _(Path):
-    artefactFolder = Path("./artefact/variation_approach")
-    return (artefactFolder,)
 
 
 @app.cell
