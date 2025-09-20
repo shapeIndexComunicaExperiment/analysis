@@ -27,6 +27,8 @@ def _():
     import statistics
     from pathlib import Path
     import matplotlib.patches as patches
+    import matplotlib
+    import matplotlib.patches as mpatches
     return (
         Line2D,
         Path,
@@ -34,10 +36,16 @@ def _():
         generatePlot,
         generate_stats,
         mo,
+        mpatches,
         np,
-        patches,
         plt,
     )
+
+
+@app.cell
+def _():
+    #plt.rcParams['hatch.linewidth'] = 1
+    return
 
 
 @app.cell
@@ -84,7 +92,7 @@ def _(Path):
 
 
 @app.cell
-def _(Line2D, evalInstances, np, patches, plt):
+def _(Line2D, evalInstances, mpatches, np, plt):
     def colorViolon(part, color, pattern=None):
         for pc in part['bodies']:
             pc.set_color(color)
@@ -92,6 +100,7 @@ def _(Line2D, evalInstances, np, patches, plt):
             pc.set_alpha(0.75)
             if pattern:
                 pc.set_hatch(pattern)
+                pc.set_edgecolor((0, 0, 0, 1))
         part['cmeans'].set_color('black')
         part['cmins'].set_color('black')
         part['cmaxes'].set_color('black')
@@ -100,9 +109,9 @@ def _(Line2D, evalInstances, np, patches, plt):
 
     def plotOneQueryExecutionTime(instances, queryName, color_map, pattern_map):
         query_map = {'interactive-discover-1': 'D1', 'interactive-discover-2': 'D2', 'interactive-discover-3': 'D3', 'interactive-discover-4': 'D4', 'interactive-discover-5': 'D5', 'interactive-discover-6': 'D6', 'interactive-discover-7': 'D7', 'interactive-discover-8': 'D8', 'interactive-short-1': 'S1', 'interactive-short-2': 'S2', 'interactive-short-3': 'S3', 'interactive-short-4': 'S4', 'interactive-short-5': 'S5', 'interactive-short-6': 'S6', 'interactive-short-7': 'S7'}
-    
+
         # Define patterns mapped to color_map keys (using global color_map)
-    
+
         indexes = np.linspace(0, 0.25, 5)
         width = 0.05
         fig, ax = plt.subplots(figsize=(10, 8))
@@ -140,9 +149,10 @@ def _(Line2D, evalInstances, np, patches, plt):
             color = color_map[label]
             pattern = pattern_map[label]  # Use pattern_map based on instance name
             colorViolon(plot, color, pattern)
-        
+
             # Create legend patch with pattern
-            legend_patch = patches.Patch(color=color, hatch=pattern, alpha=0.75, label=label)
+            legend_patch = mpatches.Patch(facecolor=color, hatch=pattern, alpha=0.75, 
+                                            edgecolor='black', linewidth=2, label=label)
             legend_elements.append(legend_patch)
 
         # Add timeout legend
