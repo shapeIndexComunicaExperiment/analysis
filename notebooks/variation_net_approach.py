@@ -184,12 +184,6 @@ def _():
 
 
 @app.cell
-def _(result_object_time):
-    result_object_time
-    return
-
-
-@app.cell
 def _(color_map, instances, mticker, np, plt, queries):
     def generatePlot(results, yaxisLabel):
         fontSize=16
