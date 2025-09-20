@@ -151,7 +151,7 @@ def _(Line2D, evalInstances, mpatches, np, plt):
             colorViolon(plot, color, pattern)
 
             # Create legend patch with pattern
-            legend_patch = mpatches.Patch(facecolor=color, hatch=pattern, alpha=0.75, 
+            legend_patch = mpatches.Patch(facecolor=color, hatch=pattern, alpha=1, 
                                             edgecolor='black', linewidth=2, label=label)
             legend_elements.append(legend_patch)
 
