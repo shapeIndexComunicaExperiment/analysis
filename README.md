@@ -1,8 +1,14 @@
 # Analysis of the results of the paper Traveling with a Map: Optimizing the Search Space of Link Traversal Queries Using RDF Data Shapes
 
-Python script and Jupyter notebooks for analyzing the experiment results for the paper Traveling with a Map: Optimizing the Search Space of Link Traversal Queries Using RDF Data Shapes.
+Python script and Marimo notebooks for analyzing the experiment results for the paper Traveling with a Map: Optimizing the Search Space of Link Traversal Queries Using RDF Data Shapes.
 The figures and the table from the paper are generated from this repository in `./artefact`.
 The `./results` folder contains the raw data of the experiment.
+The notebook that generate the artefact are located in `./notebooks.`
+
+## Online notebooks
+The analysis notebooks are available as HTML pages in the `./docs` directory.
+
+**View online:** https://shapeindexcomunicaexperiment.github.io/analysis/
 
 ## Description of the artifact
 
