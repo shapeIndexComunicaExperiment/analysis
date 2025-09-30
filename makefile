@@ -2,7 +2,7 @@ RUN = poetry run python
 MARIMO = poetry run marimo
 ARTEFACT_DIR = ./artefact
 
-NOTEBOOK_HTML = html_notebook
+NOTEBOOK_HTML = docs
 
 CONTINUOUS_PERFORMANCE_DIR = $(ARTEFACT_DIR)/continuous_performance
 
