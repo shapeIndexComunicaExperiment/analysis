@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Notebooks - Traveling with a Map</title>
+    <style>
+        body {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            color: #000;
+            background: #fafafa;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #000;
+            border-bottom: 3px solid #000;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 1.1rem;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            color: #000;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        a {
+            color: #000;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-bottom 0.2s;
+        }
+        
+        a:hover {
+            border-bottom: 1px solid #000;
+        }
+        
+        a::before {
+            content: "→ ";
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notebooks for the analysis of the results of the paper<br>
+    <em>Traveling with a Map: Optimizing the Search Space of Link Traversal Queries Using RDF Data Shapes</em></h1>
+    
+    <h2>Approach Comparisons</h2>
+    <ul>
+        <li><a href="./variation_approaches.html">Analysis different approaches comparison</a></li>
+        <li><a href="./variation_approaches_net.html">Analysis different approaches</a></li>
+    </ul>
+    
+    <h2>Performance</h2>
+    <ul>
+        <li><a href="./continuous_performance.html">Continuous performance</a></li>
+        <li><a href="./dief_continuous_performance.html">Diefficiency metric</a></li>
+        <li><a href="./statistical_significance.html">Statistical significance analysis</a></li>
+    </ul>
+    
+    <h2>Shape Index Variations</h2>
+    <ul>
+        <li><a href="./variation_percentage_shape_index_entry.html">Analysis of the impact of incomplete shape indexes</a></li>
+        <li><a href="./variation_percentage_shape_index.html">Analysis of the impact of not every subweb exposing a shape index</a></li>
+        <li><a href="./variation_shape_detail.html">Analysis of the impact of the variation of the level of detail of the shapes</a></li>
+    </ul>
+    
+    <h2>Efficiency Metrics</h2>
+    <ul>
+        <li><a href="./ratio_useful_sources.html">Percentage of query-relevant resources</a></li>
+        <li><a href="./query_shape_subsumption_execution_time.html">Query-Shape subsumption execution time</a></li>
+    </ul>
+    
+    <h2>HTTP Request Analysis</h2>
+    <ul>
+        <li><a href="./relation_number_http_req_exec_time.html">Relationship reduction number of HTTP request and query execution time</a></li>
+    </ul>
+</body>
+</html>

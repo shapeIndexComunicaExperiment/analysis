@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.13.15"
+__generated_with = "0.14.11"
 app = marimo.App(width="medium")
 
 
@@ -76,7 +76,7 @@ def _(
         os.makedirs(os.path.join(artefactFolder, key), exist_ok=True)
 
         results: Optional[Dict[str,float]] = None
-    
+
         with open(filePath, 'rb') as rf:
             results = json.load(rf)
 
@@ -87,7 +87,7 @@ def _(
             if query not in ignoreQueries:
                 row = [query_label_mapping[query], value["average"],value["std"],value["max"] ]
                 rows.append(row)
-    
+
         caption= "Query-Shape containment computation time (100 samples) is negligeable with the most restrictive shapes of our experiments."
         label="tab:queryShapeContainmentEval"
 
@@ -122,11 +122,6 @@ def _(tables):
 @app.cell
 def _(tables):
     tables["minimal"]
-    return
-
-
-@app.cell
-def _():
     return
 
 

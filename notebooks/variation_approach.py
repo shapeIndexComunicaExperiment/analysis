@@ -114,7 +114,7 @@ def _(Line2D, evalInstances, mpatches, np, plt):
 
         indexes = np.linspace(0, 0.25, 5)
         width = 0.05
-        fig, ax = plt.subplots(figsize=(10, 8))
+        fig, ax = plt.subplots(figsize=(14, 12))
         ax.set_xticks(indexes)
         ax.set_xticklabels(['{}V{}'.format(query_map[queryName], i+1) for i, v in enumerate(indexes)])
         violon_plots = {}
