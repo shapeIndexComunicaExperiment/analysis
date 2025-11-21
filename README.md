@@ -47,6 +47,7 @@ and the waiting time between results.
 
 ## Dependencies
 - [python 3](https://www.python.org/)
+- [poetry](https://python-poetry.org/)
 
 ## Installation
 
