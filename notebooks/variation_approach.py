@@ -93,19 +93,23 @@ def _(Path):
 
 @app.cell
 def _(Line2D, evalInstances, mpatches, np, plt):
+    def _rgba(hexcolor, a):
+        h = hexcolor.lstrip('#')
+        return (int(h[0:2], 16) / 255, int(h[2:4], 16) / 255, int(h[4:6], 16) / 255, a)
+
     def colorViolon(part, color, pattern=None):
         for pc in part['bodies']:
-            pc.set_color(color)
-            pc.set_edgecolor(color)
-            pc.set_alpha(0.75)
-            if pattern:
-                pc.set_hatch(pattern)
-                pc.set_edgecolor((0, 0, 0, 1))
-        part['cmeans'].set_color('black')
-        part['cmins'].set_color('black')
-        part['cmaxes'].set_color('black')
-        part['cbars'].set_color('black')
-        part['cmedians'].set_color('black')
+            # Semi-transparent fill so stacked violins remain visible, with a crisp
+            # opaque coloured outline and matching statistic bars for a clean look.
+            pc.set_facecolor(_rgba(color, 0.45))
+            pc.set_edgecolor(_rgba(color, 1.0))
+            pc.set_linewidth(1.8)
+            pc.set_alpha(None)
+        part['cmeans'].set_color(color)
+        part['cmins'].set_color(color)
+        part['cmaxes'].set_color(color)
+        part['cbars'].set_color(color)
+        part['cmedians'].set_color(color)
 
     def plotOneQueryExecutionTime(instances, queryName, color_map, pattern_map):
         query_map = {'interactive-discover-1': 'D1', 'interactive-discover-2': 'D2', 'interactive-discover-3': 'D3', 'interactive-discover-4': 'D4', 'interactive-discover-5': 'D5', 'interactive-discover-6': 'D6', 'interactive-discover-7': 'D7', 'interactive-discover-8': 'D8', 'interactive-short-1': 'S1', 'interactive-short-2': 'S2', 'interactive-short-3': 'S3', 'interactive-short-4': 'S4', 'interactive-short-5': 'S5', 'interactive-short-6': 'S6', 'interactive-short-7': 'S7'}
@@ -147,12 +151,9 @@ def _(Line2D, evalInstances, mpatches, np, plt):
         legend_elements = []
         for label, plot in violon_plots.items():
             color = color_map[label]
-            pattern = pattern_map[label]  # Use pattern_map based on instance name
-            colorViolon(plot, color, pattern)
+            colorViolon(plot, color)
 
-            # Create legend patch with pattern
-            legend_patch = mpatches.Patch(facecolor=color, hatch=pattern, alpha=1, 
-                                            edgecolor='black', linewidth=2, label=label)
+            legend_patch = mpatches.Patch(facecolor=color, alpha=0.5, edgecolor=color, label=label)
             legend_elements.append(legend_patch)
 
         # Add timeout legend
