@@ -122,6 +122,19 @@ OUTPUT_VARIATION_PERCENTAGE_SI = $(VARIATION_PERCENTAGE_SI_DIR)/reduction_number
 	$(VARIATION_PERCENTAGE_SI_DIR)/reduction_query_execution_time.svg \
 	$(VARIATION_PERCENTAGE_SI_DIR)/reduction_query_execution_time.eps
 
+HTML_TARGETS = \
+	$(NOTEBOOK_HTML)/continuous_performance.html \
+	$(NOTEBOOK_HTML)/dief_continuous_performance.html \
+	$(NOTEBOOK_HTML)/relation_number_http_req_exec_time.html \
+	$(NOTEBOOK_HTML)/variation_shape_detail.html \
+	$(NOTEBOOK_HTML)/query_shape_subsumption_execution_time.html \
+	$(NOTEBOOK_HTML)/ratio_useful_sources.html \
+	$(NOTEBOOK_HTML)/statistical_significance.html \
+	$(NOTEBOOK_HTML)/variation_approaches.html \
+	$(NOTEBOOK_HTML)/variation_approaches_net.html \
+	$(NOTEBOOK_HTML)/variation_percentage_shape_index_entry.html \
+	$(NOTEBOOK_HTML)/variation_percentage_shape_index.html
+
 TARGETS = \
 	$(OUTPUTS_CONTINUOUS_PERFORMANCE_DIEF) \
 	$(OUTPUTS_CONTINUOUS_PERFORMANCE) \
@@ -135,17 +148,7 @@ TARGETS = \
 	$(OUTPUT_VARIATION_APPROACH_NET) \
 	$(OUTPUT_VARIATION_PERCENTAGE_ENTRY_SI) \
 	$(OUTPUT_VARIATION_PERCENTAGE_SI) \
-	$(NOTEBOOK_HTML)/continuous_performance.html \
-	$(NOTEBOOK_HTML)/dief_continuous_performance.html \
-	$(NOTEBOOK_HTML)/relation_number_http_req_exec_time.html \
-	$(NOTEBOOK_HTML)/variation_shape_detail.html \
-	$(NOTEBOOK_HTML)/query_shape_subsumption_execution_time.html \
-	$(NOTEBOOK_HTML)/ratio_useful_sources.html \
-	$(NOTEBOOK_HTML)/statistical_significance.html \
-	$(NOTEBOOK_HTML)/variation_approaches.html \
-	$(NOTEBOOK_HTML)/variation_approaches_net.html \
-	$(NOTEBOOK_HTML)/variation_percentage_shape_index_entry.html \
-	$(NOTEBOOK_HTML)/variation_percentage_shape_index.html
+	$(HTML_TARGETS)
 
 UTIL_SRC = \
 	plotsVariation.py \
@@ -154,73 +157,85 @@ UTIL_SRC = \
 
 all: $(TARGETS)
 	
-$(OUTPUTS_CONTINUOUS_PERFORMANCE) &: ./notebooks/continuous_performance.py ./templates/table_continuous_performance.tex ./results/**/* $(UTIL_SRC) 
+$(OUTPUTS_CONTINUOUS_PERFORMANCE) &: ./notebooks/continuous_performance.py ./templates/table_continuous_performance.tex ./results/**/* $(UTIL_SRC)
+	mkdir -p $(CONTINUOUS_PERFORMANCE_DIR)
 	$(RUN) ./notebooks/continuous_performance.py
 
 $(NOTEBOOK_HTML)/continuous_performance.html: ./notebooks/continuous_performance.py
 	$(MARIMO) export html ./notebooks/continuous_performance.py > $(NOTEBOOK_HTML)/continuous_performance.html
 
 $(OUTPUTS_CONTINUOUS_PERFORMANCE_DIEF) &: ./notebooks/dief_continuous_performance.py ./notebooks/continuous_performance.py ./templates/dief_table_continuous_performance.tex ./results/**/* $(UTIL_SRC)
+	mkdir -p $(CONTINUOUS_PERFORMANCE_DIR)
 	$(RUN) ./notebooks/dief_continuous_performance.py
 
 $(NOTEBOOK_HTML)/dief_continuous_performance.html: ./notebooks/dief_continuous_performance.py
 	$(MARIMO) export html ./notebooks/dief_continuous_performance.py > $(NOTEBOOK_HTML)/dief_continuous_performance.html
 
 $(OUTPUTS_HTTP_REQ_EXEC_TIME_RELATION) &: ./notebooks/linearity_reduction_http_time.py ./results/**/* $(UTIL_SRC)
+	mkdir -p $(HTTP_REQ_EXEC_TIME_RELATION_DIR)
 	$(RUN) ./notebooks/linearity_reduction_http_time.py
 
 $(NOTEBOOK_HTML)/relation_number_http_req_exec_time.html: ./notebooks/linearity_reduction_http_time.py
 	$(MARIMO) export html ./notebooks/linearity_reduction_http_time.py > $(NOTEBOOK_HTML)/relation_number_http_req_exec_time.html
 
 $(OUTPUTS_DETAIL_SHAPE) &: ./notebooks/variation_shape_details.py ./results/**/* $(UTIL_SRC)
+	mkdir -p $(DETAIL_SHAPE_DIR)
 	$(RUN) ./notebooks/variation_shape_details.py
 
 $(NOTEBOOK_HTML)/variation_shape_detail.html: ./notebooks/variation_shape_details.py
 	$(MARIMO) export html ./notebooks/variation_shape_details.py > $(NOTEBOOK_HTML)/variation_shape_detail.html
 
 $(OUTPUT_QUERY_CONTAINMENT) &: ./notebooks/query_containment_execution_time.py ./results/**/* $(UTIL_SRC)
+	mkdir -p $(QUERY_CONTAINMENT_DIR)/fully_bounded $(QUERY_CONTAINMENT_DIR)/inner_dataset $(QUERY_CONTAINMENT_DIR)/minimal
 	$(RUN) ./notebooks/query_containment_execution_time.py
 
 $(NOTEBOOK_HTML)/query_shape_subsumption_execution_time.html: ./notebooks/query_containment_execution_time.py
 	$(MARIMO) export html ./notebooks/query_containment_execution_time.py > $(NOTEBOOK_HTML)/query_shape_subsumption_execution_time.html
 
 $(OUTPUT_RATIO_USEFUL_RESOURCES) : ./notebooks/ratio_useful_sources.py ./templates/table_ratio_useful_resources_summary.tex ./results/**/* $(UTIL_SRC)
+	mkdir -p $(RATIO_USEFUL_RESOURCES_DIR)
 	$(RUN) ./notebooks/ratio_useful_sources.py
 
 $(NOTEBOOK_HTML)/ratio_useful_sources.html: ./notebooks/ratio_useful_sources.py
 	$(MARIMO) export html ./notebooks/ratio_useful_sources.py > $(NOTEBOOK_HTML)/ratio_useful_sources.html
 
 $(OUTPUT_SHAPE_INDEX_VARIATION_ONE_PLOT) &: ./notebooks/shape_index_variation_one_plot.py ./results/**/* $(UTIL_SRC)
+	mkdir -p $(SHAPE_INDEX_VARIATION_ONE_PLOT_DIR)
 	$(RUN) ./notebooks/shape_index_variation_one_plot.py
 
 $(NOTEBOOK_HTML)/variation_one_plot.html: ./notebooks/shape_index_variation_one_plot.py
 	$(MARIMO) export html ./notebooks/shape_index_variation_one_plot.py > $(NOTEBOOK_HTML)/variation_one_plot.html
 
 $(OUTPUT_STATISTICAL_SIGNIFICANCE): ./notebooks/statistical_significance.py ./results/**/* $(UTIL_SRC)
+	mkdir -p $(STATISTICAL_SIGNIFICANCE_DIR)
 	$(RUN) ./notebooks/statistical_significance.py
 
 $(NOTEBOOK_HTML)/statistical_significance.html: ./notebooks/statistical_significance.py
 	$(MARIMO) export html ./notebooks/statistical_significance.py > $(NOTEBOOK_HTML)/statistical_significance.html
 
 $(OUTPUT_VARIATION_APPROACH) &: ./notebooks/variation_approach.py ./results/**/* $(UTIL_SRC)
+	mkdir -p $(VARIATION_APPROACH_DIR)
 	$(RUN) ./notebooks/variation_approach.py
 
 $(NOTEBOOK_HTML)/variation_approaches.html: ./notebooks/variation_approach.py
 	$(MARIMO) export html ./notebooks/variation_approach.py > $(NOTEBOOK_HTML)/variation_approaches.html
 
 $(OUTPUT_VARIATION_APPROACH_NET) &: ./notebooks/variation_net_approach.py ./results/**/* $(UTIL_SRC)
+	mkdir -p $(VARIATION_APPROACH_DIR)
 	$(RUN) ./notebooks/variation_net_approach.py
 
 $(NOTEBOOK_HTML)/variation_approaches_net.html: ./notebooks/variation_net_approach.py
 	$(MARIMO) export html ./notebooks/variation_net_approach.py > $(NOTEBOOK_HTML)/variation_approaches_net.html
 
 $(OUTPUT_VARIATION_PERCENTAGE_ENTRY_SI) &: ./notebooks/variation_percentage_shape_entries.py ./results/**/* $(UTIL_SRC)
+	mkdir -p $(VARIATION_PERCENTAGE_SI_ENTRY_DIR)
 	$(RUN) ./notebooks/variation_percentage_shape_entries.py
 
 $(NOTEBOOK_HTML)/variation_percentage_shape_index_entry.html: ./notebooks/variation_percentage_shape_entries.py
 	$(MARIMO) export html ./notebooks/variation_percentage_shape_entries.py > $(NOTEBOOK_HTML)/variation_percentage_shape_index_entry.html
 
 $(OUTPUT_VARIATION_PERCENTAGE_SI) &: ./notebooks/variation_percentage_shape_index.py ./results/**/* $(UTIL_SRC)
+	mkdir -p $(VARIATION_PERCENTAGE_SI_DIR)
 	$(RUN) ./notebooks/variation_percentage_shape_index.py
 
 $(NOTEBOOK_HTML)/variation_percentage_shape_index.html: ./notebooks/variation_percentage_shape_index.py
@@ -229,7 +244,8 @@ $(NOTEBOOK_HTML)/variation_percentage_shape_index.html: ./notebooks/variation_pe
 .PHONY: notebook clean
 
 clean:
-	rm -f $(TARGETS)
+	rm -rf $(ARTEFACT_DIR)
+	rm -f $(HTML_TARGETS)
 
 notebook:
 	$(MARIMO) edit
